@@ -1,0 +1,53 @@
+###########################################
+# Created from ros2_dockerfile.jinja
+###########################################
+
+###########################################
+# Base image 
+###########################################
+FROM ubuntu:{{ ubuntu_distro }} AS base
+
+ENV DEBIAN_FRONTEND=noninteractive
+ENV ROS_DISTRO={{ ros_distro }}
+
+{% include 'snippits/language.jinja' %}
+
+{% include 'snippits/timezone.jinja' %}
+
+# Install ROS2
+COPY install_ros2_base.sh /setup/install_ros2_base.sh
+RUN /setup/install_ros2_base.sh && rm -rf /var/lib/apt/lists/*
+
+ENV AMENT_PREFIX_PATH=/opt/ros/${ROS_DISTRO}
+ENV COLCON_PREFIX_PATH=/opt/ros/${ROS_DISTRO}
+ENV LD_LIBRARY_PATH=/opt/ros/${ROS_DISTRO}/lib
+ENV PATH=/opt/ros/${ROS_DISTRO}/bin:$PATH
+ENV PYTHONPATH=/opt/ros/${ROS_DISTRO}/lib/python{{ python_version }}/site-packages
+ENV ROS_PYTHON_VERSION=3
+ENV ROS_VERSION=2
+ENV DEBIAN_FRONTEND=
+
+###########################################
+#  Develop image 
+###########################################
+FROM base AS dev
+
+ENV DEBIAN_FRONTEND=noninteractive
+# Install dev tools
+COPY install_ros2_dev.sh /setup/install_ros2_dev.sh
+RUN /setup/install_ros2_dev.sh 
+
+{% include 'snippits/ros_user.jinja' %}
+ENV DEBIAN_FRONTEND=
+
+###########################################
+#  Full image 
+###########################################
+FROM dev AS full
+
+ENV DEBIAN_FRONTEND=noninteractive
+# Install the full release
+RUN apt-get update && apt-get install -y \
+  ros-${ROS_DISTRO}-desktop \
+  && rm -rf /var/lib/apt/lists/*
+ENV DEBIAN_FRONTEND=
