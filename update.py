@@ -37,6 +37,22 @@ IMAGES = {
         "repository": "ros2",
         "targets": TARGETS
     },
+    "gazebo10": {
+        "repository": "gazebo",
+        "targets": ["base", "dev"]
+    },
+    "gazebo11": {
+        "repository": "gazebo",
+        "targets": ["base", "dev"]
+    },
+    "blueprint": {
+        "repository": "ignition",
+        "targets": ["base", "dev"]
+    },
+    "citadel": {
+        "repository": "ignition",
+        "targets": ["base", "dev"]
+    },
     "pages": {
         "repository": "github",
         "targets": ["dev"]
