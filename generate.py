@@ -5,21 +5,25 @@ from jinja2 import Environment, FileSystemLoader
 TEMPLATES = {
     'ros2': [
         {
+            'name': 'foxy',
             'ubuntu_distro': '20.04',
             'ros_distro': 'foxy',
             'python_version': 3.8
         },
         {
+            'name': 'eloquent',
             'ubuntu_distro': '18.04',
             'ros_distro': 'eloquent',
             'python_version': 3.6
         },
         {
+            'name': 'dashing',
             'ubuntu_distro': '18.04',
             'ros_distro': 'dashing',
             'python_version': 3.6
         },
         {
+            'name': 'crystal',
             'ubuntu_distro': '16.04',
             'ros_distro': 'crystal',
             'python_version': 3.6
@@ -27,23 +31,40 @@ TEMPLATES = {
     ],
     'ros': [
         {
+            'name': 'noetic',
             'ubuntu_distro': '20.04',
             'ros_distro': 'noetic',
             'python_version': 3,
             'python_env': 3
         },
         {
+            'name': 'melodic',
             'ubuntu_distro': '18.04',
             'ros_distro': 'melodic',
             'python_version': 2.7,
             'python_env': 2
         },
         {
+            'name': 'kinetic',
             'ubuntu_distro': '16.04',
             'ros_distro': 'kinetic',
             'python_version': 2.7,
             'python_env': 2
         }
+    ],
+    'ignition': [
+        {
+            'name': 'citadel',
+            'ubuntu_distro': '18.04',
+            'ign_distro': 'citadel',
+            'gazebo_version': 3
+        },
+        {
+            'name': 'blueprint',
+            'ubuntu_distro': '18.04',
+            'ign_distro': 'blueprint',
+            'gazebo_version': 2
+        },
     ]
 }
 
@@ -59,7 +80,7 @@ def generate():
         template = env.get_template(template_name)
         for file in dockerfiles:
             output = template.render(file)
-            out_file = name + "/" + file['ros_distro'] + ".Dockerfile"
+            out_file = name + "/" + file['name'] + ".Dockerfile"
             print("Generating {filename}".format(filename=out_file))
             dockerfile_out = open(out_file, "w")
             dockerfile_out.write(output)
