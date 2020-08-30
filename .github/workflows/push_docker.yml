@@ -1,4 +1,4 @@
-name: dockerfiles
+name: push_dockerfiles
 
 on:
   schedule:

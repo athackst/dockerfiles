@@ -1,4 +1,4 @@
-name: dockerfiles
+name: check_dockerfiles
 
 on:
   pull_request:
