@@ -1,0 +1,30 @@
+###########################################
+# Base image 
+###########################################
+FROM ubuntu:{{ ubuntu_distro }} AS base
+
+ENV GAZEBO_RELEASE={{ gazebo_release }}
+
+# Avoid warnings by switching to noninteractive
+ENV DEBIAN_FRONTEND=noninteractive
+
+{% include 'snippits/language.jinja' %}
+
+{% include 'snippits/timezone.jinja' %}
+
+COPY install_base.sh /setup/install_base.sh
+RUN ./setup/install_base.sh && rm -rf /var/lib/apt/lists/*
+
+
+###########################################
+# Develop image 
+###########################################
+FROM base AS dev
+
+ENV DEBIAN_FRONTEND=noninteractive
+# Install dev tools
+COPY install_dev.sh /setup/install_dev.sh
+RUN ./setup/install_dev.sh && rm -rf /var/lib/apt/lists/*
+
+{% include 'snippits/ros_user.jinja' %}
+ENV DEBIAN_FRONTEND=
