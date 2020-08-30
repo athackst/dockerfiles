@@ -14,63 +14,28 @@ jobs:
       fail-fast: false
       matrix:
         docker_image:
-          ["kinetic", "melodic", "noetic", "dashing", "eloquent", "foxy"]
-        docker_target: ["base", "dev", "full", "gazebo"]
-        include:
-          - docker_image: "kinetic"
-            docker_repo: "ros"
-          - docker_image: "melodic"
-            docker_repo: "ros"
-          - docker_image: "noetic"
-            docker_repo: "ros"
-          - docker_image: "dashing"
-            docker_repo: "ros2"
-          - docker_image: "eloquent"
-            docker_repo: "ros2"
-          - docker_image: "foxy"
-            docker_repo: "ros2"
-          - docker_image: "pages"
-            docker_repo: "github"
-            docker_target: "dev"
-          - docker_image: "citadel"
-            docker_repo: "ignition"
-            docker_target: "base"
-          - docker_image: "citadel"
-            docker_repo: "ignition"
-            docker_target: "dev"
-          - docker_image: "blueprint"
-            docker_repo: "ignition"
-            docker_target: "base"
-          - docker_image: "blueprint"
-            docker_repo: "ignition"
-            docker_target: "dev"
-          - docker_image: "gazebo10"
-            docker_repo: "gazebo"
-            docker_target: "base"
-          - docker_image: "gazebo10"
-            docker_repo: "gazebo"
-            docker_target: "dev"
-          - docker_image: "gazebo11"
-            docker_repo: "gazebo"
-            docker_target: "base"
-          - docker_image: "gazebo11"
-            docker_repo: "gazebo"
-            docker_target: "dev"
-
+          - "kinetic"
+          - "melodic"
+          - "noetic"
+          - "dashing"
+          - "eloquent"
+          - "foxy"
+          - "blueprint"
+          - "citadel"
+          - "gazebo10"
+          - "gazebo11"
+          - "pages"
     steps:
       - uses: actions/checkout@v2
-      - name: Update date
-        run: |
-          echo "::set-env name=TODAY::$(date +'%Y-%m-%d')"   
-      - name: Build and publish image
-        uses: docker/build-push-action@v1.1.0
+      - name: Set up Python
+        uses: actions/setup-python@v2.1.2
         with:
-          path: ${{ matrix.docker_repo }}
-          dockerfile: ${{ matrix.docker_repo}}/${{ matrix.docker_image }}.Dockerfile
-          target: ${{ matrix.docker_target }}
-          repository: athackst/${{ matrix.docker_repo }}
-          username: ${{ secrets.DOCKER_USERNAME }}
-          password: ${{ secrets.DOCKER_PASSWORD }}
-          tags: ${{ matrix.docker_image }}-${{ matrix.docker_target }},${{ matrix.docker_image }}-${{ matrix.docker_target }}-${{ env.TODAY }}
-          labels: version=${{ env.TODAY }}
-          push: ${{ github.ref == 'refs/heads/main' }}
+          python-version: "3.x"
+      - name: Build
+        env:
+          DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+          DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+        run: |
+          python -m pip install --upgrade pip
+          if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+          ./update.py --push --auth ${{ matrix.docker_image }}
