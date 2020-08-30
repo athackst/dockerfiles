@@ -60,7 +60,8 @@ IMAGES = {
 }
 
 
-def build_push(context, dockerfile, repository, tag, target, labels, push):
+def build_push(context, dockerfile, repository,
+               tag, target, labels, push, auth):
     """Build and optionally push the docker file.
 
     Args:
@@ -83,11 +84,20 @@ def build_push(context, dockerfile, repository, tag, target, labels, push):
     client.images.build(path=context, dockerfile=dockerfile, target=target,
                         tag=build_tag, labels=labels, pull=True)
     if push:
-        client.images.push(repository=repository, tag=tag)
+        auth_config = None
+        if auth:
+            auth_config = {
+                "username": os.getenv('DOCKER_USERNAME'),
+                "password": os.getenv('DOCKER_PASSWORD')
+            }
+        print("Pushing {repository}:{tag}".format(
+            repository=repository, tag=tag))
+        client.images.push(repository=repository, tag=tag,
+                           auth_config=auth_config)
     client.images.prune()
 
 
-def update(repository, name, targets, push):
+def update(repository, name, targets, push, auth):
     """Build and push docker file.
 
     Args:
@@ -111,7 +121,8 @@ def update(repository, name, targets, push):
                    tag=latest_tag,
                    target=target,
                    labels=labels,
-                   push=push)
+                   push=push,
+                   auth=auth)
 
         dated_tag = "{latest}-{date}".format(latest=latest_tag, date=TODAY)
         build_push(context=context,
@@ -120,7 +131,8 @@ def update(repository, name, targets, push):
                    tag=dated_tag,
                    target=target,
                    labels=labels,
-                   push=push)
+                   push=push,
+                   auth=auth)
 
 
 @click.command()
@@ -130,9 +142,12 @@ def update(repository, name, targets, push):
 @click.option("--push/--no-push",
               default=False,
               help="Push generated images to DockerHub.")
+@click.option("--auth/--no-auth",
+              default=False,
+              help="use authorization config from environment")
 @click.argument("image",
                 type=click.Choice(list(IMAGES) + ['all']))
-def main(generate, push, image):
+def main(generate, push, auth, image):
     """Build the docker images."""
     if generate:
         gen.generate()
@@ -144,7 +159,8 @@ def main(generate, push, image):
     for name in builds:
         repository = builds[name]["repository"]
         targets = builds[name]["targets"]
-        update(repository=repository, name=name, targets=targets, push=push)
+        update(repository=repository, name=name,
+               targets=targets, push=push, auth=auth)
 
 
 if __name__ == "__main__":
