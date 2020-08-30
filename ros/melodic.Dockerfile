@@ -85,3 +85,15 @@ RUN apt-get update && apt-get install -y \
   ros-${ROS_DISTRO}-desktop \
   && rm -rf /var/lib/apt/lists/*
 ENV DEBIAN_FRONTEND=
+
+###########################################
+#  Full+Gazebo image 
+###########################################
+FROM full AS gazebo
+
+ENV DEBIAN_FRONTEND=noninteractive
+# Install gazebo
+RUN apt-get update && apt-get install -y \
+  ros-${ROS_DISTRO}-gazebo* \
+  && rm -rf /var/lib/apt/lists/*
+ENV DEBIAN_FRONTEND=
