@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
-
+"""Generate the dockerfiles from a jinja template."""
 from jinja2 import Environment, FileSystemLoader
 
-repos = {
+TEMPLATES = {
     'ros2': [
         {
             'ubuntu_distro': '20.04',
@@ -49,21 +49,19 @@ repos = {
 
 
 def generate():
-    """
-    Generate the dockerfiles for this repo
-    """
+    """Generate the dockerfiles for this repo."""
     file_loader = FileSystemLoader('template')
     env = Environment(loader=file_loader)
 
-    for repo in repos:
-        template_name = repo + ".dockerfile.jinja"
-        dockerfiles = repos[repo]
+    for name in TEMPLATES:
+        template_name = name + ".dockerfile.jinja"
+        dockerfiles = TEMPLATES[name]
         template = env.get_template(template_name)
         for file in dockerfiles:
             output = template.render(file)
-            filename = repo + "/" + file['ros_distro'] + ".Dockerfile"
-            print("Generating {filename}".format(filename=filename))
-            dockerfile_out = open(filename, "w")
+            out_file = name + "/" + file['ros_distro'] + ".Dockerfile"
+            print("Generating {filename}".format(filename=out_file))
+            dockerfile_out = open(out_file, "w")
             dockerfile_out.write(output)
             dockerfile_out.close()
 

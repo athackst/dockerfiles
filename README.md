@@ -9,13 +9,13 @@ You can use them as a base image for development with VSCode using container bas
 Create the docker images
 
 ```bash
-./update.sh all
+./update.py all
 ```
 
 To see help information on the update script
 
 ```bash
-./update.sh -h
+./update.py --help
 ```
 
 -----
