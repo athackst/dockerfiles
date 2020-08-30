@@ -4,7 +4,7 @@ set -e
 push=0
 TODAY=$(date +'%Y-%m-%d')
 
-update() {
+_update() {
   # Update the base image
   USERNAME=athackst
   DOCKER_BASE_NAME=$1
@@ -36,61 +36,69 @@ update() {
   docker system prune -f
 }
 
-update_crystal() {
+targets=( "base", "dev", "full", "gazebo")
+_update_targets() {
+  for target in "${targets[@]}"; do
+    _update ${repo} ${distro} ${target}
+  done
+}
+
+set_crystal() {
   read -p "WARNING: Updating EOL distribution. Are you sure? (y/n)" -n 1 -r
   if [[ $REPLY =~ ^[Yy]$ ]]
   then
+    repo="ros2"
+    distro="crystal"
     docker pull ubuntu:16.04
-    update ros2 crystal base
-    update ros2 crystal dev
+    _update_targets
   fi
+}
+
+update_dashing() {
+  repo="ros2"
+  distro="dashing"
+  docker pull ubuntu:18.04
+  _update_targets
+}
+
+update_eloquent() {
+  repo="ros2"
+  distro="eloquent"
+  docker pull ubuntu:18.04
+  _update_targets
+}
+
+update_foxy() {
+  repo="ros2"
+  distro="foxy"
+  docker pull ubuntu:20.04
+  _update_targets
+}
+
+update_kinetic() {
+  repo="ros"
+  distro="kinetic"
+  docker pull ubuntu:18.04
+  _update_targets
+}
+
+update_melodic() {
+  repo="ros"
+  distro="melodic"
+  docker pull ubuntu:18.04
+  _update_targets
+}
+
+update_noetic() {
+  repo="ros"
+  distro="noetic"
+  docker pull ubuntu:20.04
+  _update_targets
 }
 
 update_pages() {
   docker pull jekyll/jekyll:pages
   update github pages dev
-}
-
-update_dashing() {
-  docker pull ubuntu:18.04
-  update ros2 dashing base
-  update ros2 dashing dev
-  update ros2 dashing full
-}
-
-update_eloquent() {
-  docker pull ubuntu:18.04
-  update ros2 eloquent base
-  update ros2 eloquent dev
-  update ros2 eloquent full
-}
-
-update_foxy() {
-  docker pull ubuntu:20.04
-  update ros2 foxy base
-  update ros2 foxy dev
-  update ros2 foxy full
-}
-
-update_kinetic() {
-  docker pull ubuntu:18.04
-  update ros kinetic base
-  update ros kinetic dev
-  update ros kinetic full
-}
-
-update_melodic() {
-  docker pull ubuntu:18.04
-  update ros melodic base
-  update ros melodic dev
-  update ros melodic full
-}
-
-update_noetic() {
-  docker pull ubuntu:20.04
-  update ros noetic base
-  update ros noetic dev
-  update ros noetic full
 }
 
 update_all() {

@@ -48,7 +48,7 @@ jobs:
       matrix:
         docker_image:
           ["kinetic", "melodic", "noetic", "dashing", "eloquent", "foxy"]
-        docker_target: ["base", "dev", "full"]
+        docker_target: ["base", "dev", "full", "gazebo"]
         include:
           - docker_image: "kinetic"
             docker_repo: "ros"
