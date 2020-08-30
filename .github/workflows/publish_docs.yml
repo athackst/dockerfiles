@@ -2,7 +2,8 @@ name: publish_docs
 
 on:
   push:
-    branches: [main, feature/documentation]
+    branches: [main]
+  workflow_dispatch:
 
 jobs:
   publish:

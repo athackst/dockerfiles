@@ -4,6 +4,8 @@ on:
   pull_request:
     branches:
       - main
+  # TODO: filter the paths once github supports required checks with filters
+  workflow_dispatch:
 jobs:
   cleanup:
     runs-on: ubuntu-latest

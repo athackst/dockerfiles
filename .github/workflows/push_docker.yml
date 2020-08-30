@@ -7,8 +7,10 @@ on:
   push:
     branches:
       - main
+    paths:
+      - "**.dockerfiles"
   workflow_dispatch:
-    
+
 jobs:
   docker:
     runs-on: ubuntu-latest
@@ -41,29 +43,3 @@ jobs:
           python -m pip install --upgrade pip
           if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
           ./build.py ${{ matrix.docker_image }} --push --auth --verbose
-
-  readme:
-    runs-on: ubuntu-latest
-    name: Push README to Docker Hub
-    strategy:
-      fail-fast: false
-      matrix:
-        docker_repo:
-          - "ros"
-          - "ros2"
-          - "gazebo"
-          - "ignition"
-          - "github"
-    steps:
-      - name: git checkout
-        uses: actions/checkout@v2
-      - name: push README to Dockerhub
-        uses: christian-korneck/update-container-description-action@v1
-        env:
-          DOCKER_USER: ${{ secrets.DOCKER_USERNAME }}
-          DOCKER_PASS: ${{ secrets.DOCKER_RM_PASSWORD }}
-        with:
-          destination_container_repo: athackst/${{ matrix.docker_repo }}
-          provider: dockerhub
-          short_description: "An assortment of development containers for ${{ matrix.docker_repo }}"
-          readme_file: ${{ matrix.docker_repo }}/README.md
