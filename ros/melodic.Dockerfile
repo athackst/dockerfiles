@@ -8,7 +8,6 @@
 FROM ubuntu:18.04 AS base
 
 ENV DEBIAN_FRONTEND=noninteractive
-ENV ROS_DISTRO=melodic
 
 # Install language
 RUN apt-get update && apt-get install -y \
@@ -27,22 +26,30 @@ RUN ln -fs /usr/share/zoneinfo/UTC /etc/localtime \
   && rm -rf /var/lib/apt/lists/*
 
 # Install ROS
-COPY install_ros_base.sh /setup/install_ros_base.sh
-RUN /setup/install_ros_base.sh && rm -rf /var/lib/apt/lists/*
+RUN apt-get update && apt-get install -y \
+    dirmngr \
+    gnupg2 \
+    lsb-release \
+  && sh -c 'echo "deb http://packages.ros.org/ros/ubuntu $(lsb_release -sc) main" > /etc/apt/sources.list.d/ros-latest.list' \
+  && apt-key adv --keyserver 'hkp://keyserver.ubuntu.com:80' --recv-key C1CF6E31E6BADE8868B172B4F42ED6FBAB17C654 \
+  && apt-get update && apt-get install -y \
+    ros-melodic-ros-base \
+  && rm -rf /var/lib/apt/lists/*
 
 # Setup environment
-ENV LD_LIBRARY_PATH=/opt/ros/$ROS_DISTRO/lib:$LD_LIBRARY_PATH
-ENV ROS_ROOT=/opt/ros/$ROS_DISTRO/share/ros
-ENV ROS_PACKAGE_PATH=/opt/ros/$ROS_DISTRO/share
+ENV LD_LIBRARY_PATH=/opt/ros/melodic/lib:$LD_LIBRARY_PATH
+ENV ROS_DISTRO=melodic
+ENV ROS_ROOT=/opt/ros/melodic/share/ros
+ENV ROS_PACKAGE_PATH=/opt/ros/melodic/share
 ENV ROS_MASTER_URI=http://localhost:11311
-ENV ROS_PYTHON_VERSION=2
+ENV ROS_PYTHON_VERSION=
 ENV ROS_VERSION=1
-ENV PATH=/opt/ros/$ROS_DISTRO/bin:$PATH
+ENV PATH=/opt/ros/melodic/bin:$PATH
 ENV ROSLISP_PACKAGE_DIRECTORIES=
-ENV PYTHONPATH=/opt/ros/${ROS_DISTRO}/lib/python2.7/dist-packages:$PYTHONPATH
-ENV PKG_CONFIG_PATH=/opt/ros/$ROS_DISTRO/lib/pkgconfig:$PKG_CONFIG_PATH
-ENV ROS_ETC_DIR=/opt/ros/$ROS_DISTRO/etc/ros
-ENV CMAKE_PREFIX_PATH=/opt/ros/$ROS_DISTRO:$CMAKE_PREFIX_PATH
+ENV PYTHONPATH=/opt/ros/melodic/lib/python2.7/dist-packages:$PYTHONPATH
+ENV PKG_CONFIG_PATH=/opt/ros/melodic/lib/pkgconfig:$PKG_CONFIG_PATH
+ENV ROS_ETC_DIR=/opt/ros/melodic/etc/ros
+ENV CMAKE_PREFIX_PATH=/opt/ros/melodic:$CMAKE_PREFIX_PATH
 ENV DEBIAN_FRONTEND=
 
 ###########################################
@@ -52,8 +59,19 @@ FROM base AS dev
 
 ENV DEBIAN_FRONTEND=noninteractive
 # Install dev tools
-COPY install_ros_dev2.sh /setup/install_ros_dev.sh
-RUN /setup/install_ros_dev.sh && rm -rf /var/lib/apt/lists/*
+RUN apt-get update && apt-get install -y \
+    python-rosdep \
+    python-rosinstall \
+    python-rosinstall-generator \
+    python-wstool \
+    python-pip \
+    pylint \
+    build-essential \
+    bash-completion \
+    git \
+    vim \
+  && rm -rf /var/lib/apt/lists/* \
+  && rosdep init || echo "rosdep already initialized"
 
 ARG USERNAME=ros
 ARG USER_UID=1000
@@ -82,7 +100,7 @@ FROM dev AS full
 ENV DEBIAN_FRONTEND=noninteractive
 # Install the full release
 RUN apt-get update && apt-get install -y \
-  ros-${ROS_DISTRO}-desktop \
+  ros-melodic-desktop \
   && rm -rf /var/lib/apt/lists/*
 ENV DEBIAN_FRONTEND=
 
@@ -94,6 +112,6 @@ FROM full AS gazebo
 ENV DEBIAN_FRONTEND=noninteractive
 # Install gazebo
 RUN apt-get update && apt-get install -y \
-  ros-${ROS_DISTRO}-gazebo* \
+  ros-melodic-gazebo* \
   && rm -rf /var/lib/apt/lists/*
 ENV DEBIAN_FRONTEND=

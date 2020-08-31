@@ -38,4 +38,4 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
-          ./update.py --push --auth ${{ matrix.docker_image }}
+          ./update.py ${{ matrix.docker_image }} --push --auth --verbose 

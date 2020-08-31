@@ -7,8 +7,6 @@
 ###########################################
 FROM ubuntu:18.04 AS base
 
-ENV IGN_DISTRO=citadel
-
 # Avoid warnings by switching to noninteractive
 ENV DEBIAN_FRONTEND=noninteractive
 
@@ -29,20 +27,30 @@ RUN ln -fs /usr/share/zoneinfo/UTC /etc/localtime \
   && rm -rf /var/lib/apt/lists/*
 
 # install packages
-COPY install_base.sh /setup/install_base.sh
-RUN ./setup/install_base.sh && rm -rf /var/lib/apt/lists/*
+RUN apt-get update && apt-get install -q -y \
+  dirmngr \
+  gnupg2 \
+  lsb-release \
+  wget \
+  && sh -c 'echo "deb http://packages.osrfoundation.org/gazebo/ubuntu-stable `lsb_release -cs` main" > /etc/apt/sources.list.d/gazebo-stable.list' \
+  && wget http://packages.osrfoundation.org/gazebo.key -O - | apt-key add - \
+  && apt-get update && apt-get install -y \
+    ignition-citadel \
+  && rm -rf /var/lib/apt/lists/*
+
 
 ###########################################
 # Develop image 
 ###########################################
 FROM base AS dev
 
-ENV GAZEBO_VERSION=3
-
 ENV DEBIAN_FRONTEND=noninteractive
 # Install dev tools
-COPY install_dev.sh /setup/install_dev.sh
-RUN ./setup/install_dev.sh && rm -rf /var/lib/apt/lists/*
+RUN apt-get update && apt-get install -y \
+  libignition-plugin-dev \
+  libignition-cmake2-dev \
+  libignition-gazebo3-dev \
+  && rm -rf /var/lib/apt/lists/*
 
 ARG USERNAME=ros
 ARG USER_UID=1000

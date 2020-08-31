@@ -7,8 +7,6 @@
 ###########################################
 FROM ubuntu:18.04 AS base
 
-ENV GAZEBO_RELEASE=10
-
 # Avoid warnings by switching to noninteractive
 ENV DEBIAN_FRONTEND=noninteractive
 
@@ -28,9 +26,17 @@ RUN ln -fs /usr/share/zoneinfo/UTC /etc/localtime \
   && dpkg-reconfigure --frontend noninteractive tzdata \
   && rm -rf /var/lib/apt/lists/*
 
-COPY install_base.sh /setup/install_base.sh
-RUN ./setup/install_base.sh && rm -rf /var/lib/apt/lists/*
-
+# Install gazebo
+RUN apt-get update && apt-get install -q -y \
+    dirmngr \
+    gnupg2 \
+    lsb-release \
+    wget \
+  && sh -c 'echo "deb http://packages.osrfoundation.org/gazebo/ubuntu-stable `lsb_release -cs` main" > /etc/apt/sources.list.d/gazebo-stable.list' \
+  && wget http://packages.osrfoundation.org/gazebo.key -O - | apt-key add - \
+  && apt-get update && apt-get install -y \
+    gazebo10 \
+  && rm -rf /var/lib/apt/lists/*
 
 ###########################################
 # Develop image 
@@ -39,8 +45,9 @@ FROM base AS dev
 
 ENV DEBIAN_FRONTEND=noninteractive
 # Install dev tools
-COPY install_dev.sh /setup/install_dev.sh
-RUN ./setup/install_dev.sh && rm -rf /var/lib/apt/lists/*
+RUN apt-get update && apt-get install -y \
+    libgazebo10-dev \
+  && rm -rf /var/lib/apt/lists/*
 
 ARG USERNAME=ros
 ARG USER_UID=1000

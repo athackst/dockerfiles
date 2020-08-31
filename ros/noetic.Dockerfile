@@ -8,7 +8,6 @@
 FROM ubuntu:20.04 AS base
 
 ENV DEBIAN_FRONTEND=noninteractive
-ENV ROS_DISTRO=noetic
 
 # Install language
 RUN apt-get update && apt-get install -y \
@@ -27,22 +26,30 @@ RUN ln -fs /usr/share/zoneinfo/UTC /etc/localtime \
   && rm -rf /var/lib/apt/lists/*
 
 # Install ROS
-COPY install_ros_base.sh /setup/install_ros_base.sh
-RUN /setup/install_ros_base.sh && rm -rf /var/lib/apt/lists/*
+RUN apt-get update && apt-get install -y \
+    dirmngr \
+    gnupg2 \
+    lsb-release \
+  && sh -c 'echo "deb http://packages.ros.org/ros/ubuntu $(lsb_release -sc) main" > /etc/apt/sources.list.d/ros-latest.list' \
+  && apt-key adv --keyserver 'hkp://keyserver.ubuntu.com:80' --recv-key C1CF6E31E6BADE8868B172B4F42ED6FBAB17C654 \
+  && apt-get update && apt-get install -y \
+    ros-noetic-ros-base \
+  && rm -rf /var/lib/apt/lists/*
 
 # Setup environment
-ENV LD_LIBRARY_PATH=/opt/ros/$ROS_DISTRO/lib:$LD_LIBRARY_PATH
-ENV ROS_ROOT=/opt/ros/$ROS_DISTRO/share/ros
-ENV ROS_PACKAGE_PATH=/opt/ros/$ROS_DISTRO/share
+ENV LD_LIBRARY_PATH=/opt/ros/noetic/lib:$LD_LIBRARY_PATH
+ENV ROS_DISTRO=noetic
+ENV ROS_ROOT=/opt/ros/noetic/share/ros
+ENV ROS_PACKAGE_PATH=/opt/ros/noetic/share
 ENV ROS_MASTER_URI=http://localhost:11311
 ENV ROS_PYTHON_VERSION=3
 ENV ROS_VERSION=1
-ENV PATH=/opt/ros/$ROS_DISTRO/bin:$PATH
+ENV PATH=/opt/ros/noetic/bin:$PATH
 ENV ROSLISP_PACKAGE_DIRECTORIES=
-ENV PYTHONPATH=/opt/ros/${ROS_DISTRO}/lib/python3/dist-packages:$PYTHONPATH
-ENV PKG_CONFIG_PATH=/opt/ros/$ROS_DISTRO/lib/pkgconfig:$PKG_CONFIG_PATH
-ENV ROS_ETC_DIR=/opt/ros/$ROS_DISTRO/etc/ros
-ENV CMAKE_PREFIX_PATH=/opt/ros/$ROS_DISTRO:$CMAKE_PREFIX_PATH
+ENV PYTHONPATH=/opt/ros/noetic/lib/python3/dist-packages:$PYTHONPATH
+ENV PKG_CONFIG_PATH=/opt/ros/noetic/lib/pkgconfig:$PKG_CONFIG_PATH
+ENV ROS_ETC_DIR=/opt/ros/noetic/etc/ros
+ENV CMAKE_PREFIX_PATH=/opt/ros/noetic:$CMAKE_PREFIX_PATH
 ENV DEBIAN_FRONTEND=
 
 ###########################################
@@ -52,8 +59,19 @@ FROM base AS dev
 
 ENV DEBIAN_FRONTEND=noninteractive
 # Install dev tools
-COPY install_ros_dev3.sh /setup/install_ros_dev.sh
-RUN /setup/install_ros_dev.sh && rm -rf /var/lib/apt/lists/*
+RUN apt-get update && apt-get install -y \
+    python3-rosdep \
+    python3-rosinstall \
+    python3-rosinstall-generator \
+    python3-wstool \
+    python3-pip \
+    pylint3 \
+    build-essential \
+    bash-completion \
+    git \
+    vim \
+  && rm -rf /var/lib/apt/lists/* \
+  && rosdep init || echo "rosdep already initialized"
 
 ARG USERNAME=ros
 ARG USER_UID=1000
@@ -82,7 +100,7 @@ FROM dev AS full
 ENV DEBIAN_FRONTEND=noninteractive
 # Install the full release
 RUN apt-get update && apt-get install -y \
-  ros-${ROS_DISTRO}-desktop \
+  ros-noetic-desktop \
   && rm -rf /var/lib/apt/lists/*
 ENV DEBIAN_FRONTEND=
 
@@ -94,6 +112,6 @@ FROM full AS gazebo
 ENV DEBIAN_FRONTEND=noninteractive
 # Install gazebo
 RUN apt-get update && apt-get install -y \
-  ros-${ROS_DISTRO}-gazebo* \
+  ros-noetic-gazebo* \
   && rm -rf /var/lib/apt/lists/*
 ENV DEBIAN_FRONTEND=
