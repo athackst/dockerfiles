@@ -84,7 +84,7 @@ class Docker(object):
 
     def __init__(self):
         """Initialize docker container from environment."""
-        self.client = docker.from_env()
+        self.client = docker.from_env(timeout=600)
         self.api_client = docker.APIClient()
         self.auth_config = None
 
@@ -117,6 +117,17 @@ class Docker(object):
         self._process_output(output)
         log.info("Done building {}".format(build_tag))
 
+    def tag(self, repository, prev_tag, new_tag):
+        """Tag a built image."""
+        remote_repository = "{}/{}".format(Docker.REGISTRY, repository)
+        image = "{}:{}".format(remote_repository, prev_tag)
+        log.info("Taging {image} --> {repository}:{tag}".format(
+            image=image,
+            repository=remote_repository,
+            tag=new_tag))
+        self.api_client.tag(
+            image=image, repository=remote_repository, tag=new_tag)
+
     def push(self, repository, tag):
         """Push a built repository:tag to a registry.
 
@@ -127,25 +138,13 @@ class Docker(object):
             tag: The name of the tag.
         """
         remote_repository = "{}/{}".format(Docker.REGISTRY, repository)
-        retry = True
-        retry_count = 0
-        while retry:
-            try:
-                log.info("Pushing {repository}:{tag}".format(
-                    repository=remote_repository, tag=tag))
-                output = self.api_client.push(repository=remote_repository,
-                                              tag=tag,
-                                              stream=True,
-                                              auth_config=self.auth_config)
-                self._process_output(output)
-                retry = False
-            except Exception as e:
-                if retry_count > 6:
-                    log.error("Unable to push {repository}:{tag}".format(
-                        repository=remote_repository, tag=tag))
-                    retry = False
-                    raise e
-                retry_count += 1
+        log.info("Pushing {repository}:{tag}".format(
+            repository=remote_repository, tag=tag))
+        output = self.api_client.push(repository=remote_repository,
+                                      tag=tag,
+                                      stream=True,
+                                      auth_config=self.auth_config)
+        self._process_output(output)
 
         log.info("Done pushing {repository}:{tag}".format(
             repository=remote_repository, tag=tag))
@@ -167,7 +166,7 @@ class Docker(object):
         self.api_client.prune_images()
 
     def _process_output(self, output):
-        if type(output) == str:
+        if isinstance(output, str):
             output = output.split("\n")
 
         for line in output:
@@ -272,12 +271,9 @@ def main(generate, push, auth, verbose, image):
                            tag=latest_tag,
                            target=target,
                            labels=labels)
-            dockerpy.build(context=context,
-                           dockerfile=dockerfile,
-                           repository=repository,
-                           tag=dated_tag,
-                           target=target,
-                           labels=labels)
+            dockerpy.tag(repository=repository,
+                         prev_tag=latest_tag, new_tag=dated_tag)
+
             if push:
                 dockerpy.push(repository=repository, tag=latest_tag)
                 dockerpy.push(repository=repository, tag=dated_tag)
