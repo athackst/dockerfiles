@@ -8,7 +8,6 @@
 FROM ubuntu:18.04 AS base
 
 ENV DEBIAN_FRONTEND=noninteractive
-ENV ROS_DISTRO=dashing
 
 # Install language
 RUN apt-get update && apt-get install -y \
@@ -27,14 +26,23 @@ RUN ln -fs /usr/share/zoneinfo/UTC /etc/localtime \
   && rm -rf /var/lib/apt/lists/*
 
 # Install ROS2
-COPY install_ros2_base.sh /setup/install_ros2_base.sh
-RUN /setup/install_ros2_base.sh && rm -rf /var/lib/apt/lists/*
+RUN apt-get update && apt-get install -y \
+    curl \
+    gnupg2 \
+    lsb-release \
+  && curl http://repo.ros2.org/repos.key | apt-key add - \
+  && sh -c 'echo "deb [arch=amd64,arm64] http://packages.ros.org/ros2/ubuntu `lsb_release -cs` main" > /etc/apt/sources.list.d/ros2-latest.list' \
+  && apt-get update && apt-get install -y \
+    ros-dashing-ros-base \
+    python3-argcomplete \
+  && rm -rf /var/lib/apt/lists/*
 
-ENV AMENT_PREFIX_PATH=/opt/ros/${ROS_DISTRO}
-ENV COLCON_PREFIX_PATH=/opt/ros/${ROS_DISTRO}
-ENV LD_LIBRARY_PATH=/opt/ros/${ROS_DISTRO}/lib
-ENV PATH=/opt/ros/${ROS_DISTRO}/bin:$PATH
-ENV PYTHONPATH=/opt/ros/${ROS_DISTRO}/lib/python3.6/site-packages
+ENV ROS_DISTRO=dashing
+ENV AMENT_PREFIX_PATH=/opt/ros/dashing
+ENV COLCON_PREFIX_PATH=/opt/ros/dashing
+ENV LD_LIBRARY_PATH=/opt/ros/dashing/lib
+ENV PATH=/opt/ros/dashing/bin:$PATH
+ENV PYTHONPATH=/opt/ros/dashing/lib/python3.6/site-packages
 ENV ROS_PYTHON_VERSION=3
 ENV ROS_VERSION=2
 ENV DEBIAN_FRONTEND=
@@ -45,9 +53,28 @@ ENV DEBIAN_FRONTEND=
 FROM base AS dev
 
 ENV DEBIAN_FRONTEND=noninteractive
-# Install dev tools
-COPY install_ros2_dev.sh /setup/install_ros2_dev.sh
-RUN /setup/install_ros2_dev.sh 
+RUN apt-get update && apt-get install -y \
+  bash-completion \
+  build-essential \
+  cmake \
+  gdb \
+  git \
+  pylint3 \
+  python3-argcomplete \
+  python3-colcon-common-extensions \
+  python3-pip \
+  python3-rosdep \
+  python3-vcstool \
+  vim \
+  wget \
+  # Install ros distro testing packages
+  ros-dashing-ament-lint \
+  ros-dashing-launch-testing \
+  ros-dashing-launch-testing-ament-cmake \
+  ros-dashing-launch-testing-ros \
+  python-autopep8 \
+  && rm -rf /var/lib/apt/lists/* \
+  && rosdep init || echo "rosdep already initialized"
 
 ARG USERNAME=ros
 ARG USER_UID=1000
@@ -76,7 +103,7 @@ FROM dev AS full
 ENV DEBIAN_FRONTEND=noninteractive
 # Install the full release
 RUN apt-get update && apt-get install -y \
-  ros-${ROS_DISTRO}-desktop \
+  ros-dashing-desktop \
   && rm -rf /var/lib/apt/lists/*
 ENV DEBIAN_FRONTEND=
 
@@ -88,6 +115,6 @@ FROM full AS gazebo
 ENV DEBIAN_FRONTEND=noninteractive
 # Install gazebo
 RUN apt-get update && apt-get install -y \
-  ros-${ROS_DISTRO}-gazebo* \
+  ros-dashing-gazebo* \
   && rm -rf /var/lib/apt/lists/*
 ENV DEBIAN_FRONTEND=

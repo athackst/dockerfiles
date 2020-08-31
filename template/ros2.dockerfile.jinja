@@ -8,21 +8,29 @@
 FROM ubuntu:{{ ubuntu_distro }} AS base
 
 ENV DEBIAN_FRONTEND=noninteractive
-ENV ROS_DISTRO={{ ros_distro }}
 
 {% include 'snippits/language.jinja' %}
 
 {% include 'snippits/timezone.jinja' %}
 
 # Install ROS2
-COPY install_ros2_base.sh /setup/install_ros2_base.sh
-RUN /setup/install_ros2_base.sh && rm -rf /var/lib/apt/lists/*
+RUN apt-get update && apt-get install -y \
+    curl \
+    gnupg2 \
+    lsb-release \
+  && curl http://repo.ros2.org/repos.key | apt-key add - \
+  && sh -c 'echo "deb [arch=amd64,arm64] http://packages.ros.org/ros2/ubuntu `lsb_release -cs` main" > /etc/apt/sources.list.d/ros2-latest.list' \
+  && apt-get update && apt-get install -y \
+    ros-{{ ros_distro }}-ros-base \
+    python3-argcomplete \
+  && rm -rf /var/lib/apt/lists/*
 
-ENV AMENT_PREFIX_PATH=/opt/ros/${ROS_DISTRO}
-ENV COLCON_PREFIX_PATH=/opt/ros/${ROS_DISTRO}
-ENV LD_LIBRARY_PATH=/opt/ros/${ROS_DISTRO}/lib
-ENV PATH=/opt/ros/${ROS_DISTRO}/bin:$PATH
-ENV PYTHONPATH=/opt/ros/${ROS_DISTRO}/lib/python{{ python_version }}/site-packages
+ENV ROS_DISTRO={{ ros_distro }}
+ENV AMENT_PREFIX_PATH=/opt/ros/{{ ros_distro }}
+ENV COLCON_PREFIX_PATH=/opt/ros/{{ ros_distro }}
+ENV LD_LIBRARY_PATH=/opt/ros/{{ ros_distro }}/lib
+ENV PATH=/opt/ros/{{ ros_distro }}/bin:$PATH
+ENV PYTHONPATH=/opt/ros/{{ ros_distro }}/lib/python{{ python_version }}/site-packages
 ENV ROS_PYTHON_VERSION=3
 ENV ROS_VERSION=2
 ENV DEBIAN_FRONTEND=
@@ -33,9 +41,30 @@ ENV DEBIAN_FRONTEND=
 FROM base AS dev
 
 ENV DEBIAN_FRONTEND=noninteractive
-# Install dev tools
-COPY install_ros2_dev.sh /setup/install_ros2_dev.sh
-RUN /setup/install_ros2_dev.sh 
+RUN apt-get update && apt-get install -y \
+  bash-completion \
+  build-essential \
+  cmake \
+  gdb \
+  git \
+  pylint3 \
+  python3-argcomplete \
+  python3-colcon-common-extensions \
+  python3-pip \
+  python3-rosdep \
+  python3-vcstool \
+  vim \
+  wget \
+  # Install ros distro testing packages
+  ros-{{ ros_distro }}-ament-lint \
+  ros-{{ ros_distro }}-launch-testing \
+  ros-{{ ros_distro }}-launch-testing-ament-cmake \
+  ros-{{ ros_distro }}-launch-testing-ros \
+  {% if ros_distro == "dashing" -%}python-autopep8 \
+  {%- elif ros_distro == "eloquent" -%}python-autopep8 \
+  {%- else %}python3-autopep8 \{% endif %}
+  && rm -rf /var/lib/apt/lists/* \
+  && rosdep init || echo "rosdep already initialized"
 
 {% include 'snippits/ros_user.jinja' %}
 ENV DEBIAN_FRONTEND=
@@ -48,7 +77,7 @@ FROM dev AS full
 ENV DEBIAN_FRONTEND=noninteractive
 # Install the full release
 RUN apt-get update && apt-get install -y \
-  ros-${ROS_DISTRO}-desktop \
+  ros-{{ ros_distro }}-desktop \
   && rm -rf /var/lib/apt/lists/*
 ENV DEBIAN_FRONTEND=
 
@@ -60,6 +89,6 @@ FROM full AS gazebo
 ENV DEBIAN_FRONTEND=noninteractive
 # Install gazebo
 RUN apt-get update && apt-get install -y \
-  ros-${ROS_DISTRO}-gazebo* \
+  ros-{{ ros_distro }}-gazebo* \
   && rm -rf /var/lib/apt/lists/*
 ENV DEBIAN_FRONTEND=
