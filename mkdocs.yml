@@ -1,0 +1,30 @@
+site_name: athackst/dockerfiles
+site_url: https://athackst.github.io/dockerfiles
+
+theme:
+  name: "material"
+  palette:
+    primary: green
+    accent: green
+
+plugins:
+- simple
+- search
+- mkdocstrings:
+    default_handler: python
+    handlers:
+      python:
+        rendering:
+          show_source: true  
+
+extra:
+  social:
+    - icon: fontawesome/brands/twitter
+      link: https://twitter.com/althack
+    - icon: fontawesome/brands/docker
+      link: https://hub.docker.com/u/athackst
+    - icon: fontawesome/regular/laugh
+      link: https://allisonthackston.com
+
+repo_url: https://github.com/athackst/dockerfiles
+edit_uri: ""

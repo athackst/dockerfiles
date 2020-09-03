@@ -10,59 +10,64 @@ import generate as gen
 from datetime import date
 
 TODAY = date.today()
-
-TARGETS = ["base", "dev", "full", "gazebo"]
-
 USER = "athackst"
 
-IMAGES = {
-    "kinetic": {
-        "repository": "ros",
-        "targets": TARGETS
-    },
-    "melodic": {
-        "repository": "ros",
-        "targets": TARGETS
-    },
-    "noetic": {
-        "repository": "ros",
-        "targets": TARGETS
-    },
-    "dashing": {
-        "repository": "ros2",
-        "targets": TARGETS
-    },
-    "eloquent": {
-        "repository": "ros2",
-        "targets": TARGETS
-    },
-    "foxy": {
-        "repository": "ros2",
-        "targets": TARGETS
-    },
-    "gazebo10": {
-        "repository": "gazebo",
-        "targets": ["base", "dev"]
-    },
-    "gazebo11": {
-        "repository": "gazebo",
-        "targets": ["base", "dev"]
-    },
-    "blueprint": {
-        "repository": "ignition",
-        "targets": ["base", "dev"]
-    },
-    "citadel": {
-        "repository": "ignition",
-        "targets": ["base", "dev"]
-    },
-    "pages": {
-        "repository": "github",
-        "targets": ["dev"]
-    },
-}
-
 log = logging.getLogger(__name__)
+
+
+def targets():
+    """List of default targets for the dockerfiles."""
+    return ["base", "dev", "full", "gazebo"]
+
+
+def images():
+    """List of images and build settings."""
+    return {
+        "kinetic": {
+            "repository": "ros",
+            "targets": targets()
+        },
+        "melodic": {
+            "repository": "ros",
+            "targets": targets()
+        },
+        "noetic": {
+            "repository": "ros",
+            "targets": targets()
+        },
+        "dashing": {
+            "repository": "ros2",
+            "targets": targets()
+        },
+        "eloquent": {
+            "repository": "ros2",
+            "targets": targets()
+        },
+        "foxy": {
+            "repository": "ros2",
+            "targets": targets()
+        },
+        "gazebo10": {
+            "repository": "gazebo",
+            "targets": ["base", "dev"]
+        },
+        "gazebo11": {
+            "repository": "gazebo",
+            "targets": ["base", "dev"]
+        },
+        "blueprint": {
+            "repository": "ignition",
+            "targets": ["base", "dev"]
+        },
+        "citadel": {
+            "repository": "ignition",
+            "targets": ["base", "dev"]
+        },
+        "pages": {
+            "repository": "github",
+            "targets": ["dev"]
+        },
+    }
 
 
 class StreamLineBuildGenerator(object):
@@ -217,40 +222,13 @@ class Docker(object):
                     raise SystemError(message)
 
 
-@click.command()
-@click.option("--generate/--no-generate",
-              default=True,
-              help="Generate docker files.")
-@click.option("--push/--no-push",
-              default=False,
-              help="Push generated images to DockerHub.")
-@click.option("--auth/--no-auth",
-              default=False,
-              help="use authorization config from environment")
-@click.option('--verbose', is_flag=True)
-@click.argument("image",
-                type=click.Choice(list(IMAGES) + ['all']))
-def main(generate, push, auth, verbose, image):
+def build(image, push, auth, verbose):
     """Build the docker images."""
-    # Set up logger.
-    log.setLevel(logging.DEBUG)
-    formatter = logging.Formatter('%(message)s')
-    ch = logging.StreamHandler()
-    if verbose:
-        ch.setLevel(logging.DEBUG)
-    else:
-        ch.setLevel(logging.INFO)
-    ch.setFormatter(formatter)
-    log.addHandler(ch)
-
-    if generate:
-        gen.generate(log)
-
-    builds = IMAGES
+    builds = images()
     if image != 'all':
-        builds = {image: IMAGES[image]}
+        builds = {image: images()[image]}
 
-    # Update docker images.
+    # Build docker images.
     dockerpy = Docker()
     path_to_script = os.path.dirname(os.path.abspath(__file__))
     if auth:
@@ -278,6 +256,37 @@ def main(generate, push, auth, verbose, image):
                 dockerpy.push(repository=repository, tag=latest_tag)
                 dockerpy.push(repository=repository, tag=dated_tag)
             dockerpy.prune()
+
+
+@click.command()
+@click.option("--generate/--no-generate",
+              default=True,
+              help="Generate docker files.")
+@click.option("--push/--no-push",
+              default=False,
+              help="Push generated images to DockerHub.")
+@click.option("--auth/--no-auth",
+              default=False,
+              help="use authorization config from environment")
+@click.option('--verbose', is_flag=True)
+@click.argument("image",
+                type=click.Choice(list(images()) + ['all']))
+def main(generate, push, auth, verbose, image):
+    """Set up logging and trigger build."""
+    log.setLevel(logging.DEBUG)
+    formatter = logging.Formatter('%(message)s')
+    ch = logging.StreamHandler()
+    if verbose:
+        ch.setLevel(logging.DEBUG)
+    else:
+        ch.setLevel(logging.INFO)
+    ch.setFormatter(formatter)
+    log.addHandler(ch)
+
+    if generate:
+        gen.generate(log)
+
+    build(image, push, auth, verbose)
 
 
 if __name__ == "__main__":
