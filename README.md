@@ -1,31 +1,56 @@
 # dockerfiles
 
-These are base docker images for developing code.
+These are multi-stage docker images I use for developing with [VSCode](https://code.visualstudio.com/).
 
-You can use them as a base image for development with VSCode using container based development.
+See [how I develop with vscode and docker](https://www.allisonthackston.com/articles/docker_development.html).
+
+Instructions on how to duplicate my IDE:
+
+* [vscode, docker, and ros2](https://www.allisonthackston.com/articles/vscode_docker_ros2.html)
+* [vscode, docker, and github pages](https://www.allisonthackston.com/articles/vscode_docker_ros2.html)
 
 ## Quick start
 
-Create the docker images
+Grab the docker image from [docker hub](https://hub.docker.com/u/athackst).  This repo provides the images in:
+
+* [athackst/ros](https://hub.docker.com/r/athackst/ros)
+* [athackst/ros2](https://hub.docker.com/r/athackst/ros2)
+* [athackst/gazebo](https://hub.docker.com/r/athackst/gazebo)
+* [atahckst/igntion](https://hub.docker.com/r/athackst/ignition)
+* [athackst/github](https://hub.docker.com/r/athackst/github)
+
+Then, set up a [vscode workspace](https://github.com/athackst/vscode_ros2_workspace).
+
+## Build from source
+
+Alternatively, you can build all the docker images directly from source.
 
 ```bash
-./update.py all
+./build.py all
 ```
 
-To see help information on the update script
+Or just build one
 
 ```bash
-./update.py --help
+./build.py foxy
+```
+
+To see help information and build options
+
+```bash
+./build.py --help
 ```
 
 -----
 
-## FAQ
+## Reference
 
-__Q: Why build code inside a docker?__
+### generate.py
 
-> Re-creatable building environment that can be duplicated in Continuous Integration or sent to others to duplicate issues.
+::: generate.templates
 
-__Q: What is needed to set up vscode to work with docker as a development container?__
+### build.py
 
-> You need to create a non-root user with the same user id and group as your user, and you need to mount your .ssh configuration inside the container.
+::: build.targets
+
+::: build.images

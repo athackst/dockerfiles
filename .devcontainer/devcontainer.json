@@ -20,7 +20,8 @@
 	"extensions": [
 		"ms-azuretools.vscode-docker",
 		"ms-python.python",
-		"redhat.vscode-yaml"
+		"redhat.vscode-yaml",
+		"njpwerner.autodocstring"
 	],
 	
 	// Use 'forwardPorts' to make a list of ports inside the container available locally.
