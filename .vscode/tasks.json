@@ -1,0 +1,27 @@
+{
+  // See https://go.microsoft.com/fwlink/?LinkId=733558
+  // for the documentation about the tasks.json format
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "flake8",
+      "type": "shell",
+      "command": "flake8 ."
+    },
+    {
+      "label": "pep257",
+      "type": "shell",
+      "command": "pep257 ."
+    },
+    {
+      "label": "generate",
+      "type": "shell",
+      "command": "./generate.py"
+    },
+    {
+      "label": "build",
+      "type": "shell",
+      "command": "./build.py"
+    }
+  ]
+}
