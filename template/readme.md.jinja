@@ -1,0 +1,23 @@
+# athackst/{{ repo_name }}
+
+These are the docker images I use for developing with [VSCode](https://code.visualstudio.com/).
+See [the docs](https://athackst.github.io/dockerfiles) or read about  [how I develop with vscode and docker](https://www.allisonthackston.com/articles/docker_development.html).
+
+## Usage
+
+```bash
+docker pull athackst/{{ repo_name }}:{{ dockerfiles[0].name }}-{{ images[dockerfiles[0].name].targets | first }}
+```
+
+## Organization
+
+The main docker image tags are:
+{% for file in dockerfiles -%}
+  {% for target in images[file.name].targets %}
+* [{{ file.name }}-{{ target }}](https://github.com/athackst/dockerfiles/blob/main/{{ repo_name }}/{{ file.name }}.Dockerfile)
+  {%- endfor -%}
+{%- endfor %}
+
+Each image is additionally tagged with the date of creation, which lets you peg to a specific version of packages.
+
+The format is {image-name}-{year}-{month}-{day}
