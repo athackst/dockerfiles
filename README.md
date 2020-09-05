@@ -40,17 +40,3 @@ To see help information and build options
 ```bash
 ./build.py --help
 ```
-
------
-
-## Reference
-
-### generate.py
-
-::: generate.templates
-
-### build.py
-
-::: build.targets
-
-::: build.images

@@ -6,68 +6,14 @@ import docker
 import json
 import logging
 import re
-import generate as gen
 from datetime import date
+from settings import images
+from generate import generate as gen
 
 TODAY = date.today()
 USER = "athackst"
 
 log = logging.getLogger(__name__)
-
-
-def targets():
-    """List of default targets for the dockerfiles."""
-    return ["base", "dev", "full", "gazebo"]
-
-
-def images():
-    """List of images and build settings."""
-    return {
-        "kinetic": {
-            "repository": "ros",
-            "targets": targets()
-        },
-        "melodic": {
-            "repository": "ros",
-            "targets": targets()
-        },
-        "noetic": {
-            "repository": "ros",
-            "targets": targets()
-        },
-        "dashing": {
-            "repository": "ros2",
-            "targets": targets()
-        },
-        "eloquent": {
-            "repository": "ros2",
-            "targets": targets()
-        },
-        "foxy": {
-            "repository": "ros2",
-            "targets": targets()
-        },
-        "gazebo10": {
-            "repository": "gazebo",
-            "targets": ["base", "dev"]
-        },
-        "gazebo11": {
-            "repository": "gazebo",
-            "targets": ["base", "dev"]
-        },
-        "blueprint": {
-            "repository": "ignition",
-            "targets": ["base", "dev"]
-        },
-        "citadel": {
-            "repository": "ignition",
-            "targets": ["base", "dev"]
-        },
-        "pages": {
-            "repository": "github",
-            "targets": ["dev"]
-        },
-    }
 
 
 class StreamLineBuildGenerator(object):
@@ -284,7 +230,7 @@ def main(generate, push, auth, verbose, image):
     log.addHandler(ch)
 
     if generate:
-        gen.generate(log)
+        gen(log)
 
     build(image, push, auth, verbose)
 
