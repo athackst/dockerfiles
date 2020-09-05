@@ -43,7 +43,6 @@ jobs:
           ./build.py ${{ matrix.docker_image }} --push --auth --verbose
 
   readme:
-    needs: docker
     runs-on: ubuntu-latest
     name: Push README to Docker Hub
     strategy:
@@ -62,7 +61,7 @@ jobs:
         uses: christian-korneck/update-container-description-action@v1
         env:
           DOCKER_USER: ${{ secrets.DOCKER_USERNAME }}
-          DOCKER_PASS: ${{ secrets.DOCKER_PASSWORD }}
+          DOCKER_PASS: ${{ secrets.DOCKER_RM_PASSWORD }}
         with:
           destination_container_repo: athackst/${{ matrix.docker_repo }}
           provider: dockerhub
