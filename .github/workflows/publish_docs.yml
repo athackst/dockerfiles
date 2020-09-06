@@ -1,4 +1,4 @@
-name: publish-docs
+name: publish_docs
 
 on:
   push:
@@ -23,4 +23,4 @@ jobs:
         env:
           REPO_URL: http://github.com/${{ github.repository }} 
           SITE_NAME: ${{ github.repository }}
-          SITE_URL: http://athackst.github.io/${{github.event.pull_request.head.repo.full_name}}
+          SITE_URL: http://athackst.github.io/${{ github.event.repository.name }}
