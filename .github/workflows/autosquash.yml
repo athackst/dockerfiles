@@ -1,4 +1,4 @@
-name: Autosquash
+name: autosquash
 on:
   check_run:
     types:

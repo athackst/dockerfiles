@@ -1,4 +1,4 @@
-name: bot-jobs
+name: bot_jobs
 on:
   pull_request:
     types: [opened]
