@@ -25,15 +25,13 @@ on:
 jobs:
   autosquash:
     name: Autosquash
-    runs-on: ubuntu-18.04
+    runs-on: ubuntu-latest
     steps:
-      - uses: tibdex/autosquash@v2
-        with:
-          # We can't use the built-in secrets.GITHUB_TOKEN yet because of this limitation:
-          # https://github.community/t5/GitHub-Actions/Triggering-a-new-workflow-from-another-workflow/td-p/31676
-          # In the meantime, use a token granting write access on the repo:
-          # - a GitHub App token
-          #   See https://github.com/marketplace/actions/github-app-token.
-          # - a personal access token
-          #   See https://help.github.com/en/articles/creating-a-personal-access-token-for-the-command-line.
-          github_token: ${{ secrets.WORKFLOW_TOKEN }}
+      - name: automerge
+        uses: "pascalgn/automerge-action@f81beb99aef41bb55ad072857d43073fba833a98"
+        env:
+          GITHUB_TOKEN: "${{ secrets.WORKFLOW_TOKEN }}"
+          MERGE_LABELS: "autosquash,!work in progress"
+          MERGE_REMOVE_LABELS: "autosquash"
+          MERGE_METHOD: "squash"
+          MERGE_COMMIT_MESSAGE: "pull-request-title-and-description"
