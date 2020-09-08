@@ -5,6 +5,11 @@ on:
       # Check runs completing successfully can unblock the
       # corresponding pull requests and make them mergeable.
       - completed
+  check_suite:
+    types:
+      # Check runs completing successfully can unblock the
+      # corresponding pull requests and make them mergeable.
+      - completed
   pull_request:
     types:
       # A closed pull request makes the checks on the other
