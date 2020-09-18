@@ -79,7 +79,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: automerge
-        uses: "pascalgn/automerge-action@4775c532c615e0491d53bc42c0893840ae7cc07a"
+        uses: "pascalgn/automerge-action@a6eda95628e71aa97719c9e111847402fa9d476a"
         env:
           GITHUB_TOKEN: "${{ secrets.WORKFLOW_TOKEN }}"
           MERGE_LABELS: "autosquash,!work in progress"
