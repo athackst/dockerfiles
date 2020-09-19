@@ -19,8 +19,4 @@ jobs:
           rm temp.zip
           cat mkdocs.yml
       - name: MkDocs Simple action
-        uses: athackst/mkdocs-simple-plugin@v0.1.2
-        env:
-          REPO_URL: http://github.com/${{ github.repository }} 
-          SITE_NAME: ${{ github.repository }}
-          SITE_URL: http://athackst.github.io/${{ github.event.repository.name }}
+        uses: athackst/mkdocs-simple-plugin@v0.1.4
