@@ -19,4 +19,4 @@ jobs:
           rm temp.zip
           cat mkdocs.yml
       - name: MkDocs Simple action
-        uses: athackst/mkdocs-simple-plugin@v0.1.4
+        uses: athackst/mkdocs-simple-plugin@v0.1.7
