@@ -1,5 +1,8 @@
 # dockerfiles
 
+![publish_docs](https://github.com/athackst/dockerfiles/workflows/publish_docs/badge.svg)
+![push_dockerfiles](https://github.com/athackst/dockerfiles/workflows/push_dockerfiles/badge.svg)
+
 These are multi-stage docker images I use for developing with [VSCode](https://code.visualstudio.com/).
 
 See [how I develop with vscode and docker](https://www.allisonthackston.com/articles/docker_development.html).
