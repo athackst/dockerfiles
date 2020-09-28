@@ -12,6 +12,5 @@ RUN groupadd --gid $USER_GID $USERNAME \
   && chmod 0440 /etc/sudoers.d/$USERNAME \
   # Cleanup
   && rm -rf /var/lib/apt/lists/* \
-  && echo "source /usr/share/bash-completion/completions/git" >> /home/$USERNAME/.bashrc \
-  && echo "source /opt/ros/${ROS_DISTRO}/setup.bash" >> /home/$USERNAME/.bashrc
+  && echo "source /usr/share/bash-completion/completions/git" >> /home/$USERNAME/.bashrc
 
