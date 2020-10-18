@@ -7,13 +7,52 @@
       "label": "flake8",
       "type": "shell",
       "command": "flake8 .",
-      "problemMatcher": []
+      "problemMatcher": [
+        {
+          "owner": "flake8",
+          "source": "flake8",
+          "pattern": [
+            {
+              "code": 4,
+              "column": 3,
+              "file": 1,
+              "line": 2,
+              "message": 5,
+              "regexp": "^(.+):(\\d+):(\\d+): (\\w\\d+) (.+)$"
+            }
+          ]
+        }
+      ]
     },
     {
       "label": "pep257",
       "type": "shell",
       "command": "pep257 .",
-      "problemMatcher": []
+      "problemMatcher": [
+        {
+          "owner": "pep257",
+          "source": "pep257",
+          "pattern": [
+            {
+              "regexp": "^(.*):(\\d*).*:",
+              "file": 1,
+              "line": 2
+            },
+            {
+              "regexp": "^\\s*(.*): (.*)",
+              "code": 1,
+              "message": 2
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "label": "test",
+      "dependsOn": [
+        "flake8",
+        "pep257"
+      ],
     },
     {
       "label": "generate",

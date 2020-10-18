@@ -116,6 +116,11 @@ class Docker(object):
         """Prune dangling images."""
         self.api_client.prune_images()
 
+    def rmi(self, repository, tag):
+        """Remove image by repository and tag."""
+        image = "{}/{}:{}".format(Docker.REGISTRY, repository, tag)
+        self.api_client.remove_image(image=image)
+
     def _process_output(self, output):
         if isinstance(output, str):
             output = output.split("\n")
@@ -167,7 +172,7 @@ class Docker(object):
                     raise SystemError(message)
 
 
-def build(image, push, auth, verbose):
+def build(image, push, clean, auth, verbose):
     """Build the docker images."""
     builds = images()
     if image != 'all':
@@ -200,7 +205,9 @@ def build(image, push, auth, verbose):
             if push:
                 dockerpy.push(repository=repository, tag=latest_tag)
                 dockerpy.push(repository=repository, tag=dated_tag)
-            dockerpy.prune()
+            if clean:
+                dockerpy.rmi(repository=repository, tag=dated_tag)
+                dockerpy.prune()
 
 
 @click.command()
@@ -212,11 +219,14 @@ def build(image, push, auth, verbose):
               help="Push generated images to DockerHub.")
 @click.option("--auth/--no-auth",
               default=False,
-              help="use authorization config from environment")
+              help="Use authorization config from environment.")
+@click.option("--clean/--no-clean",
+              default=True,
+              help="Clean dated content and old images.")
 @click.option('--verbose', is_flag=True)
 @click.argument("image",
                 type=click.Choice(list(images()) + ['all']))
-def main(generate, push, auth, verbose, image):
+def main(generate, push, clean, auth, verbose, image):
     """Set up logging and trigger build."""
     log.setLevel(logging.DEBUG)
     formatter = logging.Formatter('%(message)s')
@@ -231,7 +241,7 @@ def main(generate, push, auth, verbose, image):
     if generate:
         gen(log)
 
-    build(image, push, auth, verbose)
+    build(image, push, clean, auth, verbose)
 
 
 if __name__ == "__main__":
