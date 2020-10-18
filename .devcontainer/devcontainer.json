@@ -4,18 +4,18 @@
 	"name": "Docker from Docker",
 	"dockerFile": "Dockerfile",
 	"context": "../",
-	"mounts": [ "source=/var/run/docker.sock,target=/var/run/docker-host.sock,type=bind" ],
-
+	"mounts": [
+		"source=/var/run/docker.sock,target=/var/run/docker-host.sock,type=bind",
+		"source=/${env:HOME}/.bash_aliases,target=/home/vscode/.bash_aliases,type=bind,consistency=cached"
+	],
 	// Use this environment variable if you need to bind mount your local source code into a new container.
 	"remoteEnv": {
 		"LOCAL_WORKSPACE_FOLDER": "${localWorkspaceFolder}"
 	},
-
 	// Set *default* container specific settings.json values on container create.
-	"settings": { 
+	"settings": {
 		"terminal.integrated.shell.linux": "/bin/bash"
 	},
-
 	// Add the IDs of extensions you want installed when the container is created.
 	"extensions": [
 		"ms-azuretools.vscode-docker",
@@ -23,13 +23,10 @@
 		"redhat.vscode-yaml",
 		"njpwerner.autodocstring"
 	],
-	
 	// Use 'forwardPorts' to make a list of ports inside the container available locally.
 	// "forwardPorts": [],
-
 	// Use 'postCreateCommand' to run commands after the container is created.
 	// "postCreateCommand": "docker --version",
-
 	// Uncomment the next two lines to connect as a non-root user. See https://aka.ms/vscode-remote/containers/non-root.
 	"overrideCommand": false,
 	"remoteUser": "vscode"
