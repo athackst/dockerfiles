@@ -6,22 +6,53 @@
     {
       "label": "flake8",
       "type": "shell",
-      "command": "flake8 ."
+      "command": "flake8 .",
+      "problemMatcher": []
     },
     {
       "label": "pep257",
       "type": "shell",
-      "command": "pep257 ."
+      "command": "pep257 .",
+      "problemMatcher": []
     },
     {
       "label": "generate",
       "type": "shell",
-      "command": "./generate.py"
+      "command": "./generate.py",
+      "problemMatcher": []
     },
     {
       "label": "build",
       "type": "shell",
-      "command": "./build.py"
+      "command": "./build.py ${input:build_name} --verbose",
+      "problemMatcher": [],
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      }
+    }
+  ],
+  "inputs": [
+    {
+      "id": "build_name",
+      "type": "pickString",
+      "description": "name of the image to build",
+      "options": [
+        "kinetic",
+        "melodic",
+        "noetic",
+        "dashing",
+        "eloquent",
+        "foxy",
+        "gazebo10",
+        "gazebo11",
+        "blueprint",
+        "citadel",
+        "dome",
+        "pages",
+        "all"
+      ],
+      "default": "foxy"
     }
   ]
 }

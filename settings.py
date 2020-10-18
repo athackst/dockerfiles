@@ -50,6 +50,12 @@ def templates():
         ],
         'ignition': [
             {
+                'name': 'dome',
+                'ubuntu_distro': '18.04',
+                'ign_distro': 'dome',
+                'gazebo_version': '3'
+            },
+            {
                 'name': 'citadel',
                 'ubuntu_distro': '18.04',
                 'ign_distro': 'citadel',
@@ -127,6 +133,10 @@ def images():
             "targets": ["base", "dev"]
         },
         "citadel": {
+            "repository": "ignition",
+            "targets": ["base", "dev"]
+        },
+        "dome": {
             "repository": "ignition",
             "targets": ["base", "dev"]
         },

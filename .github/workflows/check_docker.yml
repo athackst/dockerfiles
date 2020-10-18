@@ -59,6 +59,7 @@ jobs:
           - "foxy"
           - "blueprint"
           - "citadel"
+          - "dome"
           - "gazebo10"
           - "gazebo11"
           - "pages"
@@ -86,4 +87,3 @@ jobs:
           MERGE_REMOVE_LABELS: "autosquash"
           MERGE_METHOD: "squash"
           MERGE_COMMIT_MESSAGE: "pull-request-title-and-description"
-

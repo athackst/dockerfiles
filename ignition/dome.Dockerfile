@@ -1,11 +1,11 @@
 ##################################################
-# Created from template gazebo.dockerfile.jinja
+# Created from template ignition.dockerfile.jinja
 ##################################################
 
 ###########################################
 # Base image 
 ###########################################
-FROM ubuntu:20.04 AS base
+FROM ubuntu:18.04 AS base
 
 # Avoid warnings by switching to noninteractive
 ENV DEBIAN_FRONTEND=noninteractive
@@ -26,17 +26,18 @@ RUN ln -fs /usr/share/zoneinfo/UTC /etc/localtime \
   && dpkg-reconfigure --frontend noninteractive tzdata \
   && rm -rf /var/lib/apt/lists/*
 
-# Install gazebo
+# install packages
 RUN apt-get update && apt-get install -q -y \
-    dirmngr \
-    gnupg2 \
-    lsb-release \
-    wget \
+  dirmngr \
+  gnupg2 \
+  lsb-release \
+  wget \
   && sh -c 'echo "deb http://packages.osrfoundation.org/gazebo/ubuntu-stable `lsb_release -cs` main" > /etc/apt/sources.list.d/gazebo-stable.list' \
   && wget http://packages.osrfoundation.org/gazebo.key -O - | apt-key add - \
   && apt-get update && apt-get install -y \
-    gazebo11 \
+    ignition-dome \
   && rm -rf /var/lib/apt/lists/*
+
 
 ###########################################
 # Develop image 
@@ -46,7 +47,9 @@ FROM base AS dev
 ENV DEBIAN_FRONTEND=noninteractive
 # Install dev tools
 RUN apt-get update && apt-get install -y \
-    libgazebo11-dev \
+  libignition-plugin-dev \
+  libignition-cmake2-dev \
+  libignition-gazebo3-dev \
   && rm -rf /var/lib/apt/lists/*
 
 ARG USERNAME=ros

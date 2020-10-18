@@ -37,19 +37,19 @@ RUN apt-get update && apt-get install -y \
   && rm -rf /var/lib/apt/lists/*
 
 # Setup environment
-ENV LD_LIBRARY_PATH=/opt/ros/melodic/lib:$LD_LIBRARY_PATH
+ENV LD_LIBRARY_PATH=/opt/ros/melodic/lib
 ENV ROS_DISTRO=melodic
 ENV ROS_ROOT=/opt/ros/melodic/share/ros
 ENV ROS_PACKAGE_PATH=/opt/ros/melodic/share
 ENV ROS_MASTER_URI=http://localhost:11311
 ENV ROS_PYTHON_VERSION=
 ENV ROS_VERSION=1
-ENV PATH=/opt/ros/melodic/bin:$PATH
+ENV PATH=/opt/ros/melodic/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
 ENV ROSLISP_PACKAGE_DIRECTORIES=
-ENV PYTHONPATH=/opt/ros/melodic/lib/python2.7/dist-packages:$PYTHONPATH
-ENV PKG_CONFIG_PATH=/opt/ros/melodic/lib/pkgconfig:$PKG_CONFIG_PATH
+ENV PYTHONPATH=/opt/ros/melodic/lib/python2.7/dist-packages
+ENV PKG_CONFIG_PATH=/opt/ros/melodic/lib/pkgconfig
 ENV ROS_ETC_DIR=/opt/ros/melodic/etc/ros
-ENV CMAKE_PREFIX_PATH=/opt/ros/melodic:$CMAKE_PREFIX_PATH
+ENV CMAKE_PREFIX_PATH=/opt/ros/melodic
 ENV DEBIAN_FRONTEND=
 
 ###########################################
@@ -65,6 +65,8 @@ RUN apt-get update && apt-get install -y \
     python-rosinstall-generator \
     python-wstool \
     python-pip \
+    python-pep8 \
+    python-autopep8 \
     pylint \
     build-essential \
     bash-completion \
@@ -89,7 +91,6 @@ RUN groupadd --gid $USER_GID $USERNAME \
   && rm -rf /var/lib/apt/lists/* \
   && echo "source /usr/share/bash-completion/completions/git" >> /home/$USERNAME/.bashrc \
   && echo "source /opt/ros/${ROS_DISTRO}/setup.bash" >> /home/$USERNAME/.bashrc
-
 ENV DEBIAN_FRONTEND=
 
 ###########################################

@@ -125,6 +125,7 @@ class Docker(object):
                 errors = set()
                 try:
                     stream_line = StreamLineBuildGenerator(line)
+                    # pylint: disable=no-member
 
                     if hasattr(stream_line, "status"):
                         log.debug(stream_line.status)
@@ -132,9 +133,7 @@ class Docker(object):
                     elif hasattr(stream_line, "stream"):
                         stream = re.sub("^\n", "", stream_line.stream)
                         stream = re.sub("\n$", "", stream)
-                        # found after newline to close (red) "error"
-                        # blocks: 27 91 48
-                        stream = re.sub("\n(\x1B\[0m)$", "\\1", stream)  # noqa: W605, E501
+                        stream = re.sub(r"\n(\x1B\[0m)$", "\\1", stream)
                         if stream:
                             log.debug(stream)
 
@@ -236,4 +235,5 @@ def main(generate, push, auth, verbose, image):
 
 
 if __name__ == "__main__":
+    # pylint: disable=no-value-for-parameter
     main()

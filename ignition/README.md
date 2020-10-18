@@ -6,13 +6,15 @@ See [the docs](https://athackst.github.io/dockerfiles) or read about  [how I dev
 ## Usage
 
 ```bash
-docker pull athackst/ignition:citadel-base
+docker pull athackst/ignition:dome-base
 ```
 
 ## Organization
 
 The main docker image tags are:
 
+* [dome-base](https://github.com/athackst/dockerfiles/blob/main/ignition/dome.Dockerfile)
+* [dome-dev](https://github.com/athackst/dockerfiles/blob/main/ignition/dome.Dockerfile)
 * [citadel-base](https://github.com/athackst/dockerfiles/blob/main/ignition/citadel.Dockerfile)
 * [citadel-dev](https://github.com/athackst/dockerfiles/blob/main/ignition/citadel.Dockerfile)
 * [blueprint-base](https://github.com/athackst/dockerfiles/blob/main/ignition/blueprint.Dockerfile)
