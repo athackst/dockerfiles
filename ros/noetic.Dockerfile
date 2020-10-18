@@ -37,19 +37,19 @@ RUN apt-get update && apt-get install -y \
   && rm -rf /var/lib/apt/lists/*
 
 # Setup environment
-ENV LD_LIBRARY_PATH=/opt/ros/noetic/lib:$LD_LIBRARY_PATH
+ENV LD_LIBRARY_PATH=/opt/ros/noetic/lib
 ENV ROS_DISTRO=noetic
 ENV ROS_ROOT=/opt/ros/noetic/share/ros
 ENV ROS_PACKAGE_PATH=/opt/ros/noetic/share
 ENV ROS_MASTER_URI=http://localhost:11311
 ENV ROS_PYTHON_VERSION=3
 ENV ROS_VERSION=1
-ENV PATH=/opt/ros/noetic/bin:$PATH
+ENV PATH=/opt/ros/noetic/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
 ENV ROSLISP_PACKAGE_DIRECTORIES=
-ENV PYTHONPATH=/opt/ros/noetic/lib/python3/dist-packages:$PYTHONPATH
-ENV PKG_CONFIG_PATH=/opt/ros/noetic/lib/pkgconfig:$PKG_CONFIG_PATH
+ENV PYTHONPATH=/opt/ros/noetic/lib/python3/dist-packages
+ENV PKG_CONFIG_PATH=/opt/ros/noetic/lib/pkgconfig
 ENV ROS_ETC_DIR=/opt/ros/noetic/etc/ros
-ENV CMAKE_PREFIX_PATH=/opt/ros/noetic:$CMAKE_PREFIX_PATH
+ENV CMAKE_PREFIX_PATH=/opt/ros/noetic
 ENV DEBIAN_FRONTEND=
 
 ###########################################
@@ -65,6 +65,8 @@ RUN apt-get update && apt-get install -y \
     python3-rosinstall-generator \
     python3-wstool \
     python3-pip \
+    python3-pep8 \
+    python3-autopep8 \
     pylint3 \
     build-essential \
     bash-completion \
@@ -89,7 +91,6 @@ RUN groupadd --gid $USER_GID $USERNAME \
   && rm -rf /var/lib/apt/lists/* \
   && echo "source /usr/share/bash-completion/completions/git" >> /home/$USERNAME/.bashrc \
   && echo "source /opt/ros/${ROS_DISTRO}/setup.bash" >> /home/$USERNAME/.bashrc
-
 ENV DEBIAN_FRONTEND=
 
 ###########################################
