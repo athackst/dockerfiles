@@ -117,6 +117,7 @@ class Docker(object):
         self.api_client.prune_images()
 
     def rmi(self, repository, tag):
+        """Remove image by repository and tag."""
         image = "{}/{}:{}".format(Docker.REGISTRY, repository, tag)
         self.api_client.remove_image(image=image)
 
@@ -220,7 +221,7 @@ def build(image, push, clean, auth, verbose):
               default=False,
               help="Use authorization config from environment.")
 @click.option("--clean/--no-clean",
-              default=True, 
+              default=True,
               help="Clean dated content and old images.")
 @click.option('--verbose', is_flag=True)
 @click.argument("image",
