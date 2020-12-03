@@ -35,6 +35,8 @@ class Docker(object):
 
     def __init__(self):
         """Initialize docker container from environment."""
+        # 600 timeout increases likelihood that push will be successful.
+        # May need adjustmet.
         self.client = docker.from_env(timeout=600)
         self.api_client = docker.APIClient()
         self.auth_config = None
