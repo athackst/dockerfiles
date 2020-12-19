@@ -3,9 +3,7 @@
 import os
 import click
 import docker
-import json
 import logging
-import re
 from datetime import date
 from settings import images
 from generate import generate as gen
@@ -14,18 +12,6 @@ TODAY = date.today()
 USER = "athackst"
 
 log = logging.getLogger(__name__)
-
-
-class StreamLineBuildGenerator(object):
-    """Generator for docker streams."""
-
-    def __init__(self, json_data):
-        """Initialze with json formatted dictionary.
-
-        Args:
-            json_data: The json dictionary
-        """
-        self.__dict__ = json.loads(json_data)
 
 
 class Docker(object):
@@ -66,7 +52,8 @@ class Docker(object):
                                        target=target,
                                        tag=build_tag,
                                        labels=labels,
-                                       pull=True)
+                                       pull=True,
+                                       decode=True)
         self._process_output(output)
         log.info("Done building {}".format(build_tag))
 
@@ -96,7 +83,8 @@ class Docker(object):
         output = self.api_client.push(repository=remote_repository,
                                       tag=tag,
                                       stream=True,
-                                      auth_config=self.auth_config)
+                                      decode=True,
+                                      auth_config=self.auth_config,)
         self._process_output(output)
 
         log.info("Done pushing {repository}:{tag}".format(
@@ -124,54 +112,44 @@ class Docker(object):
         self.api_client.remove_image(image=image)
 
     def _process_output(self, output):
-        if isinstance(output, str):
-            output = output.split("\n")
-
         for line in output:
-            if line:
-                errors = set()
-                try:
-                    stream_line = StreamLineBuildGenerator(line)
-                    # pylint: disable=no-member
+            errors = set()
+            try:
+                if "status" in line:
+                    log.debug(line["status"].rstrip())
 
-                    if hasattr(stream_line, "status"):
-                        log.debug(stream_line.status)
+                elif "stream" in line:
+                    if line["stream"].rstrip():
+                        log.debug(line["stream"].rstrip())
 
-                    elif hasattr(stream_line, "stream"):
-                        stream = re.sub("^\n", "", stream_line.stream)
-                        stream = re.sub("\n$", "", stream)
-                        stream = re.sub(r"\n(\x1B\[0m)$", "\\1", stream)
-                        if stream:
-                            log.debug(stream)
+                elif "aux" in line:
+                    if "Digest" in line["aux"]:
+                        log.debug("digest: {}".format(
+                            line["aux"]["Digest"].rstrip()))
 
-                    elif hasattr(stream_line, "aux"):
-                        if hasattr(stream_line.aux, "Digest"):
-                            log.debug("digest: {}".format(
-                                stream_line.aux["Digest"]))
+                    if "ID" in line["aux"]:
+                        log.debug("ID: {}".format(line["aux"]["ID"].rstrip()))
 
-                        if hasattr(stream_line.aux, "ID"):
-                            log.debug("ID: {}".format(stream_line.aux["ID"]))
+                else:
+                    log.debug("not recognized (1): {}".format(line))
 
-                    else:
-                        log.debug("not recognized (1): {}".format(line))
+                if "error" in line:
+                    errors.add(line["error"].rstrip())
 
-                    if hasattr(stream_line, "error"):
-                        errors.add(stream_line.error)
+                if "errorDetail" in line:
+                    errors.add(line["errorDetail"]["message"].rstrip())
 
-                    if hasattr(stream_line, "errorDetail"):
-                        errors.add(stream_line.errorDetail["message"])
+                    if hasattr(line.errorDetail, "code"):
+                        error_code = line["errorDetail"]["code"].rstrip()
+                        errors.add("Error code: {}".format(error_code))
 
-                        if hasattr(stream_line.errorDetail, "code"):
-                            error_code = stream_line.errorDetail["code"]
-                            errors.add("Error code: {}".format(error_code))
+            except ValueError:
+                log.error("not recognized (2): {}".format(line))
 
-                except ValueError:
-                    log.error("not recognized (2): {}".format(line))
-
-                if errors:
-                    message = "problem executing Docker: {}".format(
-                        ". ".join(errors))
-                    raise SystemError(message)
+            if errors:
+                message = "problem executing Docker: {}".format(
+                    ". ".join(errors))
+                raise SystemError(message)
 
 
 def build(image, push, clean, auth, verbose):
