@@ -6,7 +6,6 @@
 	"context": "../",
 	"mounts": [
 		"source=/var/run/docker.sock,target=/var/run/docker-host.sock,type=bind",
-		"source=/${env:HOME}/.bash_aliases,target=/home/vscode/.bash_aliases,type=bind,consistency=cached"
 	],
 	// Use this environment variable if you need to bind mount your local source code into a new container.
 	"remoteEnv": {
