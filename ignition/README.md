@@ -15,6 +15,7 @@ The main docker image tags are:
 
 * [dome-base](https://github.com/athackst/dockerfiles/blob/main/ignition/dome.Dockerfile)
 * [dome-dev](https://github.com/athackst/dockerfiles/blob/main/ignition/dome.Dockerfile)
+* [dome-nvidia](https://github.com/athackst/dockerfiles/blob/main/ignition/dome.Dockerfile)
 * [citadel-base](https://github.com/athackst/dockerfiles/blob/main/ignition/citadel.Dockerfile)
 * [citadel-dev](https://github.com/athackst/dockerfiles/blob/main/ignition/citadel.Dockerfile)
 * [blueprint-base](https://github.com/athackst/dockerfiles/blob/main/ignition/blueprint.Dockerfile)

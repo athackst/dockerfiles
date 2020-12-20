@@ -92,3 +92,11 @@ RUN apt-get update && apt-get install -y \
   ros-{{ ros_distro }}-gazebo* \
   && rm -rf /var/lib/apt/lists/*
 ENV DEBIAN_FRONTEND=
+
+###########################################
+#  Full+Gazebo+Nvidia image 
+###########################################
+
+FROM gazebo AS gazebo-nvidia
+
+{% include 'snippits/nvidia.jinja' %}

@@ -137,10 +137,11 @@ class Docker(object):
                     errors.add(line["error"].rstrip())
 
                 if "errorDetail" in line:
-                    errors.add(line["errorDetail"]["message"].rstrip())
+                    if "message" in line["errorDetail"]:
+                        errors.add(line["errorDetail"]["message"].rstrip())
 
-                    if hasattr(line.errorDetail, "code"):
-                        error_code = line["errorDetail"]["code"].rstrip()
+                    if "code" in line["errorDetail"]:
+                        error_code = line["errorDetail"]["code"]
                         errors.add("Error code: {}".format(error_code))
 
             except ValueError:

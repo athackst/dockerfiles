@@ -39,3 +39,11 @@ RUN apt-get update && apt-get install -y \
 
 {% include 'snippits/ros_user.jinja' %}
 ENV DEBIAN_FRONTEND=
+
+###########################################
+#  Full+Gazebo+Nvidia image 
+###########################################
+
+FROM gazebo AS nvidia
+
+{% include 'snippits/nvidia.jinja' %}
