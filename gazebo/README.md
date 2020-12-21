@@ -15,6 +15,7 @@ The main docker image tags are:
 
 * [gazebo11-base](https://github.com/athackst/dockerfiles/blob/main/gazebo/gazebo11.Dockerfile)
 * [gazebo11-dev](https://github.com/athackst/dockerfiles/blob/main/gazebo/gazebo11.Dockerfile)
+* [gazebo11-nvidia](https://github.com/athackst/dockerfiles/blob/main/gazebo/gazebo11.Dockerfile)
 * [gazebo10-base](https://github.com/athackst/dockerfiles/blob/main/gazebo/gazebo10.Dockerfile)
 * [gazebo10-dev](https://github.com/athackst/dockerfiles/blob/main/gazebo/gazebo10.Dockerfile)
 

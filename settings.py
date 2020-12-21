@@ -118,7 +118,7 @@ def images():
         },
         "foxy": {
             "repository": "ros2",
-            "targets": targets()
+            "targets": targets() + ["gazebo-nvidia"]
         },
         "gazebo10": {
             "repository": "gazebo",
@@ -126,7 +126,7 @@ def images():
         },
         "gazebo11": {
             "repository": "gazebo",
-            "targets": ["base", "dev"]
+            "targets": ["base", "dev", "nvidia"]
         },
         "blueprint": {
             "repository": "ignition",
@@ -138,7 +138,7 @@ def images():
         },
         "dome": {
             "repository": "ignition",
-            "targets": ["base", "dev"]
+            "targets": ["base", "dev", "nvidia"]
         },
         "pages": {
             "repository": "github",
