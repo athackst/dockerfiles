@@ -33,7 +33,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: Set up Python
-        uses: actions/setup-python@v2.2.0
+        uses: actions/setup-python@v2.2.1
         with:
           python-version: "3.x"
       - name: Build
