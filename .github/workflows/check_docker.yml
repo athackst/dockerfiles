@@ -75,15 +75,3 @@ jobs:
           python -m pip install --upgrade pip
           if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
           ./build.py ${{ matrix.docker_image }} --verbose
-  ready:
-    needs: docker
-    runs-on: ubuntu-latest
-    steps:
-      - name: automerge
-        uses: "pascalgn/automerge-action@c9bd1823770819dc8fb8a5db2d11a3a95fbe9b07"
-        env:
-          GITHUB_TOKEN: "${{ secrets.WORKFLOW_TOKEN }}"
-          MERGE_LABELS: "autosquash,!work in progress"
-          MERGE_REMOVE_LABELS: "autosquash"
-          MERGE_METHOD: "squash"
-          MERGE_COMMIT_MESSAGE: "pull-request-title-and-description"
