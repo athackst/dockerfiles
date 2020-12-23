@@ -125,6 +125,10 @@ def images():
             "repository": "ros2",
             "targets": targets() + ["gazebo-nvidia"]
         },
+        "gazebo9": {
+            "repository": "gazebo",
+            "targets": ["base", "dev"]
+        },
         "gazebo10": {
             "repository": "gazebo",
             "targets": ["base", "dev"]
