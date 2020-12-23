@@ -18,6 +18,8 @@ The main docker image tags are:
 * [gazebo11-nvidia](https://github.com/athackst/dockerfiles/blob/main/gazebo/gazebo11.Dockerfile)
 * [gazebo10-base](https://github.com/athackst/dockerfiles/blob/main/gazebo/gazebo10.Dockerfile)
 * [gazebo10-dev](https://github.com/athackst/dockerfiles/blob/main/gazebo/gazebo10.Dockerfile)
+* [gazebo9-base](https://github.com/athackst/dockerfiles/blob/main/gazebo/gazebo9.Dockerfile)
+* [gazebo9-dev](https://github.com/athackst/dockerfiles/blob/main/gazebo/gazebo9.Dockerfile)
 
 Each image is additionally tagged with the date of creation, which lets you peg to a specific version of packages.
 

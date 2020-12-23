@@ -1,5 +1,6 @@
 name: Dockerfiles
-
+# Test and push dockerfiles when they change.
+# Test for pull request, push dockerfiles when merged into main.
 on:
   schedule:
     # * is a special character in YAML so you have to quote this string
@@ -10,8 +11,6 @@ on:
     paths:
       - "**.Dockerfile"
   pull_request:
-    branches:
-      - main
   workflow_dispatch:
 
 jobs:
@@ -22,20 +21,6 @@ jobs:
         uses: styfle/cancel-workflow-action@0.6.0
         with:
           access_token: ${{ secrets.GITHUB_TOKEN }}
-  lint:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-      - name: Set up Python
-        uses: actions/setup-python@v2.2.1
-        with:
-          python-version: "3.x"
-      - name: Verify dockerfiles
-        run: |
-          python -m pip install --upgrade pip
-          if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
-          flake8 .
-          pep257 .
 
   generate:
     runs-on: ubuntu-latest
@@ -68,6 +53,7 @@ jobs:
           - "blueprint"
           - "citadel"
           - "dome"
+          - "gazebo9"
           - "gazebo10"
           - "gazebo11"
           - "pages"
@@ -82,6 +68,7 @@ jobs:
           python -m pip install --upgrade pip
           if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
       - name: Build and Push
+        # Build and push if the branch is main
         if: github.ref == 'refs/heads/main'
         env:
           DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
@@ -89,6 +76,7 @@ jobs:
         run: |
           ./build.py ${{ matrix.docker_image }} --push --auth --verbose
       - name: Build only
+        # Build only if the branch isn't main
         if: github.ref != 'refs/heads/main'
         run: |
           ./build.py ${{ matrix.docker_image }} --verbose

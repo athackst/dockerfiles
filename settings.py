@@ -79,6 +79,11 @@ def templates():
                 'ubuntu_distro': '18.04',
                 'gazebo_release': '10'
             },
+            {
+                'name': 'gazebo9',
+                'ubuntu_distro': '18.04',
+                'gazebo_release': '9'
+            },
         ],
         'github': [
             {
@@ -119,6 +124,10 @@ def images():
         "foxy": {
             "repository": "ros2",
             "targets": targets() + ["gazebo-nvidia"]
+        },
+        "gazebo9": {
+            "repository": "gazebo",
+            "targets": ["base", "dev"]
         },
         "gazebo10": {
             "repository": "gazebo",
