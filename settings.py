@@ -79,6 +79,11 @@ def templates():
                 'ubuntu_distro': '18.04',
                 'gazebo_release': '10'
             },
+            {
+                'name': 'gazebo9',
+                'ubuntu_distro': '18.04',
+                'gazebo_release': '9'
+            },
         ],
         'github': [
             {
