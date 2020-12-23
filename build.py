@@ -14,18 +14,49 @@ USER = "athackst"
 log = logging.getLogger(__name__)
 
 
+def auth_config():
+    """Set the authorization config from environment variables.
+
+    Env:
+        username: $DOCKER_USERNAME
+        password: $DOCKER_PASSWORD
+    """
+    if os.getenv('DOCKER_USERNAME') and os.getenv('DOCKER_PASSWORD'):
+        return {
+            "username": os.getenv('DOCKER_USERNAME'),
+            "password": os.getenv('DOCKER_PASSWORD')
+        }
+    return None
+
+
+def docker_push():
+    """Set whether or not to push from environment variables.
+
+    Env:
+        push: $DOCKER_PUSH
+    """
+    return os.getenv('DOCKER_PUSH')
+
+
+def docker_clean():
+    """Set whether or not to clean images from environment variables.
+
+    Env:
+        push: $DOCKER_CLEAN
+    """
+    return os.getenv('DOCKER_CLEAN')
+
+
 class Docker(object):
     """Managed docker class to hide complexity with logging output."""
 
-    REGISTRY = "athackst"
-
-    def __init__(self):
+    def __init__(self, auth_config=None):
         """Initialize docker container from environment."""
         # 600 timeout increases likelihood that push will be successful.
         # May need adjustmet.
         self.client = docker.from_env(timeout=600)
         self.api_client = docker.APIClient()
-        self.auth_config = None
+        self.auth_config = auth_config
 
     def build(self, context, dockerfile, repository, tag, target, labels):
         """Build the specified container.
@@ -38,8 +69,7 @@ class Docker(object):
             target: The target to build in a multi-stage docker
             labels: Extra label to add to the image
         """
-        build_tag = "{registry}/{repository}:{tag}".format(
-            registry=Docker.REGISTRY,
+        build_tag = "{repository}:{tag}".format(
             repository=repository,
             tag=tag)
         log.info("Building {context}{dockerfile} {target} as {tag}".format(
@@ -59,48 +89,34 @@ class Docker(object):
 
     def tag(self, repository, prev_tag, new_tag):
         """Tag a built image."""
-        remote_repository = "{}/{}".format(Docker.REGISTRY, repository)
-        image = "{}:{}".format(remote_repository, prev_tag)
+        image = "{}:{}".format(repository, prev_tag)
         log.info("Taging {image} --> {repository}:{tag}".format(
             image=image,
-            repository=remote_repository,
+            repository=repository,
             tag=new_tag))
         self.api_client.tag(
-            image=image, repository=remote_repository, tag=new_tag)
+            image=image, repository=repository, tag=new_tag)
 
     def push(self, repository, tag):
         """Push a built repository:tag to a registry.
 
-        Format: registry/repository:tag
+        Format: repository:tag
 
         Args:
             repository: The name of the repository.
             tag: The name of the tag.
         """
-        remote_repository = "{}/{}".format(Docker.REGISTRY, repository)
         log.info("Pushing {repository}:{tag}".format(
-            repository=remote_repository, tag=tag))
-        output = self.api_client.push(repository=remote_repository,
+            repository=repository, tag=tag))
+        output = self.api_client.push(repository=repository,
                                       tag=tag,
                                       stream=True,
                                       decode=True,
-                                      auth_config=self.auth_config,)
+                                      auth_config=self.auth_config)
         self._process_output(output)
 
         log.info("Done pushing {repository}:{tag}".format(
-            repository=remote_repository, tag=tag))
-
-    def set_auth_config(self):
-        """Set the authorization config from environment variables.
-
-        Env:
-            username: $DOCKER_USERNAME
-            password: $DOCKER_PASSWORD
-        """
-        self.auth_config = {
-            "username": os.getenv('DOCKER_USERNAME'),
-            "password": os.getenv('DOCKER_PASSWORD')
-        }
+            repository=repository, tag=tag))
 
     def prune(self):
         """Prune dangling images."""
@@ -108,7 +124,7 @@ class Docker(object):
 
     def rmi(self, repository, tag):
         """Remove image by repository and tag."""
-        image = "{}/{}:{}".format(Docker.REGISTRY, repository, tag)
+        image = "{}:{}".format(repository, tag)
         self.api_client.remove_image(image=image)
 
     def _process_output(self, output):
@@ -153,22 +169,20 @@ class Docker(object):
                 raise SystemError(message)
 
 
-def build(image, push, clean, auth, verbose):
+def build(image, push, clean):
     """Build the docker images."""
     builds = images()
     if image != 'all':
         builds = {image: images()[image]}
 
     # Build docker images.
-    dockerpy = Docker()
+    dockerpy = Docker(auth_config())
     path_to_script = os.path.dirname(os.path.abspath(__file__))
-    if auth:
-        dockerpy.set_auth_config()
     for name in builds:
-        repository = builds[name]["repository"]
+        repository = "{}/{}".format(USER, builds[name]["repository"])
         targets = builds[name]["targets"]
-        context = "{path}/{repository}/".format(
-            path=path_to_script, repository=repository)
+        context = "{path}/{folder}/".format(
+            path=path_to_script, folder=builds[name]["repository"])
         dockerfile = "{file}.Dockerfile".format(file=name)
         labels = {"version": "{date}".format(date=TODAY)}
         for target in targets:
@@ -183,10 +197,10 @@ def build(image, push, clean, auth, verbose):
             dockerpy.tag(repository=repository,
                          prev_tag=latest_tag, new_tag=dated_tag)
 
-            if push:
+            if push or docker_push():
                 dockerpy.push(repository=repository, tag=latest_tag)
                 dockerpy.push(repository=repository, tag=dated_tag)
-            if clean:
+            if clean or docker_clean():
                 dockerpy.rmi(repository=repository, tag=dated_tag)
                 dockerpy.prune()
 
@@ -198,31 +212,24 @@ def build(image, push, clean, auth, verbose):
 @click.option("--push/--no-push",
               default=False,
               help="Push generated images to DockerHub.")
-@click.option("--auth/--no-auth",
-              default=False,
-              help="Use authorization config from environment.")
 @click.option("--clean/--no-clean",
               default=True,
               help="Clean dated content and old images.")
-@click.option('--verbose', is_flag=True)
 @click.argument("image",
                 type=click.Choice(list(images()) + ['all']))
-def main(generate, push, clean, auth, verbose, image):
+def main(generate, push, clean, image):
     """Set up logging and trigger build."""
     log.setLevel(logging.DEBUG)
     formatter = logging.Formatter('%(message)s')
     ch = logging.StreamHandler()
-    if verbose:
-        ch.setLevel(logging.DEBUG)
-    else:
-        ch.setLevel(logging.INFO)
+    ch.setLevel(logging.DEBUG)
     ch.setFormatter(formatter)
     log.addHandler(ch)
 
     if generate:
         gen(log)
 
-    build(image, push, clean, auth, verbose)
+    build(image, push, clean)
 
 
 if __name__ == "__main__":
