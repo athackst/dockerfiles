@@ -1,4 +1,4 @@
-name: Dockerfiles
+name: Test
 
 on:
   push:
