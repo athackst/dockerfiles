@@ -67,16 +67,15 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
-      - name: Build and Push
+      - name: Env Setup
         # Build and push if the branch is main
         if: github.ref == 'refs/heads/main'
         env:
           DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
           DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+          DOCKER_PUSH: '1'
         run: |
-          ./build.py ${{ matrix.docker_image }} --push --auth --verbose
-      - name: Build only
-        # Build only if the branch isn't main
-        if: github.ref != 'refs/heads/main'
+          echo "Setup environment for pushing.."
+      - name: Build 
         run: |
-          ./build.py ${{ matrix.docker_image }} --verbose
+          ./build.py ${{ matrix.docker_image }}
