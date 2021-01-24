@@ -38,6 +38,8 @@ RUN apt-get update && apt-get install -y \
   libignition-plugin-dev \
   libignition-cmake2-dev \
   libignition-gazebo{{ gazebo_version }}-dev \
+  git \
+  vim \
   && rm -rf /var/lib/apt/lists/*
 
 {% include 'snippits/ros_user.jinja' %}

@@ -50,6 +50,8 @@ RUN apt-get update && apt-get install -y \
   libignition-plugin-dev \
   libignition-cmake2-dev \
   libignition-gazebo2-dev \
+  git \
+  vim \
   && rm -rf /var/lib/apt/lists/*
 
 ARG USERNAME=ros
@@ -67,7 +69,7 @@ RUN groupadd --gid $USER_GID $USERNAME \
   # Cleanup
   && rm -rf /var/lib/apt/lists/* \
   && echo "source /usr/share/bash-completion/completions/git" >> /home/$USERNAME/.bashrc \
-  && echo "source /opt/ros/${ROS_DISTRO}/setup.bash" >> /home/$USERNAME/.bashrc
+  && echo "if [ -f /opt/ros/${ROS_DISTRO}/setup.bash ]; then source /opt/ros/${ROS_DISTRO}/setup.bash; fi" >> /home/$USERNAME/.bashrc
 ENV DEBIAN_FRONTEND=
 
 ###########################################

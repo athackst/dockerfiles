@@ -63,7 +63,7 @@
     {
       "label": "build",
       "type": "shell",
-      "command": "./build.py ${input:build_name} --verbose",
+      "command": "./build.py ${input:build_name}",
       "problemMatcher": [],
       "group": {
         "kind": "build",
