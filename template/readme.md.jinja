@@ -6,14 +6,14 @@ See [the docs](https://athackst.github.io/dockerfiles) or read about  [how I dev
 ## Usage
 
 ```bash
-docker pull athackst/{{ repo_name }}:{{ dockerfiles[0].name }}-{{ images[dockerfiles[0].name].targets | first }}
+docker pull athackst/{{ repo_name }}:{{ dockerfiles[0].name }}-{{ dockerfiles[0].targets | first }}
 ```
 
 ## Organization
 
 The main docker image tags are:
 {% for file in dockerfiles -%}
-  {% for target in images[file.name].targets %}
+  {% for target in file.targets %}
 * [{{ file.name }}-{{ target }}](https://github.com/athackst/dockerfiles/blob/main/{{ repo_name }}/{{ file.name }}.Dockerfile)
   {%- endfor -%}
 {%- endfor %}

@@ -10,19 +10,15 @@ def templates():
                 'name': 'foxy',
                 'ubuntu_distro': '20.04',
                 'ros_distro': 'foxy',
-                'python_version': '3.8'
-            },
-            {
-                'name': 'eloquent',
-                'ubuntu_distro': '18.04',
-                'ros_distro': 'eloquent',
-                'python_version': '3.6'
+                'python_version': '3.8',
+                'targets': ["base", "dev", "full", "gazebo", "gazebo-nvidia"]
             },
             {
                 'name': 'dashing',
                 'ubuntu_distro': '18.04',
                 'ros_distro': 'dashing',
-                'python_version': '3.6'
+                'python_version': '3.6',
+                'targets': ["base", "dev", "full", "gazebo"]
             },
         ],
         'ros': [
@@ -31,21 +27,24 @@ def templates():
                 'ubuntu_distro': '20.04',
                 'ros_distro': 'noetic',
                 'python_version': '3',
-                'python_env': '3'
+                'python_env': '3',
+                'targets': ["base", "dev", "full", "gazebo"]
             },
             {
                 'name': 'melodic',
                 'ubuntu_distro': '18.04',
                 'ros_distro': 'melodic',
                 'python_version': '2.7',
-                'python_env': ''
+                'python_env': '',
+                'targets': ["base", "dev", "full", "gazebo"]
             },
             {
                 'name': 'kinetic',
                 'ubuntu_distro': '16.04',
                 'ros_distro': 'kinetic',
                 'python_version': '2.7',
-                'python_env': ''
+                'python_env': '',
+                'targets': ["base", "dev", "full", "gazebo"]
             }
         ],
         'ignition': [
@@ -53,104 +52,47 @@ def templates():
                 'name': 'dome',
                 'ubuntu_distro': '18.04',
                 'ign_distro': 'dome',
-                'gazebo_version': '3'
+                'gazebo_version': '3',
+                "targets": ["base", "dev", "nvidia"]
             },
             {
                 'name': 'citadel',
                 'ubuntu_distro': '18.04',
                 'ign_distro': 'citadel',
-                'gazebo_version': '3'
-            },
-            {
-                'name': 'blueprint',
-                'ubuntu_distro': '18.04',
-                'ign_distro': 'blueprint',
-                'gazebo_version': '2'
+                'gazebo_version': '3',
+                "targets": ["base", "dev", "nvidia"]
             },
         ],
         'gazebo': [
             {
                 'name': 'gazebo11',
                 'ubuntu_distro': '20.04',
-                'gazebo_release': '11'
-            },
-            {
-                'name': 'gazebo10',
-                'ubuntu_distro': '18.04',
-                'gazebo_release': '10'
+                'gazebo_release': '11',
+                "targets": ["base", "dev", "nvidia"]
             },
             {
                 'name': 'gazebo9',
                 'ubuntu_distro': '18.04',
-                'gazebo_release': '9'
+                'gazebo_release': '9',
+                "targets": ["base", "dev"]
             },
         ],
         'github': [
             {
-                'name': 'pages'
+                'name': 'pages',
+                "targets": ["dev"]
             }
         ]
     }
 
 
-def targets():
-    """List of default targets for the dockerfiles."""
-    return ["base", "dev", "full", "gazebo"]
-
-
 def images():
-    """List of images and build settings."""
-    return {
-        "kinetic": {
-            "repository": "ros",
-            "targets": targets()
-        },
-        "melodic": {
-            "repository": "ros",
-            "targets": targets()
-        },
-        "noetic": {
-            "repository": "ros",
-            "targets": targets()
-        },
-        "dashing": {
-            "repository": "ros2",
-            "targets": targets()
-        },
-        "eloquent": {
-            "repository": "ros2",
-            "targets": targets()
-        },
-        "foxy": {
-            "repository": "ros2",
-            "targets": targets() + ["gazebo-nvidia"]
-        },
-        "gazebo9": {
-            "repository": "gazebo",
-            "targets": ["base", "dev"]
-        },
-        "gazebo10": {
-            "repository": "gazebo",
-            "targets": ["base", "dev"]
-        },
-        "gazebo11": {
-            "repository": "gazebo",
-            "targets": ["base", "dev", "nvidia"]
-        },
-        "blueprint": {
-            "repository": "ignition",
-            "targets": ["base", "dev"]
-        },
-        "citadel": {
-            "repository": "ignition",
-            "targets": ["base", "dev"]
-        },
-        "dome": {
-            "repository": "ignition",
-            "targets": ["base", "dev", "nvidia"]
-        },
-        "pages": {
-            "repository": "github",
-            "targets": ["dev"]
-        },
-    }
+    """List of images and targets."""
+    image_list = {}
+    for repository in templates():
+        for dockerfile in templates()[repository]:
+            image_list[dockerfile["name"]] = {
+                "repository": repository,
+                "targets": dockerfile["targets"]
+            }
+    return image_list
