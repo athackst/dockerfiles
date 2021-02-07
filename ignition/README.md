@@ -18,8 +18,7 @@ The main docker image tags are:
 * [dome-nvidia](https://github.com/athackst/dockerfiles/blob/main/ignition/dome.Dockerfile)
 * [citadel-base](https://github.com/athackst/dockerfiles/blob/main/ignition/citadel.Dockerfile)
 * [citadel-dev](https://github.com/athackst/dockerfiles/blob/main/ignition/citadel.Dockerfile)
-* [blueprint-base](https://github.com/athackst/dockerfiles/blob/main/ignition/blueprint.Dockerfile)
-* [blueprint-dev](https://github.com/athackst/dockerfiles/blob/main/ignition/blueprint.Dockerfile)
+* [citadel-nvidia](https://github.com/athackst/dockerfiles/blob/main/ignition/citadel.Dockerfile)
 
 Each image is additionally tagged with the date of creation, which lets you peg to a specific version of packages.
 

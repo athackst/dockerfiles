@@ -48,14 +48,11 @@ jobs:
           - "melodic"
           - "noetic"
           - "dashing"
-          - "eloquent"
           - "foxy"
-          - "blueprint"
+          - "gazebo9"
+          - "gazebo11"
           - "citadel"
           - "dome"
-          - "gazebo9"
-          - "gazebo10"
-          - "gazebo11"
           - "pages"
     steps:
       - uses: actions/checkout@v2
