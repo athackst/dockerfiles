@@ -1,5 +1,5 @@
 jinja2==2.11.3
-pylint==2.6.2
+pylint==2.7.0
 autopep8==1.5.5
 flake8==3.8.4
 pep257==0.7.0
