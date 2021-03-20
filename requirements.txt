@@ -5,4 +5,4 @@ flake8==3.9.0
 pep257==0.7.0
 click==7.1.2
 docker==4.4.4
-pydocstyle==5.1.1
+pydocstyle==6.0.0
