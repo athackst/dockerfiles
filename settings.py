@@ -62,6 +62,13 @@ def templates():
                 'gazebo_version': '3',
                 "targets": ["base", "dev", "nvidia"]
             },
+            {
+                'name': 'edifice',
+                'ubuntu_distro': '20.04',
+                'ign_distro': 'edifice',
+                'gazebo_version': '3',
+                "targets": ["base", "dev", "nvidia"]
+            },
         ],
         'gazebo': [
             {
