@@ -19,6 +19,9 @@ The main docker image tags are:
 * [citadel-base](https://github.com/athackst/dockerfiles/blob/main/ignition/citadel.Dockerfile)
 * [citadel-dev](https://github.com/athackst/dockerfiles/blob/main/ignition/citadel.Dockerfile)
 * [citadel-nvidia](https://github.com/athackst/dockerfiles/blob/main/ignition/citadel.Dockerfile)
+* [edifice-base](https://github.com/athackst/dockerfiles/blob/main/ignition/edifice.Dockerfile)
+* [edifice-dev](https://github.com/athackst/dockerfiles/blob/main/ignition/edifice.Dockerfile)
+* [edifice-nvidia](https://github.com/athackst/dockerfiles/blob/main/ignition/edifice.Dockerfile)
 
 Each image is additionally tagged with the date of creation, which lets you peg to a specific version of packages.
 
