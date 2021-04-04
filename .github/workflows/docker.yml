@@ -53,6 +53,7 @@ jobs:
           - "gazebo11"
           - "citadel"
           - "dome"
+          - "edifice"
           - "pages"
     steps:
       - uses: actions/checkout@v2
@@ -64,15 +65,16 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
-      - name: Env Setup
-        # Setup push if the branch is main
-        if: github.ref == 'refs/heads/main'
-        env:
-          DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
-          DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
-          DOCKER_PUSH: '1'
-        run: |
-          echo "Setup environment for pushing.."
+      - name: Login to Docker Hub
+        uses: docker/login-action@v1
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
       - name: Build 
         run: |
           ./build.py ${{ matrix.docker_image }}
+      - name: Push
+        if: github.ref == 'refs/heads/main'
+        run: |
+          ./build.py --push ${{ matrix.docker_image }}
+        
