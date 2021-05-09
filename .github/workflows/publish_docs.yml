@@ -2,7 +2,7 @@ name: publish_docs
 
 on:
   push:
-    branches: 
+    branches:
       - main
   workflow_dispatch:
 
@@ -13,11 +13,6 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
       - name: Setup config
-        run: |
-          wget https://github.com/athackst/athackst.github.io/archive/mkdocs.zip -O temp.zip
-          unzip temp.zip
-          mv athackst.github.io-mkdocs/* .
-          rm temp.zip
-          cat mkdocs.yml
-      - name: MkDocs Simple action
+        uses: athackst/athackst.mkdocs@main
+      - name: Build and push docs to gh-pages
         uses: athackst/mkdocs-simple-plugin@v0.6.0
