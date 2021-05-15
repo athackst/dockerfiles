@@ -3,6 +3,6 @@ pylint==2.8.2
 autopep8==1.5.7
 flake8==3.9.2
 pep257==0.7.0
-click==7.1.2
+click==8.0.0
 docker==5.0.0
 pydocstyle==6.0.0
