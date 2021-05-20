@@ -6,4 +6,4 @@ pep257==0.7.0
 click==8.0.1
 docker==5.0.0
 pydocstyle==6.1.1
-six==1.12.0
+six==1.16.0
