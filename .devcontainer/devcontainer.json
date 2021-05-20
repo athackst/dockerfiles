@@ -1,11 +1,11 @@
 // For format details, see https://aka.ms/devcontainer.json. For config options, see the README at:
-// https://github.com/microsoft/vscode-dev-containers/tree/v0.155.1/containers/docker-from-docker
+// https://github.com/microsoft/vscode-dev-containers/tree/v0.177.0/containers/docker-from-docker
 {
 	"name": "Docker from Docker",
 	"dockerFile": "Dockerfile",
 	"context": "../",
 	"runArgs": ["--init"],
-	"mounts": [ "source=/var/run/docker.sock,target=/var/run/docker-host.sock,type=bind"],
+	"mounts": [ "source=/var/run/docker.sock,target=/var/run/docker-host.sock,type=bind" ],
 	"overrideCommand": false,
 	
 	// Use this environment variable if you need to bind mount your local source code into a new container.
