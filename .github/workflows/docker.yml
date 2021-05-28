@@ -49,6 +49,7 @@ jobs:
           - "noetic"
           - "dashing"
           - "foxy"
+          - "galactic"
           - "gazebo9"
           - "gazebo11"
           - "citadel"
