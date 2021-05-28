@@ -7,6 +7,13 @@ def templates():
     return {
         'ros2': [
             {
+                'name': 'galactic',
+                'ubuntu_distro': '20.04',
+                'ros_distro': 'galactic',
+                'python_version': '3.8',
+                'targets': ["base", "dev", "full", "gazebo", "gazebo-nvidia"]
+            },
+            {
                 'name': 'foxy',
                 'ubuntu_distro': '20.04',
                 'ros_distro': 'foxy',
