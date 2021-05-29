@@ -10,6 +10,7 @@ on:
       - main
     paths:
       - "**.Dockerfile"
+      - ".github/workflows/docker.yml"
   pull_request:
   workflow_dispatch:
 
