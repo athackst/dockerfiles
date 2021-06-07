@@ -14,13 +14,13 @@ Instructions on how to duplicate my IDE:
 
 ## Quick start
 
-Grab the docker image from [docker hub](https://hub.docker.com/u/athackst).  This repo provides the images in:
+Grab the docker image from [docker hub](https://hub.docker.com/u/althack).  This repo provides the images in:
 
-* [athackst/ros](https://hub.docker.com/r/athackst/ros)
-* [athackst/ros2](https://hub.docker.com/r/athackst/ros2)
-* [athackst/gazebo](https://hub.docker.com/r/athackst/gazebo)
-* [atahckst/igntion](https://hub.docker.com/r/athackst/ignition)
-* [athackst/github](https://hub.docker.com/r/athackst/github)
+* [althack/ros](https://hub.docker.com/r/althack/ros)
+* [althack/ros2](https://hub.docker.com/r/althack/ros2)
+* [althack/gazebo](https://hub.docker.com/r/althack/gazebo)
+* [althack/igntion](https://hub.docker.com/r/althack/ignition)
+* [althack/github](https://hub.docker.com/r/althack/github)
 
 Then, set up a [vscode workspace](https://github.com/athackst/vscode_ros2_workspace).
 
