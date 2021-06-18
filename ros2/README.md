@@ -23,10 +23,14 @@ The main docker image tags are:
 * [foxy-full](https://github.com/athackst/dockerfiles/blob/main/ros2/foxy.Dockerfile)
 * [foxy-gazebo](https://github.com/athackst/dockerfiles/blob/main/ros2/foxy.Dockerfile)
 * [foxy-gazebo-nvidia](https://github.com/athackst/dockerfiles/blob/main/ros2/foxy.Dockerfile)
-* [dashing-base](https://github.com/athackst/dockerfiles/blob/main/ros2/dashing.Dockerfile)
-* [dashing-dev](https://github.com/athackst/dockerfiles/blob/main/ros2/dashing.Dockerfile)
-* [dashing-full](https://github.com/athackst/dockerfiles/blob/main/ros2/dashing.Dockerfile)
-* [dashing-gazebo](https://github.com/athackst/dockerfiles/blob/main/ros2/dashing.Dockerfile)
+* [eloquent-base](https://github.com/athackst/dockerfiles/blob/main/ros2/eloquent.Dockerfile) (eol)
+* [eloquent-dev](https://github.com/athackst/dockerfiles/blob/main/ros2/eloquent.Dockerfile) (eol)
+* [eloquent-full](https://github.com/athackst/dockerfiles/blob/main/ros2/eloquent.Dockerfile) (eol)
+* [eloquent-gazebo](https://github.com/athackst/dockerfiles/blob/main/ros2/eloquent.Dockerfile) (eol)
+* [dashing-base](https://github.com/athackst/dockerfiles/blob/main/ros2/dashing.Dockerfile) (eol)
+* [dashing-dev](https://github.com/athackst/dockerfiles/blob/main/ros2/dashing.Dockerfile) (eol)
+* [dashing-full](https://github.com/athackst/dockerfiles/blob/main/ros2/dashing.Dockerfile) (eol)
+* [dashing-gazebo](https://github.com/athackst/dockerfiles/blob/main/ros2/dashing.Dockerfile) (eol)
 
 Each image is additionally tagged with the date of creation, which lets you peg to a specific version of packages.
 

@@ -21,11 +21,20 @@ def templates():
                 'targets': ["base", "dev", "full", "gazebo", "gazebo-nvidia"]
             },
             {
+                'name': 'eloquent',
+                'ubuntu_distro': '18.04',
+                'ros_distro': 'eloquent',
+                'python_version': '3.6',
+                'targets': ["base", "dev", "full", "gazebo"],
+                'eol': True
+            },
+            {
                 'name': 'dashing',
                 'ubuntu_distro': '18.04',
                 'ros_distro': 'dashing',
                 'python_version': '3.6',
-                'targets': ["base", "dev", "full", "gazebo"]
+                'targets': ["base", "dev", "full", "gazebo"],
+                'eol': True
             },
         ],
         'ros': [
@@ -46,12 +55,22 @@ def templates():
                 'targets': ["base", "dev", "full", "gazebo"]
             },
             {
+                'name': 'lunar',
+                'ubuntu_distro': '18.04',
+                'ros_distro': 'lunar',
+                'python_version': '2.7',
+                'python_env': '',
+                'targets': ["base", "dev", "full", "gazebo"],
+                'eol': True
+            },
+            {
                 'name': 'kinetic',
                 'ubuntu_distro': '16.04',
                 'ros_distro': 'kinetic',
                 'python_version': '2.7',
                 'python_env': '',
-                'targets': ["base", "dev", "full", "gazebo"]
+                'targets': ["base", "dev", "full", "gazebo"],
+                'eol': True
             }
         ],
         'ignition': [
@@ -83,6 +102,13 @@ def templates():
                 'ubuntu_distro': '20.04',
                 'gazebo_release': '11',
                 "targets": ["base", "dev", "nvidia"]
+            },
+            {
+                'name': 'gazebo10',
+                'ubuntu_distro': '18.04',
+                'gazebo_release': '10',
+                "targets": ["base", "dev"],
+                'eol': True
             },
             {
                 'name': 'gazebo9',

@@ -1,6 +1,6 @@
-##############################################
-# Created from template ros2.dockerfile.jinja
-##############################################
+#############################################
+# Created from template ros.dockerfile.jinja
+#############################################
 
 ###########################################
 # Base image 
@@ -25,55 +25,55 @@ RUN ln -fs /usr/share/zoneinfo/UTC /etc/localtime \
   && dpkg-reconfigure --frontend noninteractive tzdata \
   && rm -rf /var/lib/apt/lists/*
 
-# Install ROS2
+# Install ROS
 RUN apt-get update && apt-get install -y \
     curl \
+    dirmngr \
     gnupg2 \
     lsb-release \
     sudo \
-  && curl -sSL https://raw.githubusercontent.com/ros/rosdistro/master/ros.key -o /usr/share/keyrings/ros-archive-keyring.gpg \
-  && echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/ros-archive-keyring.gpg] http://packages.ros.org/ros2/ubuntu $(lsb_release -cs) main" | tee /etc/apt/sources.list.d/ros2.list > /dev/null \
+  && sh -c 'echo "deb http://packages.ros.org/ros/ubuntu $(lsb_release -sc) main" > /etc/apt/sources.list.d/ros-latest.list' \
+  && curl -s https://raw.githubusercontent.com/ros/rosdistro/master/ros.asc | apt-key add - \
   && apt-get update && apt-get install -y \
-    ros-eloquent-ros-base \
-    python3-argcomplete \
+    ros-lunar-ros-base \
   && rm -rf /var/lib/apt/lists/*
 
-ENV ROS_DISTRO=eloquent
-ENV AMENT_PREFIX_PATH=/opt/ros/eloquent
-ENV COLCON_PREFIX_PATH=/opt/ros/eloquent
-ENV LD_LIBRARY_PATH=/opt/ros/eloquent/lib
-ENV PATH=/opt/ros/eloquent/bin:$PATH
-ENV PYTHONPATH=/opt/ros/eloquent/lib/python3.6/site-packages
-ENV ROS_PYTHON_VERSION=3
-ENV ROS_VERSION=2
+# Setup environment
+ENV LD_LIBRARY_PATH=/opt/ros/lunar/lib
+ENV ROS_DISTRO=lunar
+ENV ROS_ROOT=/opt/ros/lunar/share/ros
+ENV ROS_PACKAGE_PATH=/opt/ros/lunar/share
+ENV ROS_MASTER_URI=http://localhost:11311
+ENV ROS_PYTHON_VERSION=
+ENV ROS_VERSION=1
+ENV PATH=/opt/ros/lunar/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+ENV ROSLISP_PACKAGE_DIRECTORIES=
+ENV PYTHONPATH=/opt/ros/lunar/lib/python2.7/dist-packages
+ENV PKG_CONFIG_PATH=/opt/ros/lunar/lib/pkgconfig
+ENV ROS_ETC_DIR=/opt/ros/lunar/etc/ros
+ENV CMAKE_PREFIX_PATH=/opt/ros/lunar
 ENV DEBIAN_FRONTEND=
 
 ###########################################
-#  Develop image 
+# Develop image 
 ###########################################
 FROM base AS dev
 
 ENV DEBIAN_FRONTEND=noninteractive
+# Install dev tools
 RUN apt-get update && apt-get install -y \
-  bash-completion \
-  build-essential \
-  cmake \
-  gdb \
-  git \
-  pylint3 \
-  python3-argcomplete \
-  python3-colcon-common-extensions \
-  python3-pip \
-  python3-rosdep \
-  python3-vcstool \
-  vim \
-  wget \
-  # Install ros distro testing packages
-  ros-eloquent-ament-lint \
-  ros-eloquent-launch-testing \
-  ros-eloquent-launch-testing-ament-cmake \
-  ros-eloquent-launch-testing-ros \
-  python-autopep8 \
+    python-rosdep \
+    python-rosinstall \
+    python-rosinstall-generator \
+    python-wstool \
+    python-pip \
+    python-pep8 \
+    python-autopep8 \
+    pylint \
+    build-essential \
+    bash-completion \
+    git \
+    vim \
   && rm -rf /var/lib/apt/lists/* \
   && rosdep init || echo "rosdep already initialized"
 
@@ -96,14 +96,14 @@ RUN groupadd --gid $USER_GID $USERNAME \
 ENV DEBIAN_FRONTEND=
 
 ###########################################
-#  Full image 
+# Full image 
 ###########################################
 FROM dev AS full
 
 ENV DEBIAN_FRONTEND=noninteractive
 # Install the full release
 RUN apt-get update && apt-get install -y \
-  ros-eloquent-desktop \
+  ros-lunar-desktop \
   && rm -rf /var/lib/apt/lists/*
 ENV DEBIAN_FRONTEND=
 
@@ -115,7 +115,7 @@ FROM full AS gazebo
 ENV DEBIAN_FRONTEND=noninteractive
 # Install gazebo
 RUN apt-get update && apt-get install -y \
-  ros-eloquent-gazebo* \
+  ros-lunar-gazebo* \
   && rm -rf /var/lib/apt/lists/*
 ENV DEBIAN_FRONTEND=
 
