@@ -21,10 +21,14 @@ The main docker image tags are:
 * [melodic-dev](https://github.com/athackst/dockerfiles/blob/main/ros/melodic.Dockerfile)
 * [melodic-full](https://github.com/athackst/dockerfiles/blob/main/ros/melodic.Dockerfile)
 * [melodic-gazebo](https://github.com/athackst/dockerfiles/blob/main/ros/melodic.Dockerfile)
-* [kinetic-base](https://github.com/athackst/dockerfiles/blob/main/ros/kinetic.Dockerfile)
-* [kinetic-dev](https://github.com/athackst/dockerfiles/blob/main/ros/kinetic.Dockerfile)
-* [kinetic-full](https://github.com/athackst/dockerfiles/blob/main/ros/kinetic.Dockerfile)
-* [kinetic-gazebo](https://github.com/athackst/dockerfiles/blob/main/ros/kinetic.Dockerfile)
+* [lunar-base](https://github.com/athackst/dockerfiles/blob/main/ros/lunar.Dockerfile) (eol)
+* [lunar-dev](https://github.com/athackst/dockerfiles/blob/main/ros/lunar.Dockerfile) (eol)
+* [lunar-full](https://github.com/athackst/dockerfiles/blob/main/ros/lunar.Dockerfile) (eol)
+* [lunar-gazebo](https://github.com/athackst/dockerfiles/blob/main/ros/lunar.Dockerfile) (eol)
+* [kinetic-base](https://github.com/athackst/dockerfiles/blob/main/ros/kinetic.Dockerfile) (eol)
+* [kinetic-dev](https://github.com/athackst/dockerfiles/blob/main/ros/kinetic.Dockerfile) (eol)
+* [kinetic-full](https://github.com/athackst/dockerfiles/blob/main/ros/kinetic.Dockerfile) (eol)
+* [kinetic-gazebo](https://github.com/athackst/dockerfiles/blob/main/ros/kinetic.Dockerfile) (eol)
 
 Each image is additionally tagged with the date of creation, which lets you peg to a specific version of packages.
 
