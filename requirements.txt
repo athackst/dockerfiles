@@ -4,6 +4,6 @@ autopep8==1.5.7
 flake8==3.9.2
 pep257==0.7.0
 click==8.0.1
-docker==5.0.0
+docker==5.0.1
 pydocstyle==6.1.1
 six==1.16.0
