@@ -1,4 +1,4 @@
-jinja2==3.0.1
+jinja2==3.0.2
 pylint==2.11.1
 autopep8==1.5.7
 flake8==3.9.2
