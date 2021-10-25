@@ -1,6 +1,6 @@
 jinja2==3.0.2
 pylint==2.11.1
-autopep8==1.5.7
+autopep8==1.6.0
 flake8==4.0.1
 pep257==0.7.0
 click==8.0.3
