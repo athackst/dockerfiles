@@ -1,6 +1,6 @@
 FROM jekyll/jekyll:pages AS dev
 
-RUN apk update && apk add \
+RUN apk update && apk add --no-cache \
     # development packages
     ruby-dev \
     gcc \
@@ -20,7 +20,7 @@ RUN apk update && apk add \
     sudo \
     # tab completion inside the container
     git-bash-completion \
-    && rm -rf /var/lib/apt/lists/*
+    shadow
 
 # Set up development user.
 ARG USERNAME=jekyll
