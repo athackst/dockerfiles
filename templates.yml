@@ -116,6 +116,15 @@ gazebo:
     ubuntu_distro: "18.04"
 ignition:
   - 
+    name: fortress
+    ign_distro: fortress
+    targets:
+      - base
+      - dev
+      - nvidia
+    gazebo_version: "3"
+    ubuntu_distro: "20.04"
+  - 
     name: edifice
     ign_distro: edifice
     targets:
