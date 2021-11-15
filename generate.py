@@ -1,13 +1,46 @@
 #!/usr/bin/env python3
 """Generate the dockerfiles from a jinja template."""
-from jinja2 import Environment, FileSystemLoader
-from settings import templates
+import ruamel.yaml
+import json
 import logging
+from jinja2 import Environment, FileSystemLoader
+
 
 log = logging.getLogger(__name__)
+json_parser = json
+yaml = ruamel.yaml.YAML()
+with open('templates.yml', 'r') as file:
+    settings = yaml.load(file)
 
 
-def generate(log):
+def templates():
+    """Return all of the templates and settings."""
+    return settings
+
+
+def images():
+    """List of images and targets."""
+    image_list = {}
+    for repository in templates():
+        for dockerfile in templates()[repository]:
+            image_list[dockerfile["name"]] = {
+                "repository": repository,
+                "targets": dockerfile["targets"]
+            }
+    return image_list
+
+
+def workflow_names():
+    """List workflow docker images that are not eol."""
+    image_list = []
+    for repository in templates():
+        for dockerfile in templates()[repository]:
+            if "eol" not in dockerfile.keys():
+                image_list.append(dockerfile["name"])
+    return image_list
+
+
+def generate_dockerfiles(log):
     """Generate the dockerfiles for this repo."""
     file_loader = FileSystemLoader('template')
     env = Environment(loader=file_loader)
@@ -37,6 +70,34 @@ def generate(log):
         readme_out.close()
 
 
+def generate_workflow(log):
+    """Generate workflow with non-eol images."""
+    log.info("Generating workflow file.")
+    workflow_file = ".github/workflows/docker.yml"
+    docker_workflow = None
+    with open(workflow_file, 'r') as file:
+        docker_workflow = yaml.load(file)
+        (docker_workflow["jobs"]["docker"]["strategy"]
+         ["matrix"]["docker_image"]) = workflow_names()
+
+    with open(workflow_file, "w") as file:
+        yaml.indent(mapping=2, sequence=4, offset=2)
+        yaml.dump(docker_workflow, file)
+
+
+def generate_tasks(log):
+    """Generate tasks with non-eol images."""
+    log.info("Generating tasks.")
+    tasks_file = ".vscode/tasks.json"
+    with open(tasks_file, 'r') as file:
+        tasks = json_parser.load(file)
+        for input in tasks["inputs"]:
+            if input["id"] == "build_name":
+                input["options"] = workflow_names() + ['all']
+    with open(tasks_file, "w") as file:
+        json_parser.dump(tasks, file, indent=2)
+
+
 if __name__ == "__main__":
     # Set up logger.
     log.setLevel(logging.INFO)
@@ -46,5 +107,7 @@ if __name__ == "__main__":
     ch.setFormatter(formatter)
     log.addHandler(ch)
 
-    generate(log)
+    generate_dockerfiles(log)
+    generate_workflow(log)
+    generate_tasks(log)
     log.info("Finished generating dockerfiles.")

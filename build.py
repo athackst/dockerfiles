@@ -5,8 +5,8 @@ import click
 import docker
 import logging
 from datetime import date
-from settings import images
-from generate import generate as gen
+from generate import images
+from generate import generate_workflow as gen
 
 TODAY = date.today()
 USER = "althack"
