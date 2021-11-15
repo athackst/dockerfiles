@@ -1,5 +1,5 @@
 # Note: You can use any Debian/Ubuntu based image you want. 
-FROM mcr.microsoft.com/vscode/devcontainers/base:0-buster
+FROM mcr.microsoft.com/vscode/devcontainers/base:0-bullseye
 
 # [Option] Install zsh
 ARG INSTALL_ZSH="true"
@@ -7,8 +7,13 @@ ARG INSTALL_ZSH="true"
 ARG UPGRADE_PACKAGES="false"
 # [Option] Enable non-root Docker access in container
 ARG ENABLE_NONROOT_DOCKER="true"
-# [Option] Use the OSS Moby CLI instead of the licensed Docker CLI
+# [Option] Use the OSS Moby Engine instead of the licensed Docker Engine
 ARG USE_MOBY="true"
+# [Option] Engine/CLI Version
+ARG DOCKER_VERSION="latest"
+
+# Enable new "BUILDKIT" mode for Docker CLI
+ENV DOCKER_BUILDKIT=1
 
 # Install needed packages and setup non-root user. Use a separate RUN statement to add your
 # own dependencies. A user of "automatic" attempts to reuse an user ID if one already exists.
@@ -19,7 +24,7 @@ COPY .devcontainer/library-scripts/*.sh /tmp/library-scripts/
 RUN apt-get update \
     && /bin/bash /tmp/library-scripts/common-debian.sh "${INSTALL_ZSH}" "${USERNAME}" "${USER_UID}" "${USER_GID}" "${UPGRADE_PACKAGES}" "true" "true" \
     # Use Docker script from script library to set things up
-    && /bin/bash /tmp/library-scripts/docker-debian.sh "${ENABLE_NONROOT_DOCKER}" "/var/run/docker-host.sock" "/var/run/docker.sock" "${USERNAME}" "${USE_MOBY}" \
+    && /bin/bash /tmp/library-scripts/docker-in-docker-debian.sh "${ENABLE_NONROOT_DOCKER}" "${USERNAME}" "${USE_MOBY}" "${DOCKER_VERSION}" \
     # Clean up
     && apt-get autoremove -y && apt-get clean -y && rm -rf /var/lib/apt/lists/* /tmp/library-scripts/
 
@@ -35,8 +40,10 @@ RUN echo ". /usr/share/bash-completion/completions/git"  >> /home/${USERNAME}/.b
     && wget -O /etc/profile.d/git_aliases.sh https://github.com/athackst/workstation_setup/raw/main/user/.aliases/git_aliases.sh \
     && echo "source /etc/profile.d/git_aliases.sh" >> /home/${USERNAME}/.bashrc
 
-# Setting the ENTRYPOINT to docker-init.sh will configure non-root access to 
-# the Docker socket if "overrideCommand": false is set in devcontainer.json. 
+VOLUME [ "/var/lib/docker" ]
+
+# Setting the ENTRYPOINT to docker-init.sh will start up the Docker Engine 
+# inside the container "overrideCommand": false is set in devcontainer.json. 
 # The script will also execute CMD if you need to alter startup behaviors.
 ENTRYPOINT [ "/usr/local/share/docker-init.sh" ]
 CMD [ "sleep", "infinity" ]

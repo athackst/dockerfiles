@@ -1,23 +1,15 @@
 // For format details, see https://aka.ms/devcontainer.json. For config options, see the README at:
-// https://github.com/microsoft/vscode-dev-containers/tree/v0.177.0/containers/docker-from-docker
+// https://github.com/microsoft/vscode-dev-containers/tree/v0.205.2/containers/docker-in-docker
 {
-	"name": "Docker from Docker",
+	"name": "Docker in Docker",
 	"dockerFile": "Dockerfile",
 	"context": "../",
-	"runArgs": ["--init"],
-	"mounts": [ "source=/var/run/docker.sock,target=/var/run/docker-host.sock,type=bind" ],
+	"runArgs": ["--init", "--privileged"],
+	"mounts": ["source=dind-var-lib-docker,target=/var/lib/docker,type=volume"],
 	"overrideCommand": false,
 	
-	// Use this environment variable if you need to bind mount your local source code into a new container.
-	"remoteEnv": {
-		"LOCAL_WORKSPACE_FOLDER": "${localWorkspaceFolder}"
-	},
-
 	// Set *default* container specific settings.json values on container create.
-	"settings": { 
-		"terminal.integrated.shell.linux": "/bin/bash"
-	},
-
+	"settings": {},
 	// Add the IDs of extensions you want installed when the container is created.
 	"extensions": [
 		"ms-azuretools.vscode-docker",
@@ -34,5 +26,9 @@
 	// "postCreateCommand": "docker --version",
 
 	// Comment out connect as root instead. More info: https://aka.ms/vscode-remote/containers/non-root.
-	"remoteUser": "vscode"
+	"remoteUser": "vscode",
+	"features": {
+		"git": "os-provided",
+		"python": "os-provided"
+	}
 }
