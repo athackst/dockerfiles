@@ -7,7 +7,7 @@ docker==5.0.3
 flake8==4.0.1
 idna==3.3
 isort==5.10.1
-Jinja2==3.0.2
+Jinja2==3.0.3
 json-spec==0.10.1
 jsoncomment==0.4.2
 lazy-object-proxy==1.6.0
