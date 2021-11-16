@@ -4,13 +4,13 @@ name: Dockerfiles
 on:
   schedule:
     # * is a special character in YAML so you have to quote this string
-    - cron: "0 0 1 * *"
+    - cron: 0 0 1 * *
   push:
     branches:
       - main
     paths:
-      - "**.Dockerfile"
-      - ".github/workflows/docker.yml"
+      - '**.Dockerfile'
+      - .github/workflows/docker.yml
   pull_request:
   workflow_dispatch:
 
@@ -30,7 +30,7 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v2.2.2
         with:
-          python-version: "3.x"
+          python-version: 3.x
       - name: Verify dockerfiles
         run: |
           python -m pip install --upgrade pip
@@ -45,29 +45,27 @@ jobs:
       fail-fast: false
       matrix:
         docker_image:
-          - "kinetic"
-          - "melodic"
-          - "noetic"
-          - "dashing"
-          - "foxy"
-          - "galactic"
-          - "gazebo9"
-          - "gazebo11"
-          - "citadel"
-          - "dome"
-          - "edifice"
-          - "pages"
+          - noetic
+          - melodic
+          - galactic
+          - foxy
+          - gazebo11
+          - gazebo9
+          - edifice
+          - dome
+          - citadel
+          - pages
     steps:
       - uses: actions/checkout@v2
       - name: Set up Python
         uses: actions/setup-python@v2.2.2
         with:
-          python-version: "3.x"
+          python-version: 3.x
       - name: Build Setup
         run: |
           python -m pip install --upgrade pip
           if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
-      - name: Build 
+      - name: Build
         run: |
           ./build.py ${{ matrix.docker_image }}
       - name: Push
@@ -77,4 +75,3 @@ jobs:
           DOCKER_PASSWORD: ${{ secrets.DOCKERHUB_PASSWORD }}
         run: |
           ./build.py --push ${{ matrix.docker_image }}
-        

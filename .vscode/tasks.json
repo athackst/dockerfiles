@@ -1,6 +1,4 @@
 {
-  // See https://go.microsoft.com/fwlink/?LinkId=733558
-  // for the documentation about the tasks.json format
   "version": "2.0.0",
   "tasks": [
     {
@@ -52,7 +50,7 @@
       "dependsOn": [
         "flake8",
         "pep257"
-      ],
+      ]
     },
     {
       "label": "generate",
@@ -69,6 +67,18 @@
         "kind": "build",
         "isDefault": true
       }
+    },
+    {
+      "label": "upgrade",
+      "type": "shell",
+      "command": "for i in $(pip list -o | awk 'NR > 2 {print $1}'); do pip install -U $i; done && pip freeze > requirements.txt",
+      "problemMatcher": []
+    },
+    {
+      "label": "install",
+      "type": "shell",
+      "command": "pip3 install -r requirements.txt",
+      "problemMatcher": []
     }
   ],
   "inputs": [
@@ -77,18 +87,15 @@
       "type": "pickString",
       "description": "name of the image to build",
       "options": [
-        "kinetic",
-        "melodic",
         "noetic",
-        "dashing",
-        "eloquent",
+        "melodic",
+        "galactic",
         "foxy",
-        "gazebo10",
         "gazebo11",
-        "blueprint",
-        "citadel",
-        "dome",
+        "gazebo9",
         "edifice",
+        "dome",
+        "citadel",
         "pages",
         "all"
       ],

@@ -1,0 +1,9 @@
+autopep8
+click
+docker
+flake8
+jinja2
+pep257
+pydocstyle
+pylint
+ruamel.yaml

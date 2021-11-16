@@ -1,0 +1,149 @@
+ros:
+  - 
+    name: noetic
+    ros_distro: noetic
+    targets:
+      - base
+      - dev
+      - full
+      - gazebo
+    python_env: "3"
+    python_version: "3"
+    ubuntu_distro: "20.04"
+  - 
+    name: melodic
+    ros_distro: melodic
+    targets:
+      - base
+      - dev
+      - full
+      - gazebo
+    python_env: ""
+    python_version: "2.7"
+    ubuntu_distro: "18.04"
+  - 
+    name: lunar
+    ros_distro: lunar
+    targets:
+      - base
+      - dev
+      - full
+      - gazebo
+    python_env: ""
+    python_version: "2.7"
+    ubuntu_distro: "18.04"
+    eol: true
+  - 
+    name: kinetic
+    ros_distro: kinetic
+    targets:
+      - base
+      - dev
+      - full
+      - gazebo
+    python_env: ""
+    python_version: "2.7"
+    ubuntu_distro: "16.04"
+    eol: true
+ros2:
+  - 
+    name: galactic
+    ros_distro: galactic
+    targets:
+      - base
+      - dev
+      - full
+      - gazebo
+      - gazebo-nvidia
+    python_version: "3.8"
+    ubuntu_distro: "20.04"
+  - 
+    name: foxy
+    ros_distro: foxy
+    targets:
+      - base
+      - dev
+      - full
+      - gazebo
+      - gazebo-nvidia
+    python_version: "3.8"
+    ubuntu_distro: "20.04"
+  - 
+    name: eloquent
+    ros_distro: eloquent
+    targets:
+      - base
+      - dev
+      - full
+      - gazebo
+    python_version: "3.6"
+    ubuntu_distro: "18.04"
+    eol: true
+  - 
+    name: dashing
+    ros_distro: dashing
+    targets:
+      - base
+      - dev
+      - full
+      - gazebo
+    ubuntu_distro: "18.04"
+    python_version: "3.6"
+    eol: true
+gazebo:
+  - 
+    name: gazebo11
+    gazebo_release: "11"
+    targets:
+      - base
+      - dev
+      - nvidia
+    ubuntu_distro: "20.04"
+  - 
+    name: gazebo10
+    gazebo_release: "10"
+    targets:
+      - base
+      - dev
+    ubuntu_distro: "18.04"
+    eol: true
+  - 
+    name: gazebo9
+    gazebo_release: "9"
+    targets:
+      - base
+      - dev
+    ubuntu_distro: "18.04"
+ignition:
+  - 
+    name: edifice
+    ign_distro: edifice
+    targets:
+      - base
+      - dev
+      - nvidia
+    gazebo_version: "3"
+    ubuntu_distro: "20.04"
+  - 
+    name: dome
+    ign_distro: dome
+    targets:
+      - base
+      - dev
+      - nvidia
+    gazebo_version: "3"
+    ubuntu_distro: "18.04"
+  - 
+    name: citadel
+    ign_distro: citadel
+    targets:
+      - base
+      - dev
+      - nvidia
+    gazebo_version: "3"
+    ubuntu_distro: "18.04"
+github:
+  - 
+    name: pages
+    targets:
+      - dev
