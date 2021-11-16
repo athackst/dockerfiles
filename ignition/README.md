@@ -6,13 +6,16 @@ See [the docs](https://athackst.github.io/dockerfiles) or read about  [how I dev
 ## Usage
 
 ```bash
-docker pull althack/ignition:edifice-base
+docker pull althack/ignition:fortress-base
 ```
 
 ## Organization
 
 The main docker image tags are:
 
+* [fortress-base](https://github.com/athackst/dockerfiles/blob/main/ignition/fortress.Dockerfile)
+* [fortress-dev](https://github.com/athackst/dockerfiles/blob/main/ignition/fortress.Dockerfile)
+* [fortress-nvidia](https://github.com/athackst/dockerfiles/blob/main/ignition/fortress.Dockerfile)
 * [edifice-base](https://github.com/athackst/dockerfiles/blob/main/ignition/edifice.Dockerfile)
 * [edifice-dev](https://github.com/athackst/dockerfiles/blob/main/ignition/edifice.Dockerfile)
 * [edifice-nvidia](https://github.com/athackst/dockerfiles/blob/main/ignition/edifice.Dockerfile)
