@@ -23,13 +23,13 @@
       ]
     },
     {
-      "label": "pep257",
+      "label": "pydocstyle",
       "type": "shell",
-      "command": "pep257 .",
+      "command": "pydocstyle .",
       "problemMatcher": [
         {
-          "owner": "pep257",
-          "source": "pep257",
+          "owner": "pydocstyle",
+          "source": "pydocstyle",
           "pattern": [
             {
               "regexp": "^(.*):(\\d*).*:",
@@ -49,7 +49,7 @@
       "label": "test",
       "dependsOn": [
         "flake8",
-        "pep257"
+        "pydocstyle"
       ]
     },
     {
