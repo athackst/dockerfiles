@@ -24,7 +24,7 @@ requests==2.26.0
 ruamel.yaml==0.17.17
 ruamel.yaml.clib==0.2.6
 six==1.16.0
-snowballstemmer==2.1.0
+snowballstemmer==2.2.0
 toml==0.10.2
 typing_extensions==4.0.0
 urllib3==1.26.7
