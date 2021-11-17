@@ -28,14 +28,6 @@ jobs:
       - name: Update repo description
         uses: peter-evans/dockerhub-description@v2.4.3
         with:
-          username: ${{ secrets.DOCKER_USERNAME }}
-          password: ${{ secrets.DOCKER_RM_PASSWORD }}
-          repository: athackst/${{ matrix.docker_repo }}
-          readme-filepath: ${{ matrix.docker_repo }}/README.md
-          short-description: "[Deprecated-> use althack/${{ matrix.docker_repo }}]"
-      - name: Update repo description (althack)
-        uses: peter-evans/dockerhub-description@v2.4.3
-        with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_PASSWORD }}
           repository: althack/${{ matrix.docker_repo }}
