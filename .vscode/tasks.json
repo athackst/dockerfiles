@@ -71,7 +71,7 @@
     {
       "label": "upgrade",
       "type": "shell",
-      "command": "for i in $(pip list -o | awk 'NR > 2 {print $1}'); do pip install -U $i; done && pip freeze > requirements.txt",
+      "command": " pip install --upgrade pip; for i in $(pip list -o | awk 'NR > 2 {print $1}'); do pip install -U $i; done && pip freeze > requirements.txt",
       "problemMatcher": []
     },
     {

@@ -102,10 +102,10 @@ if __name__ == "__main__":
     # Set up logger.
     log.setLevel(logging.INFO)
     formatter = logging.Formatter('%(message)s')
-    ch = logging.StreamHandler()
-    ch.setLevel(logging.INFO)
-    ch.setFormatter(formatter)
-    log.addHandler(ch)
+    stream_handler = logging.StreamHandler()
+    stream_handler.setLevel(logging.INFO)
+    stream_handler.setFormatter(formatter)
+    log.addHandler(stream_handler)
 
     generate_dockerfiles(log)
     generate_workflow(log)
