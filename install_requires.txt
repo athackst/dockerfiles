@@ -1,8 +1,5 @@
-autopep8
 click
 docker
 flake8
-jinja2
-pydocstyle
-pylint
+Jinja2
 ruamel.yaml
