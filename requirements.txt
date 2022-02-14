@@ -10,7 +10,7 @@ mccabe==0.6.1
 pycodestyle==2.8.0
 pyflakes==2.4.0
 requests==2.27.1
-ruamel.yaml==0.17.20
+ruamel.yaml==0.17.21
 ruamel.yaml.clib==0.2.6
 urllib3==1.26.8
 websocket-client==1.2.3
