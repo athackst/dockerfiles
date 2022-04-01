@@ -13,7 +13,7 @@ RUN apk update && apk add --no-cache \
     libxml2-dev \
     libgcrypt-dev \
     libxslt-dev \
-    python \
+    python3 \
     # pushing to git via ssh
     openssh \
     # permissions to install packages
@@ -28,6 +28,10 @@ RUN echo $USERNAME ALL=\(root\) NOPASSWD:ALL > /etc/sudoers.d/$USERNAME \
   && chmod 0440 /etc/sudoers.d/$USERNAME \
   && echo "source /usr/share/bash-completion/completions/git" >> /home/$USERNAME/.bashrc \
   && echo -e "if [ -f ~/.bash_aliases ]; then\n    . ~/.bash_aliases\nfi" >> /home/$USERNAME/.bashrc
+
+# Get my aliases
+RUN wget -O /etc/profile.d/git_aliases.sh https://github.com/athackst/workstation_setup/raw/main/user/.aliases/git_aliases.sh \
+    && echo "source /etc/profile.d/git_aliases.sh" >> "/home/jekyll/.bashrc"
 
 EXPOSE 4000
 
