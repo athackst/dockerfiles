@@ -1,4 +1,4 @@
-certifi==2021.10.8
+certifi==2022.5.18
 charset-normalizer==2.0.12
 click==8.1.2
 docker==5.0.3
