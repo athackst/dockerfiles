@@ -5,7 +5,7 @@ import click
 import docker
 import logging
 from datetime import date
-from generate import images
+from generate import templates
 from generate import generate_workflow as gen
 
 TODAY = date.today()
@@ -171,9 +171,9 @@ class Docker(object):
 
 def build(image, push, clean):
     """Build the docker images."""
-    builds = images()
+    builds = templates.images()
     if image != 'all':
-        builds = {image: images()[image]}
+        builds = {image: templates.images()[image]}
 
     # Build docker images.
     dockerpy = Docker(auth_config())
@@ -216,7 +216,7 @@ def build(image, push, clean):
               default=True,
               help="Clean dated content and old images.")
 @click.argument("image",
-                type=click.Choice(list(images()) + ['all']))
+                type=click.Choice(list(templates.images()) + ['all']))
 def main(generate, push, clean, image):
     """Set up logging and trigger build."""
     log.setLevel(logging.DEBUG)
