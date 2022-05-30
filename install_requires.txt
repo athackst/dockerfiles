@@ -1,5 +1,0 @@
-click
-docker
-flake8
-Jinja2
-ruamel.yaml

@@ -29,7 +29,7 @@ RUN apt-get update \
     && apt-get autoremove -y && apt-get clean -y && rm -rf /var/lib/apt/lists/* /tmp/library-scripts/
 
 # Install jinja
-COPY install_requires.txt /setup/requirements.txt
+COPY requirements.txt /setup/requirements.txt
 RUN apt-get update \ 
     && apt-get install -y python3-pip \
     && pip3 install -r /setup/requirements.txt \
