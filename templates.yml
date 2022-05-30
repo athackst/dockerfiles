@@ -151,8 +151,3 @@ ignition:
       - nvidia
     gazebo_version: "3"
     ubuntu_distro: "18.04"
-github:
-  - 
-    name: pages
-    targets:
-      - dev
