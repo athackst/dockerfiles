@@ -5,8 +5,8 @@ on:
     branches:
       - main
     paths:
-      - "**.md"
-      - ".github/workflows/docker_readme.yml"
+      - '**.md'
+      - .github/workflows/docker_readme.yml
   workflow_dispatch:
 
 jobs:
@@ -17,11 +17,10 @@ jobs:
       fail-fast: false
       matrix:
         docker_repo:
-          - "ros"
-          - "ros2"
-          - "gazebo"
-          - "ignition"
-          - "github"
+          - ros
+          - ros2
+          - gazebo
+          - ignition
     steps:
       - name: git checkout
         uses: actions/checkout@v3
@@ -32,4 +31,5 @@ jobs:
           password: ${{ secrets.DOCKERHUB_PASSWORD }}
           repository: althack/${{ matrix.docker_repo }}
           readme-filepath: ${{ matrix.docker_repo }}/README.md
-          short-description: "An assortment of development containers for ${{ matrix.docker_repo }}"
+          short-description: |
+            An assortment of development containers for ${{ matrix.docker_repo }}
