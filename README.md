@@ -10,7 +10,7 @@ See [how I develop with vscode and docker](https://www.allisonthackston.com/arti
 Instructions on how to duplicate my IDE:
 
 * [vscode, docker, and ros2](https://www.allisonthackston.com/articles/vscode_docker_ros2.html)
-* [vscode, docker, and github pages](https://www.allisonthackston.com/articles/vscode_docker_ros2.html)
+* [vscode, docker, and github pages](https://www.allisonthackston.com/articles/vscode_docker_github_pages.html)
 
 ## Quick start
 
