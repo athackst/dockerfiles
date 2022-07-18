@@ -48,12 +48,12 @@ jobs:
         docker_image:
           - noetic
           - melodic
+          - humble
           - galactic
           - foxy
           - gazebo11
           - gazebo9
           - fortress
-          - edifice
           - dome
           - citadel
     steps:

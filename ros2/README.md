@@ -6,13 +6,18 @@ See [the docs](https://athackst.github.io/dockerfiles) or read about  [how I dev
 ## Usage
 
 ```bash
-docker pull althack/ros2:galactic-base
+docker pull althack/ros2:humble-base
 ```
 
 ## Organization
 
 The main docker image tags are:
 
+* [humble-base](https://github.com/athackst/dockerfiles/blob/main/ros2/humble.Dockerfile)
+* [humble-dev](https://github.com/athackst/dockerfiles/blob/main/ros2/humble.Dockerfile)
+* [humble-full](https://github.com/athackst/dockerfiles/blob/main/ros2/humble.Dockerfile)
+* [humble-gazebo](https://github.com/athackst/dockerfiles/blob/main/ros2/humble.Dockerfile)
+* [humble-gazebo-nvidia](https://github.com/athackst/dockerfiles/blob/main/ros2/humble.Dockerfile)
 * [galactic-base](https://github.com/athackst/dockerfiles/blob/main/ros2/galactic.Dockerfile)
 * [galactic-dev](https://github.com/athackst/dockerfiles/blob/main/ros2/galactic.Dockerfile)
 * [galactic-full](https://github.com/athackst/dockerfiles/blob/main/ros2/galactic.Dockerfile)
