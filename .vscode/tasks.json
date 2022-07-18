@@ -89,12 +89,12 @@
       "options": [
         "noetic",
         "melodic",
+        "humble",
         "galactic",
         "foxy",
         "gazebo11",
         "gazebo9",
         "fortress",
-        "edifice",
         "dome",
         "citadel",
         "all"

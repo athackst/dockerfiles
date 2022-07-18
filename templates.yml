@@ -47,6 +47,17 @@ ros:
     eol: true
 ros2:
   - 
+    name: humble
+    ros_distro: humble
+    targets:
+      - base
+      - dev
+      - full
+      - gazebo
+      - gazebo-nvidia
+    python_version: "3.8"
+    ubuntu_distro: "22.04"
+  - 
     name: galactic
     ros_distro: galactic
     targets:
@@ -133,6 +144,7 @@ ignition:
       - nvidia
     gazebo_version: "3"
     ubuntu_distro: "20.04"
+    eol: true
   - 
     name: dome
     ign_distro: dome
