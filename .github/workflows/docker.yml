@@ -41,7 +41,7 @@ jobs:
 
   docker:
     needs: generate
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     strategy:
       fail-fast: false
       matrix:
@@ -49,8 +49,11 @@ jobs:
           - noetic
           - melodic
           - humble
+          - humble-cuda
           - galactic
+          - galactic-cuda
           - foxy
+          - foxy-cuda
           - gazebo11
           - gazebo9
           - fortress

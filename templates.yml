@@ -54,9 +54,20 @@ ros2:
       - dev
       - full
       - gazebo
+    python_version: "3.10"
+    base_image: "ubuntu"
+    image_version: "22.04"
+  - 
+    name: humble-cuda
+    ros_distro: humble
+    targets:
+      - base
+      - dev
+      - full
       - gazebo-nvidia
-    python_version: "3.8"
-    ubuntu_distro: "22.04"
+    python_version: "3.10"
+    base_image: "nvidia/cuda"
+    image_version: "11.7.0-runtime-ubuntu22.04"
   - 
     name: galactic
     ros_distro: galactic
@@ -65,9 +76,20 @@ ros2:
       - dev
       - full
       - gazebo
+    python_version: "3.8"
+    base_image: "ubuntu"
+    image_version: "20.04"
+  -
+    name: galactic-cuda
+    ros_distro: galactic
+    targets:
+      - base
+      - dev
+      - full
       - gazebo-nvidia
     python_version: "3.8"
-    ubuntu_distro: "20.04"
+    base_image: "nvidia/cuda"
+    image_version: "11.7.0-runtime-ubuntu20.04"
   - 
     name: foxy
     ros_distro: foxy
@@ -76,9 +98,20 @@ ros2:
       - dev
       - full
       - gazebo
+    python_version: "3.8"
+    base_image: "ubuntu"
+    image_version: "20.04"
+  - 
+    name: foxy-cuda
+    ros_distro: foxy
+    targets:
+      - base
+      - dev
+      - full
       - gazebo-nvidia
     python_version: "3.8"
-    ubuntu_distro: "20.04"
+    base_image: "nvidia/cuda"
+    image_version: "11.7.0-runtime-ubuntu20.04"
   - 
     name: eloquent
     ros_distro: eloquent
@@ -88,7 +121,8 @@ ros2:
       - full
       - gazebo
     python_version: "3.6"
-    ubuntu_distro: "18.04"
+    base_image: "ubuntu"
+    image_version: "18.04"
     eol: true
   - 
     name: dashing
@@ -98,8 +132,9 @@ ros2:
       - dev
       - full
       - gazebo
-    ubuntu_distro: "18.04"
     python_version: "3.6"
+    base_image: "ubuntu"
+    image_version: "18.04"
     eol: true
 gazebo:
   - 
