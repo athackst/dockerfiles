@@ -60,7 +60,7 @@ RUN apt-get update && apt-get install -y \
   cmake \
   gdb \
   git \
-  pylint3 \
+  pylint \
   python3-argcomplete \
   python3-colcon-common-extensions \
   python3-pip \
