@@ -161,7 +161,9 @@ class Docker(object):
                         errors.add("Error code: {}".format(error_code))
 
             except ValueError:
-                log.error("not recognized (2): {}".format(line))
+                error_msg = "not recognized (2): {}".format(line)
+                log.error(error_msg)
+                errors.add(error_msg)
 
             if errors:
                 message = "problem executing Docker: {}".format(
