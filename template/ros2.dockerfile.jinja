@@ -48,9 +48,7 @@ RUN apt-get update && apt-get install -y \
   cmake \
   gdb \
   git \
-  {% if ros_distro == "humble" -%}
-  pylint \
-  python3-ament-cppcheck \
+  {% if ros_distro == "humble" -%}pylint \
   {%- else %}pylint3 \{% endif %}
   python3-argcomplete \
   python3-colcon-common-extensions \
@@ -75,6 +73,7 @@ RUN apt-get update && apt-get install -y \
 {% include 'snippits/ros_user.jinja' %}
 
 ENV DEBIAN_FRONTEND=
+ENV AMENT_CPPCHECK_ALLOW_SLOW_VERSIONS=1
 
 ###########################################
 #  Full image 
