@@ -61,7 +61,6 @@ RUN apt-get update && apt-get install -y \
   gdb \
   git \
   pylint \
-  python3-ament-cppcheck \
   python3-argcomplete \
   python3-colcon-common-extensions \
   python3-pip \
@@ -98,6 +97,7 @@ RUN groupadd --gid $USER_GID $USERNAME \
   && echo "if [ -f /opt/ros/${ROS_DISTRO}/setup.bash ]; then source /opt/ros/${ROS_DISTRO}/setup.bash; fi" >> /home/$USERNAME/.bashrc
 
 ENV DEBIAN_FRONTEND=
+ENV AMENT_CPPCHECK_ALLOW_SLOW_VERSIONS=1
 
 ###########################################
 #  Full image 
