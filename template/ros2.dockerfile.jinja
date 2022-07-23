@@ -48,7 +48,9 @@ RUN apt-get update && apt-get install -y \
   cmake \
   gdb \
   git \
-  {% if ros_distro == "humble" -%}pylint \
+  {% if ros_distro == "humble" -%}
+  pylint \
+  python3-ament-cppcheck \
   {%- else %}pylint3 \{% endif %}
   python3-argcomplete \
   python3-colcon-common-extensions \
@@ -66,9 +68,12 @@ RUN apt-get update && apt-get install -y \
   {%- elif ros_distro == "eloquent" -%}python-autopep8 \
   {%- else %}python3-autopep8 \{% endif %}
   && rm -rf /var/lib/apt/lists/* \
-  && rosdep init || echo "rosdep already initialized"
+  && rosdep init || echo "rosdep already initialized" \
+  # Update pydocstyle
+  && pip install --upgrade pydocstyle
 
 {% include 'snippits/ros_user.jinja' %}
+
 ENV DEBIAN_FRONTEND=
 
 ###########################################

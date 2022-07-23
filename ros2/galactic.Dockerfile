@@ -75,7 +75,9 @@ RUN apt-get update && apt-get install -y \
   ros-galactic-launch-testing-ros \
   python3-autopep8 \
   && rm -rf /var/lib/apt/lists/* \
-  && rosdep init || echo "rosdep already initialized"
+  && rosdep init || echo "rosdep already initialized" \
+  # Update pydocstyle
+  && pip install --upgrade pydocstyle
 
 ARG USERNAME=ros
 ARG USER_UID=1000
@@ -93,6 +95,7 @@ RUN groupadd --gid $USER_GID $USERNAME \
   && rm -rf /var/lib/apt/lists/* \
   && echo "source /usr/share/bash-completion/completions/git" >> /home/$USERNAME/.bashrc \
   && echo "if [ -f /opt/ros/${ROS_DISTRO}/setup.bash ]; then source /opt/ros/${ROS_DISTRO}/setup.bash; fi" >> /home/$USERNAME/.bashrc
+
 ENV DEBIAN_FRONTEND=
 
 ###########################################
