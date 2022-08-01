@@ -3,5 +3,5 @@ docker==5.0.3
 flake8==4.0.1
 Jinja2==3.1.2
 pycodestyle==2.8.0
-pyflakes==2.4.0
+pyflakes==2.5.0
 ruamel.yaml==0.17.21
