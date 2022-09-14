@@ -168,7 +168,7 @@ ignition:
       - base
       - dev
       - nvidia
-    gazebo_version: "3"
+    gazebo_version: "6"
     ubuntu_distro: "20.04"
   - 
     name: edifice
@@ -177,7 +177,7 @@ ignition:
       - base
       - dev
       - nvidia
-    gazebo_version: "3"
+    gazebo_version: "5"
     ubuntu_distro: "20.04"
     eol: true
   - 
@@ -187,7 +187,7 @@ ignition:
       - base
       - dev
       - nvidia
-    gazebo_version: "3"
+    gazebo_version: "4"
     ubuntu_distro: "18.04"
   - 
     name: citadel

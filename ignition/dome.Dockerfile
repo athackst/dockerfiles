@@ -48,7 +48,7 @@ ENV DEBIAN_FRONTEND=noninteractive
 RUN apt-get update && apt-get install -y \
   libignition-plugin-dev \
   libignition-cmake2-dev \
-  libignition-gazebo3-dev \
+  libignition-gazebo4-dev \
   git \
   vim \
   && rm -rf /var/lib/apt/lists/*
