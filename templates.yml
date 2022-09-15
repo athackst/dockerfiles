@@ -198,3 +198,13 @@ ignition:
       - nvidia
     gazebo_version: "3"
     ubuntu_distro: "18.04"
+gz:
+  - 
+    name: garden
+    gz_distro: garden
+    targets:
+      - base
+      - dev
+      - nvidia
+    gazebo_version: "7"
+    ubuntu_distro: "22.04"
