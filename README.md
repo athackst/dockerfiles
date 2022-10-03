@@ -20,6 +20,7 @@ Grab the docker image from [docker hub](https://hub.docker.com/u/althack).  This
 * [althack/ros2](https://hub.docker.com/r/althack/ros2)
 * [althack/gazebo](https://hub.docker.com/r/althack/gazebo)
 * [althack/igntion](https://hub.docker.com/r/althack/ignition)
+* [althack/gz](https://hub.docker.com/r/althack/gz)
 
 Then, set up a [vscode workspace](https://github.com/athackst/vscode_ros2_workspace).
 
