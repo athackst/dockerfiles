@@ -1,4 +1,4 @@
-name: push_readme
+name: Update Readme
 # Update the readme file for docker images when the description changes and is merged into main.
 on:
   push:
