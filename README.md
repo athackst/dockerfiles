@@ -1,7 +1,7 @@
 # dockerfiles
 
-![publish_docs](https://github.com/athackst/dockerfiles/workflows/publish_docs/badge.svg)
-![push_dockerfiles](https://github.com/athackst/dockerfiles/workflows/push_dockerfiles/badge.svg)
+[![Documentation](https://github.com/athackst/dockerfiles/actions/workflows/publish_docs.yml/badge.svg)](https://github.com/athackst/dockerfiles/actions/workflows/publish_docs.yml)
+[![Dockerfiles](https://github.com/athackst/dockerfiles/actions/workflows/docker.yml/badge.svg)](https://github.com/athackst/dockerfiles/actions/workflows/docker.yml)
 
 These are multi-stage docker images I use for developing with [VSCode](https://code.visualstudio.com/).
 
@@ -11,6 +11,14 @@ Instructions on how to duplicate my IDE:
 
 * [vscode, docker, and ros2](https://www.allisonthackston.com/articles/vscode_docker_ros2.html)
 * [vscode, docker, and github pages](https://www.allisonthackston.com/articles/vscode_docker_github_pages.html)
+
+Images will continue to be supported so long as they haven't reached EOL
+
+* **Ignition/Gazebo** https://gazebosim.org/docs/all/releases
+* **Gazebo (classic)** http://classic.gazebosim.org/#status
+* **ROS** http://wiki.ros.org/Distributions
+* **ROS2** https://docs.ros.org/en/rolling/Releases.html
+
 
 ## Quick start
 
