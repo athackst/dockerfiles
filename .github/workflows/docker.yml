@@ -47,14 +47,11 @@ jobs:
           - melodic
           - humble
           - humble-cuda
-          - galactic
-          - galactic-cuda
           - foxy
           - foxy-cuda
           - gazebo11
           - gazebo9
           - fortress
-          - dome
           - citadel
           - garden
     steps:

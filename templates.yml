@@ -79,6 +79,7 @@ ros2:
     python_version: "3.8"
     base_image: "ubuntu"
     image_version: "20.04"
+    eol: true
   -
     name: galactic-cuda
     ros_distro: galactic
@@ -90,6 +91,7 @@ ros2:
     python_version: "3.8"
     base_image: "nvidia/cuda"
     image_version: "11.7.0-runtime-ubuntu20.04"
+    eol: true
   - 
     name: foxy
     ros_distro: foxy
@@ -189,6 +191,7 @@ ignition:
       - nvidia
     gazebo_version: "4"
     ubuntu_distro: "18.04"
+    eol: true
   - 
     name: citadel
     ign_distro: citadel
