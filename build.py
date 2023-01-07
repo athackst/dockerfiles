@@ -6,7 +6,7 @@ import docker
 import logging
 from datetime import date
 from generate import templates
-from generate import generate_workflow as gen
+from generate import generate_dockerfiles as gen
 
 TODAY = date.today()
 USER = "althack"
@@ -173,7 +173,7 @@ class Docker(object):
 
 def build(image, push, clean):
     """Build the docker images."""
-    builds = templates.images()
+    builds = templates.images(eol=True)
     if image != 'all':
         builds = {image: templates.images()[image]}
 
