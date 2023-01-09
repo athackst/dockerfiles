@@ -13,38 +13,63 @@ docker pull althack/ros2:humble-base
 
 The main docker image tags are:
 
+
+humble
+  
 * [humble-base](https://github.com/athackst/dockerfiles/blob/main/ros2/humble.Dockerfile)
 * [humble-dev](https://github.com/athackst/dockerfiles/blob/main/ros2/humble.Dockerfile)
 * [humble-full](https://github.com/athackst/dockerfiles/blob/main/ros2/humble.Dockerfile)
 * [humble-gazebo](https://github.com/athackst/dockerfiles/blob/main/ros2/humble.Dockerfile)
+
+humble-cuda
+  
 * [humble-cuda-base](https://github.com/athackst/dockerfiles/blob/main/ros2/humble-cuda.Dockerfile)
 * [humble-cuda-dev](https://github.com/athackst/dockerfiles/blob/main/ros2/humble-cuda.Dockerfile)
 * [humble-cuda-full](https://github.com/athackst/dockerfiles/blob/main/ros2/humble-cuda.Dockerfile)
 * [humble-cuda-gazebo-nvidia](https://github.com/athackst/dockerfiles/blob/main/ros2/humble-cuda.Dockerfile)
-* [galactic-base](https://github.com/athackst/dockerfiles/blob/main/ros2/galactic.Dockerfile) (eol)
-* [galactic-dev](https://github.com/athackst/dockerfiles/blob/main/ros2/galactic.Dockerfile) (eol)
-* [galactic-full](https://github.com/athackst/dockerfiles/blob/main/ros2/galactic.Dockerfile) (eol)
-* [galactic-gazebo](https://github.com/athackst/dockerfiles/blob/main/ros2/galactic.Dockerfile) (eol)
-* [galactic-cuda-base](https://github.com/athackst/dockerfiles/blob/main/ros2/galactic-cuda.Dockerfile) (eol)
-* [galactic-cuda-dev](https://github.com/athackst/dockerfiles/blob/main/ros2/galactic-cuda.Dockerfile) (eol)
-* [galactic-cuda-full](https://github.com/athackst/dockerfiles/blob/main/ros2/galactic-cuda.Dockerfile) (eol)
-* [galactic-cuda-gazebo-nvidia](https://github.com/athackst/dockerfiles/blob/main/ros2/galactic-cuda.Dockerfile) (eol)
+
+galactic (eol)
+  
+* [galactic-base](https://github.com/athackst/dockerfiles/blob/main/ros2/galactic.Dockerfile)
+* [galactic-dev](https://github.com/athackst/dockerfiles/blob/main/ros2/galactic.Dockerfile)
+* [galactic-full](https://github.com/athackst/dockerfiles/blob/main/ros2/galactic.Dockerfile)
+* [galactic-gazebo](https://github.com/athackst/dockerfiles/blob/main/ros2/galactic.Dockerfile)
+
+galactic-cuda (eol)
+  
+* [galactic-cuda-base](https://github.com/athackst/dockerfiles/blob/main/ros2/galactic-cuda.Dockerfile)
+* [galactic-cuda-dev](https://github.com/athackst/dockerfiles/blob/main/ros2/galactic-cuda.Dockerfile)
+* [galactic-cuda-full](https://github.com/athackst/dockerfiles/blob/main/ros2/galactic-cuda.Dockerfile)
+* [galactic-cuda-gazebo-nvidia](https://github.com/athackst/dockerfiles/blob/main/ros2/galactic-cuda.Dockerfile)
+
+foxy
+  
 * [foxy-base](https://github.com/athackst/dockerfiles/blob/main/ros2/foxy.Dockerfile)
 * [foxy-dev](https://github.com/athackst/dockerfiles/blob/main/ros2/foxy.Dockerfile)
 * [foxy-full](https://github.com/athackst/dockerfiles/blob/main/ros2/foxy.Dockerfile)
 * [foxy-gazebo](https://github.com/athackst/dockerfiles/blob/main/ros2/foxy.Dockerfile)
+
+foxy-cuda
+  
 * [foxy-cuda-base](https://github.com/athackst/dockerfiles/blob/main/ros2/foxy-cuda.Dockerfile)
 * [foxy-cuda-dev](https://github.com/athackst/dockerfiles/blob/main/ros2/foxy-cuda.Dockerfile)
 * [foxy-cuda-full](https://github.com/athackst/dockerfiles/blob/main/ros2/foxy-cuda.Dockerfile)
 * [foxy-cuda-gazebo-nvidia](https://github.com/athackst/dockerfiles/blob/main/ros2/foxy-cuda.Dockerfile)
-* [eloquent-base](https://github.com/athackst/dockerfiles/blob/main/ros2/eloquent.Dockerfile) (eol)
-* [eloquent-dev](https://github.com/athackst/dockerfiles/blob/main/ros2/eloquent.Dockerfile) (eol)
-* [eloquent-full](https://github.com/athackst/dockerfiles/blob/main/ros2/eloquent.Dockerfile) (eol)
-* [eloquent-gazebo](https://github.com/athackst/dockerfiles/blob/main/ros2/eloquent.Dockerfile) (eol)
-* [dashing-base](https://github.com/athackst/dockerfiles/blob/main/ros2/dashing.Dockerfile) (eol)
-* [dashing-dev](https://github.com/athackst/dockerfiles/blob/main/ros2/dashing.Dockerfile) (eol)
-* [dashing-full](https://github.com/athackst/dockerfiles/blob/main/ros2/dashing.Dockerfile) (eol)
-* [dashing-gazebo](https://github.com/athackst/dockerfiles/blob/main/ros2/dashing.Dockerfile) (eol)
+
+eloquent (eol)
+  
+* [eloquent-base](https://github.com/athackst/dockerfiles/blob/main/ros2/eloquent.Dockerfile)
+* [eloquent-dev](https://github.com/athackst/dockerfiles/blob/main/ros2/eloquent.Dockerfile)
+* [eloquent-full](https://github.com/athackst/dockerfiles/blob/main/ros2/eloquent.Dockerfile)
+* [eloquent-gazebo](https://github.com/athackst/dockerfiles/blob/main/ros2/eloquent.Dockerfile)
+
+dashing (eol)
+  
+* [dashing-base](https://github.com/athackst/dockerfiles/blob/main/ros2/dashing.Dockerfile)
+* [dashing-dev](https://github.com/athackst/dockerfiles/blob/main/ros2/dashing.Dockerfile)
+* [dashing-full](https://github.com/athackst/dockerfiles/blob/main/ros2/dashing.Dockerfile)
+* [dashing-gazebo](https://github.com/athackst/dockerfiles/blob/main/ros2/dashing.Dockerfile)
+
 
 Each image is additionally tagged with the date of creation, which lets you peg to a specific version of packages.
 

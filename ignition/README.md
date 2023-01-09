@@ -13,18 +13,31 @@ docker pull althack/ignition:fortress-base
 
 The main docker image tags are:
 
+
+fortress
+  
 * [fortress-base](https://github.com/athackst/dockerfiles/blob/main/ignition/fortress.Dockerfile)
 * [fortress-dev](https://github.com/athackst/dockerfiles/blob/main/ignition/fortress.Dockerfile)
 * [fortress-nvidia](https://github.com/athackst/dockerfiles/blob/main/ignition/fortress.Dockerfile)
-* [edifice-base](https://github.com/athackst/dockerfiles/blob/main/ignition/edifice.Dockerfile) (eol)
-* [edifice-dev](https://github.com/athackst/dockerfiles/blob/main/ignition/edifice.Dockerfile) (eol)
-* [edifice-nvidia](https://github.com/athackst/dockerfiles/blob/main/ignition/edifice.Dockerfile) (eol)
-* [dome-base](https://github.com/athackst/dockerfiles/blob/main/ignition/dome.Dockerfile) (eol)
-* [dome-dev](https://github.com/athackst/dockerfiles/blob/main/ignition/dome.Dockerfile) (eol)
-* [dome-nvidia](https://github.com/athackst/dockerfiles/blob/main/ignition/dome.Dockerfile) (eol)
+
+edifice (eol)
+  
+* [edifice-base](https://github.com/athackst/dockerfiles/blob/main/ignition/edifice.Dockerfile)
+* [edifice-dev](https://github.com/athackst/dockerfiles/blob/main/ignition/edifice.Dockerfile)
+* [edifice-nvidia](https://github.com/athackst/dockerfiles/blob/main/ignition/edifice.Dockerfile)
+
+dome (eol)
+  
+* [dome-base](https://github.com/athackst/dockerfiles/blob/main/ignition/dome.Dockerfile)
+* [dome-dev](https://github.com/athackst/dockerfiles/blob/main/ignition/dome.Dockerfile)
+* [dome-nvidia](https://github.com/athackst/dockerfiles/blob/main/ignition/dome.Dockerfile)
+
+citadel
+  
 * [citadel-base](https://github.com/athackst/dockerfiles/blob/main/ignition/citadel.Dockerfile)
 * [citadel-dev](https://github.com/athackst/dockerfiles/blob/main/ignition/citadel.Dockerfile)
 * [citadel-nvidia](https://github.com/athackst/dockerfiles/blob/main/ignition/citadel.Dockerfile)
+
 
 Each image is additionally tagged with the date of creation, which lets you peg to a specific version of packages.
 

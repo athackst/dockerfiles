@@ -13,13 +13,23 @@ docker pull althack/gazebo:gazebo11-base
 
 The main docker image tags are:
 
+
+gazebo11
+  
 * [gazebo11-base](https://github.com/athackst/dockerfiles/blob/main/gazebo/gazebo11.Dockerfile)
 * [gazebo11-dev](https://github.com/athackst/dockerfiles/blob/main/gazebo/gazebo11.Dockerfile)
 * [gazebo11-nvidia](https://github.com/athackst/dockerfiles/blob/main/gazebo/gazebo11.Dockerfile)
-* [gazebo10-base](https://github.com/athackst/dockerfiles/blob/main/gazebo/gazebo10.Dockerfile) (eol)
-* [gazebo10-dev](https://github.com/athackst/dockerfiles/blob/main/gazebo/gazebo10.Dockerfile) (eol)
+
+gazebo10 (eol)
+  
+* [gazebo10-base](https://github.com/athackst/dockerfiles/blob/main/gazebo/gazebo10.Dockerfile)
+* [gazebo10-dev](https://github.com/athackst/dockerfiles/blob/main/gazebo/gazebo10.Dockerfile)
+
+gazebo9
+  
 * [gazebo9-base](https://github.com/athackst/dockerfiles/blob/main/gazebo/gazebo9.Dockerfile)
 * [gazebo9-dev](https://github.com/athackst/dockerfiles/blob/main/gazebo/gazebo9.Dockerfile)
+
 
 Each image is additionally tagged with the date of creation, which lets you peg to a specific version of packages.
 
