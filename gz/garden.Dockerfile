@@ -28,29 +28,16 @@ RUN ln -fs /usr/share/zoneinfo/UTC /etc/localtime \
 
 # install packages
 RUN apt-get update && apt-get install -q -y \
-  gnupg \
-  lsb-release \
-  sudo \
-  wget \
+    curl \
+    gnupg \
+    lsb-release \
+    python3-argcomplete \
+    sudo \
+    wget \
   && wget https://packages.osrfoundation.org/gazebo.gpg -O /usr/share/keyrings/pkgs-osrf-archive-keyring.gpg \
   && echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/pkgs-osrf-archive-keyring.gpg] http://packages.osrfoundation.org/gazebo/ubuntu-stable $(lsb_release -cs) main" | tee /etc/apt/sources.list.d/gazebo-stable.list > /dev/null \
   && apt-get update && apt-get install -y -q \
     gz-garden \
-  && rm -rf /var/lib/apt/lists/*
-
-###########################################
-# Develop image 
-###########################################
-FROM base AS dev
-
-ENV DEBIAN_FRONTEND=noninteractive
-# Install dev tools
-RUN apt-get update && apt-get install -y \
-  libgz-plugin-dev \
-  libgz-cmake3-dev \
-  libgz-sim7-dev \
-  git \
-  vim \
   && rm -rf /var/lib/apt/lists/*
 
 ARG USERNAME=ros
@@ -68,12 +55,68 @@ RUN groupadd --gid $USER_GID $USERNAME \
   # Cleanup
   && rm -rf /var/lib/apt/lists/* \
   && echo "if [ -f /opt/ros/${ROS_DISTRO}/setup.bash ]; then source /opt/ros/${ROS_DISTRO}/setup.bash; fi" >> /home/$USERNAME/.bashrc
+
+###########################################
+# Develop image 
+###########################################
+FROM base AS dev
+
+ENV DEBIAN_FRONTEND=noninteractive
+# Install dev tools
+RUN apt-get update && apt-get install -y \
+  python3-pip \
+  wget \
+  lsb-release \
+  gnupg \
+  curl \
+  && sudo sh -c 'echo "deb http://packages.ros.org/ros2/ubuntu $(lsb_release -sc) main" > /etc/apt/sources.list.d/ros2-latest.list' \
+  && curl -s https://raw.githubusercontent.com/ros/rosdistro/master/ros.asc | sudo apt-key add - \
+  && sudo apt-get update \
+  && sudo apt-get install -y python3-vcstool python3-colcon-common-extensions \
+  git \
+  vim \
+  && rm -rf /var/lib/apt/lists/*
+
+WORKDIR /workspaces/gazebo/src
+# Get sources
+RUN wget https://raw.githubusercontent.com/gazebo-tooling/gazebodistro/master/collection-garden.yaml \
+  && vcs import < collection-garden.yaml \
+  # Get dependencies
+  && sudo wget https://packages.osrfoundation.org/gazebo.gpg -O /usr/share/keyrings/pkgs-osrf-archive-keyring.gpg \
+  && echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/pkgs-osrf-archive-keyring.gpg] http://packages.osrfoundation.org/gazebo/ubuntu-stable $(lsb_release -cs) main" | sudo tee /etc/apt/sources.list.d/gazebo-stable.list > /dev/null \
+  && sudo apt-get update \
+  && sudo apt -y install \
+      $(sort -u $(find . -iname 'packages-'`lsb_release -cs`'.apt' -o -iname 'packages.apt' | grep -v '/\.git/') | sed '/gz\|sdf/d' | tr '\n' ' ')
+
 ENV DEBIAN_FRONTEND=
 
 ###########################################
 # Nvidia image 
 ###########################################
-FROM dev AS nvidia
+FROM base AS nvidia
+
+################
+# Expose the nvidia driver to allow opengl 
+# Dependencies for glvnd and X11.
+################
+RUN apt-get update \
+ && apt-get install -y -qq --no-install-recommends \
+  libglvnd0 \
+  libgl1 \
+  libglx0 \
+  libegl1 \
+  libxext6 \
+  libx11-6
+
+# Env vars for the nvidia-container-runtime.
+ENV NVIDIA_VISIBLE_DEVICES all
+ENV NVIDIA_DRIVER_CAPABILITIES graphics,utility,compute
+ENV QT_X11_NO_MITSHM 1
+
+###########################################
+# Nvidia image 
+###########################################
+FROM dev AS nvidia-dev
 
 ################
 # Expose the nvidia driver to allow opengl 
