@@ -28,4 +28,3 @@ jobs:
         run: |
           pip install pydocstyle
           pydocstyle .
-
