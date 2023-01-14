@@ -209,5 +209,6 @@ gz:
       - base
       - dev
       - nvidia
+      - nvidia-dev
     gazebo_version: "7"
     ubuntu_distro: "22.04"
