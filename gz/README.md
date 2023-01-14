@@ -19,6 +19,7 @@ garden
 * [garden-base](https://github.com/athackst/dockerfiles/blob/main/gz/garden.Dockerfile)
 * [garden-dev](https://github.com/athackst/dockerfiles/blob/main/gz/garden.Dockerfile)
 * [garden-nvidia](https://github.com/athackst/dockerfiles/blob/main/gz/garden.Dockerfile)
+* [garden-nvidia-dev](https://github.com/athackst/dockerfiles/blob/main/gz/garden.Dockerfile)
 
 
 Each image is additionally tagged with the date of creation, which lets you peg to a specific version of packages.
