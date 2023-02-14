@@ -13,14 +13,22 @@ ENV DEBIAN_FRONTEND=noninteractive
 
 {% include 'snippits/timezone.jinja' %}
 
-# Install ROS2
-RUN apt-get update && apt-get install -y \
+RUN apt-get update && apt-get -y upgrade \
+    && rm -rf /var/lib/apt/lists/*
+
+# Install common programs
+RUN apt-get update && apt-get install -y --no-install-recommends \
     curl \
     gnupg2 \
     lsb-release \
     sudo \
+    software-properties-common \
+    && rm -rf /var/lib/apt/lists/*
+
+# Install ROS2
+RUN sudo add-apt-repository universe \
   && curl -sSL https://raw.githubusercontent.com/ros/rosdistro/master/ros.key -o /usr/share/keyrings/ros-archive-keyring.gpg \
-  && echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/ros-archive-keyring.gpg] http://packages.ros.org/ros2/ubuntu $(lsb_release -cs) main" | tee /etc/apt/sources.list.d/ros2.list > /dev/null \
+  && echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/ros-archive-keyring.gpg] http://packages.ros.org/ros2/ubuntu $(. /etc/os-release && echo $UBUNTU_CODENAME) main" | sudo tee /etc/apt/sources.list.d/ros2.list > /dev/null \
   && apt-get update && apt-get install -y --no-install-recommends \
     ros-{{ ros_distro }}-ros-base \
     python3-argcomplete \
@@ -48,23 +56,11 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
   cmake \
   gdb \
   git \
-  {% if ros_distro == "humble" -%}pylint \
-  {%- else %}pylint3 \{% endif %}
   python3-argcomplete \
-  python3-colcon-common-extensions \
   python3-pip \
-  python3-rosdep \
-  python3-vcstool \
+  ros-dev-tools \
   vim \
   wget \
-  # Install ros distro testing packages
-  ros-{{ ros_distro }}-ament-lint \
-  ros-{{ ros_distro }}-launch-testing \
-  ros-{{ ros_distro }}-launch-testing-ament-cmake \
-  ros-{{ ros_distro }}-launch-testing-ros \
-  {% if ros_distro == "dashing" -%}python-autopep8 \
-  {%- elif ros_distro == "eloquent" -%}python-autopep8 \
-  {%- else %}python3-autopep8 \{% endif %}
   && rm -rf /var/lib/apt/lists/* \
   && rosdep init || echo "rosdep already initialized" \
   # Update pydocstyle
