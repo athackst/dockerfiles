@@ -25,14 +25,22 @@ RUN ln -fs /usr/share/zoneinfo/UTC /etc/localtime \
   && dpkg-reconfigure --frontend noninteractive tzdata \
   && rm -rf /var/lib/apt/lists/*
 
-# Install ROS2
-RUN apt-get update && apt-get install -y \
+RUN apt-get update && apt-get -y upgrade \
+    && rm -rf /var/lib/apt/lists/*
+
+# Install common programs
+RUN apt-get update && apt-get install -y --no-install-recommends \
     curl \
     gnupg2 \
     lsb-release \
     sudo \
+    software-properties-common \
+    && rm -rf /var/lib/apt/lists/*
+
+# Install ROS2
+RUN sudo add-apt-repository universe \
   && curl -sSL https://raw.githubusercontent.com/ros/rosdistro/master/ros.key -o /usr/share/keyrings/ros-archive-keyring.gpg \
-  && echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/ros-archive-keyring.gpg] http://packages.ros.org/ros2/ubuntu $(lsb_release -cs) main" | tee /etc/apt/sources.list.d/ros2.list > /dev/null \
+  && echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/ros-archive-keyring.gpg] http://packages.ros.org/ros2/ubuntu $(. /etc/os-release && echo $UBUNTU_CODENAME) main" | sudo tee /etc/apt/sources.list.d/ros2.list > /dev/null \
   && apt-get update && apt-get install -y --no-install-recommends \
     ros-foxy-ros-base \
     python3-argcomplete \
@@ -60,20 +68,11 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
   cmake \
   gdb \
   git \
-  pylint3 \
   python3-argcomplete \
-  python3-colcon-common-extensions \
   python3-pip \
-  python3-rosdep \
-  python3-vcstool \
+  ros-dev-tools \
   vim \
   wget \
-  # Install ros distro testing packages
-  ros-foxy-ament-lint \
-  ros-foxy-launch-testing \
-  ros-foxy-launch-testing-ament-cmake \
-  ros-foxy-launch-testing-ros \
-  python3-autopep8 \
   && rm -rf /var/lib/apt/lists/* \
   && rosdep init || echo "rosdep already initialized" \
   # Update pydocstyle
