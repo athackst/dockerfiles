@@ -25,7 +25,7 @@ gazebo10 (eol)
 * [gazebo10-base](https://github.com/athackst/dockerfiles/blob/main/gazebo/gazebo10.Dockerfile)
 * [gazebo10-dev](https://github.com/athackst/dockerfiles/blob/main/gazebo/gazebo10.Dockerfile)
 
-gazebo9
+gazebo9 (eol)
   
 * [gazebo9-base](https://github.com/athackst/dockerfiles/blob/main/gazebo/gazebo9.Dockerfile)
 * [gazebo9-dev](https://github.com/athackst/dockerfiles/blob/main/gazebo/gazebo9.Dockerfile)

@@ -162,6 +162,7 @@ gazebo:
       - base
       - dev
     ubuntu_distro: "18.04"
+    eol: true
 ignition:
   - 
     name: fortress
