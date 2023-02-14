@@ -74,9 +74,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
   vim \
   wget \
   && rm -rf /var/lib/apt/lists/* \
-  && rosdep init || echo "rosdep already initialized" \
-  # Update pydocstyle
-  && pip install --upgrade pydocstyle
+  && rosdep init || echo "rosdep already initialized"
 
 ARG USERNAME=ros
 ARG USER_UID=1000
