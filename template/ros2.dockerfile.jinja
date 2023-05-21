@@ -62,8 +62,9 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
   python3-pip \
   ros-dev-tools \
   vim \
-  && rm -rf /var/lib/apt/lists/* \
-  && rosdep init || echo "rosdep already initialized"
+  && rm -rf /var/lib/apt/lists/*
+
+RUN rosdep init || echo "rosdep already initialized"
 
 {% include 'snippits/ros_user.jinja' %}
 
