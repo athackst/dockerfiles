@@ -21,6 +21,8 @@ concurrency:
 
 jobs:
   generate:
+    outputs:
+      matrix: ${{ steps.set-matrix.outputs.matrix }}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -38,39 +40,152 @@ jobs:
 
   docker:
     needs: generate
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-latest
     strategy:
       fail-fast: false
       matrix:
-        docker_image:
-          - noetic
-          - melodic
-          - humble
-          - humble-cuda
-          - foxy
-          - foxy-cuda
-          - gazebo11
-          - fortress
-          - citadel
-          - garden
+        include:
+          - label: ros
+            tag: noetic
+            target: base
+          - label: ros
+            tag: noetic
+            target: dev
+          - label: ros
+            tag: noetic
+            target: full
+          - label: ros
+            tag: noetic
+            target: gazebo
+          - label: ros
+            tag: melodic
+            target: base
+          - label: ros
+            tag: melodic
+            target: dev
+          - label: ros
+            tag: melodic
+            target: full
+          - label: ros
+            tag: melodic
+            target: gazebo
+          - label: ros2
+            tag: humble
+            target: base
+          - label: ros2
+            tag: humble
+            target: dev
+          - label: ros2
+            tag: humble
+            target: full
+          - label: ros2
+            tag: humble
+            target: gazebo
+          - label: ros2
+            tag: humble-cuda
+            target: base
+          - label: ros2
+            tag: humble-cuda
+            target: dev
+          - label: ros2
+            tag: humble-cuda
+            target: full
+          - label: ros2
+            tag: humble-cuda
+            target: gazebo-nvidia
+          - label: ros2
+            tag: foxy
+            target: base
+          - label: ros2
+            tag: foxy
+            target: dev
+          - label: ros2
+            tag: foxy
+            target: full
+          - label: ros2
+            tag: foxy
+            target: gazebo
+          - label: ros2
+            tag: foxy-cuda
+            target: base
+          - label: ros2
+            tag: foxy-cuda
+            target: dev
+          - label: ros2
+            tag: foxy-cuda
+            target: full
+          - label: ros2
+            tag: foxy-cuda
+            target: gazebo-nvidia
+          - label: gazebo
+            tag: gazebo11
+            target: base
+          - label: gazebo
+            tag: gazebo11
+            target: dev
+          - label: gazebo
+            tag: gazebo11
+            target: nvidia
+          - label: ignition
+            tag: fortress
+            target: base
+          - label: ignition
+            tag: fortress
+            target: dev
+          - label: ignition
+            tag: fortress
+            target: nvidia
+          - label: ignition
+            tag: citadel
+            target: base
+          - label: ignition
+            tag: citadel
+            target: dev
+          - label: ignition
+            tag: citadel
+            target: nvidia
+          - label: gz
+            tag: garden
+            target: base
+          - label: gz
+            tag: garden
+            target: dev
+          - label: gz
+            tag: garden
+            target: nvidia
+          - label: gz
+            tag: garden
+            target: nvidia-dev
     steps:
-      - uses: actions/checkout@v3
-      - name: Set up Python
-        uses: actions/setup-python@v4
+      - name: Set current date
+        id: date
+        run: |
+          echo "date=$(date +%Y-%m-%d)" >> "$GITHUB_OUTPUT"
+      - name: Use current date
+        run: |
+          echo "Current date is ${{ steps.date.outputs.date }}"
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v2
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+      - name: Login to Docker Hub
+        uses: docker/login-action@v2
         with:
-          python-version: 3.x
-          cache: pip
-      - name: Build Setup
-        run: |
-          python -m pip install --upgrade pip
-          if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
-      - name: Build
-        run: |
-          ./build.py ${{ matrix.docker_image }}
-      - name: Push
-        if: github.ref == 'refs/heads/main'
-        env:
-          DOCKER_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
-          DOCKER_PASSWORD: ${{ secrets.DOCKERHUB_PASSWORD }}
-        run: |
-          ./build.py --push ${{ matrix.docker_image }}
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_PASSWORD }}
+      - name: Build and push
+        uses: docker/build-push-action@v4
+        with:
+          push: ${{ github.ref == 'refs/heads/main' }}
+          file: ${{ matrix.label }}/${{ matrix.tag}}.Dockerfile
+          target: ${{ matrix.target }}
+          tags: |
+            althack/${{ matrix.label }}:${{ matrix.tag }}-${{ matrix.target }}
+            althack/${{ matrix.label }}:${{ matrix.tag }}-${{ matrix.target }}-${{ steps.date.outputs.date }}
+
+  complete:
+    needs: docker
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check
+        run: echo "Completed successfully!"

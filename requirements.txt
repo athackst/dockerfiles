@@ -1,7 +1,7 @@
+annotated-types==0.5.0
 certifi==2023.5.7
 charset-normalizer==3.1.0
 click==8.1.3
-docker==6.1.3
 flake8==6.0.0
 idna==3.4
 Jinja2==3.1.2
@@ -9,10 +9,15 @@ MarkupSafe==2.1.3
 mccabe==0.7.0
 packaging==23.1
 pycodestyle==2.10.0
+pydantic==2.0
+pydantic_core==2.0.1
 pyflakes==3.0.1
 pyparsing==3.1.0
 requests==2.31.0
 ruamel.yaml==0.17.32
 ruamel.yaml.clib==0.2.7
+tqdm==4.65.0
+typer==0.9.0
+typing_extensions==4.7.0
 urllib3==2.0.3
 websocket-client==1.6.1

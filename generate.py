@@ -75,6 +75,31 @@ class Templates():
             eol (bool, optional): Include eol images. Defaults to False.
 
         Returns:
+            list: A list includes for github workflow
+        """
+        data = self._settings
+        output = []
+        for label in data:
+            for entry in data[label]:
+                tag = entry['name']
+                if not eol and "eol" in entry.keys():
+                    continue
+                for target in entry['targets']:
+                    item = {
+                        "label": label,
+                        "tag": tag,
+                        "target": target
+                    }
+                    output.append(item)
+        return output
+
+    def task_names(self, eol: bool = False) -> list:
+        """List workflow docker images.
+
+        Args:
+            eol (bool, optional): Include eol images. Defaults to False.
+
+        Returns:
             list: A list of image names
         """
         image_list = []
@@ -138,8 +163,8 @@ def generate_workflow(log):
     docker_workflow = None
     with open(workflow_file, 'r') as file:
         docker_workflow = yaml.load(file)
-        (docker_workflow["jobs"]["docker"]["strategy"]
-         ["matrix"]["docker_image"]) = templates.workflow_names()
+        docker_workflow["jobs"]["docker"]["strategy"]["matrix"] = {
+            "include": templates.workflow_names()}
 
     with open(workflow_file, "w") as file:
         yaml.indent(mapping=2, sequence=4, offset=2)
@@ -165,7 +190,7 @@ def generate_tasks(log):
         tasks = json_parser.load(file)
         for input in tasks["inputs"]:
             if input["id"] == "build_name":
-                input["options"] = templates.workflow_names() + ['all']
+                input["options"] = templates.task_names() + ['all']
     with open(tasks_file, "w") as file:
         json_parser.dump(tasks, file, indent=2)
 
