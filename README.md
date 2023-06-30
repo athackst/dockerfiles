@@ -46,6 +46,12 @@ Or just build one
 ./build.py foxy
 ```
 
+Or just a single target for one
+
+```bash
+./build --target dev foxy
+```
+
 To see help information and build options
 
 ```bash
