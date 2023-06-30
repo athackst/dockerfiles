@@ -90,7 +90,7 @@ class Docker(object):
         os.system(f"docker rmi {image}")
 
 
-def build(image, push, clean):
+def build(image, target, push, clean):
     """Build the docker images."""
     builds = templates.images(eol=True)
     if image != 'all':
@@ -102,7 +102,7 @@ def build(image, push, clean):
     for name in builds:
         folder = builds[name]["repository"]
         repository = f"{USER}/{folder}"
-        targets = builds[name]["targets"]
+        targets = builds[name]["targets"] if not target else [target]
         context = f"{path_to_script}/{folder}/"
         dockerfile = f"{name}.Dockerfile"
         labels = {"version": f"{TODAY}"}
@@ -136,9 +136,12 @@ def build(image, push, clean):
 @click.option("--clean/--no-clean",
               default=True,
               help="Clean dated content and old images.")
+@click.option("--target",
+              default="",
+              help="The target to build")
 @click.argument("image",
                 type=click.Choice(list(templates.images()) + ['all']))
-def main(generate, push, clean, image):
+def main(generate, push, clean, image, target):
     """Set up logging and trigger build."""
     log.setLevel(logging.DEBUG)
     formatter = logging.Formatter('%(message)s')
@@ -150,7 +153,7 @@ def main(generate, push, clean, image):
     if generate:
         gen(log)
 
-    build(image, push, clean)
+    build(image, target, push, clean)
 
 
 if __name__ == "__main__":
