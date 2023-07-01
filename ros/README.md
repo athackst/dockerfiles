@@ -21,7 +21,7 @@ noetic
 * [noetic-full](https://github.com/athackst/dockerfiles/blob/main/ros/noetic.Dockerfile)
 * [noetic-gazebo](https://github.com/athackst/dockerfiles/blob/main/ros/noetic.Dockerfile)
 
-melodic
+melodic (eol)
   
 * [melodic-base](https://github.com/athackst/dockerfiles/blob/main/ros/melodic.Dockerfile)
 * [melodic-dev](https://github.com/athackst/dockerfiles/blob/main/ros/melodic.Dockerfile)

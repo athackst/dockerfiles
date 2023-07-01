@@ -57,65 +57,53 @@ jobs:
           - label: ros
             tag: noetic
             target: gazebo
-          - label: ros
-            tag: melodic
+          - label: ros2
+            tag: iron
             target: base
-          - label: ros
-            tag: melodic
+          - label: ros2
+            tag: iron
             target: dev
-          - label: ros
-            tag: melodic
+          - label: ros2
+            tag: iron
             target: full
-          - label: ros
-            tag: melodic
+          - label: ros2
+            tag: iron
             target: gazebo
           - label: ros2
-            tag: humble
+            tag: iron-cuda
             target: base
           - label: ros2
-            tag: humble
+            tag: iron-cuda
             target: dev
           - label: ros2
-            tag: humble
+            tag: iron-cuda
             target: full
           - label: ros2
-            tag: humble
-            target: gazebo
-          - label: ros2
-            tag: humble-cuda
-            target: base
-          - label: ros2
-            tag: humble-cuda
-            target: dev
-          - label: ros2
-            tag: humble-cuda
-            target: full
-          - label: ros2
-            tag: humble-cuda
+            tag: iron-cuda
             target: gazebo-nvidia
           - label: ros2
-            tag: foxy
+            tag: humble
             target: base
           - label: ros2
-            tag: foxy
+            tag: humble
             target: dev
           - label: ros2
-            tag: foxy
+            tag: humble
             target: full
           - label: ros2
-            tag: foxy
+            tag: humble
             target: gazebo
           - label: ros2
-            tag: foxy-cuda
+            tag: humble-cuda
             target: base
           - label: ros2
-            tag: foxy-cuda
+            tag: humble-cuda
             target: dev
           - label: ros2
-            tag: foxy-cuda
+            tag: humble-cuda
             target: full
           - label: ros2
-            tag: foxy-cuda
+            tag: humble-cuda
             target: gazebo-nvidia
           - label: gazebo
             tag: gazebo11
