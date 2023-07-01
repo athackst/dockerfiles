@@ -88,11 +88,10 @@
       "description": "name of the image to build",
       "options": [
         "noetic",
-        "melodic",
+        "iron",
+        "iron-cuda",
         "humble",
         "humble-cuda",
-        "foxy",
-        "foxy-cuda",
         "gazebo11",
         "fortress",
         "citadel",

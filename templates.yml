@@ -21,6 +21,7 @@ ros:
     python_env: ""
     python_version: "2.7"
     ubuntu_distro: "18.04"
+    eol: true
   - 
     name: lunar
     ros_distro: lunar
@@ -46,6 +47,28 @@ ros:
     ubuntu_distro: "16.04"
     eol: true
 ros2:
+  - 
+    name: iron
+    ros_distro: iron
+    targets:
+      - base
+      - dev
+      - full
+      - gazebo
+    python_version: "3.10"
+    base_image: "ubuntu"
+    image_version: "22.04"
+  - 
+    name: iron-cuda
+    ros_distro: iron
+    targets:
+      - base
+      - dev
+      - full
+      - gazebo-nvidia
+    python_version: "3.10"
+    base_image: "nvidia/cuda"
+    image_version: "11.8.0-runtime-ubuntu22.04"
   - 
     name: humble
     ros_distro: humble
@@ -103,6 +126,7 @@ ros2:
     python_version: "3.8"
     base_image: "ubuntu"
     image_version: "20.04"
+    eol: true
   - 
     name: foxy-cuda
     ros_distro: foxy
@@ -114,6 +138,7 @@ ros2:
     python_version: "3.8"
     base_image: "nvidia/cuda"
     image_version: "11.8.0-runtime-ubuntu20.04"
+    eol: true
   - 
     name: eloquent
     ros_distro: eloquent
