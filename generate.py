@@ -9,6 +9,7 @@ from jinja2 import Environment, FileSystemLoader
 log = logging.getLogger(__name__)
 json_parser = json
 yaml = ruamel.yaml.YAML()
+yaml.preserve_quotes = True
 
 
 class Templates():
