@@ -18,6 +18,6 @@ ruamel.yaml==0.17.32
 ruamel.yaml.clib==0.2.7
 tqdm==4.65.0
 typer==0.9.0
-typing_extensions==4.7.0
+typing_extensions==4.7.1
 urllib3==2.0.3
 websocket-client==1.6.1
