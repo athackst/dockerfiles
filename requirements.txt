@@ -1,7 +1,7 @@
 annotated-types==0.5.0
 certifi==2023.5.7
 charset-normalizer==3.2.0
-click==8.1.4
+click==8.1.5
 flake8==6.0.0
 idna==3.4
 Jinja2==3.1.2
