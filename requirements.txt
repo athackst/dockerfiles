@@ -10,7 +10,7 @@ mccabe==0.7.0
 packaging==23.1
 pycodestyle==2.10.0
 pydantic==2.0.2
-pydantic_core==2.1.2
+pydantic_core==2.3.0
 pyflakes==3.0.1
 pyparsing==3.1.0
 requests==2.31.0
