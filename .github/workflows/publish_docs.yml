@@ -17,12 +17,12 @@ permissions:
 # Allow one concurrent deployment
 concurrency:
   group: "pages"
-  cancel-in-progress: true
+  cancel-in-progress: false
 
 jobs:
   build:
     runs-on: ubuntu-latest
-    outputs: 
+    outputs:
       artifact: ${{ steps.mkdocs.outputs.artifact }}
     steps:
       - name: Checkout
