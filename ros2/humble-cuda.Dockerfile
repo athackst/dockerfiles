@@ -3,7 +3,7 @@
 ##############################################
 
 ###########################################
-# Base image 
+# Base image
 ###########################################
 FROM nvidia/cuda:11.8.0-runtime-ubuntu22.04 AS base
 
@@ -58,7 +58,7 @@ ENV ROS_VERSION=2
 ENV DEBIAN_FRONTEND=
 
 ###########################################
-#  Develop image 
+#  Develop image
 ###########################################
 FROM base AS dev
 
@@ -73,6 +73,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
   python3-argcomplete \
   python3-pip \
   ros-dev-tools \
+  ros-humble-ament-* \
   vim \
   && rm -rf /var/lib/apt/lists/*
 
@@ -102,7 +103,7 @@ ENV DEBIAN_FRONTEND=
 ENV AMENT_CPPCHECK_ALLOW_SLOW_VERSIONS=1
 
 ###########################################
-#  Full image 
+#  Full image
 ###########################################
 FROM dev AS full
 
@@ -114,7 +115,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 ENV DEBIAN_FRONTEND=
 
 ###########################################
-#  Full+Gazebo image 
+#  Full+Gazebo image
 ###########################################
 FROM full AS gazebo
 
@@ -128,7 +129,7 @@ RUN wget https://packages.osrfoundation.org/gazebo.gpg -O /usr/share/keyrings/pk
 ENV DEBIAN_FRONTEND=
 
 ###########################################
-#  Full+Gazebo+Nvidia image 
+#  Full+Gazebo+Nvidia image
 ###########################################
 
 FROM gazebo AS gazebo-nvidia
