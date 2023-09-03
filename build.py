@@ -64,7 +64,7 @@ class Docker(object):
         """Tag a built image."""
         image = f"{repository}:{prev_tag}"
         log.info(f"Taging {image} --> {repository}:{new_tag}")
-        os.system(f"docker tag {image} {new_tag}")
+        os.system(f"docker tag {image} {repository}:{new_tag}")
 
     def push(self, repository, tag):
         """Push a built repository:tag to a registry.
