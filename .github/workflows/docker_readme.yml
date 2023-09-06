@@ -24,7 +24,7 @@ jobs:
           - gz
     steps:
       - name: git checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
       - name: Update repo description
         uses: peter-evans/dockerhub-description@v3
         with:
