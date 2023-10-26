@@ -13,7 +13,7 @@ pydantic==2.4.2
 pyflakes==3.1.0
 pyparsing==3.1.1
 requests==2.31.0
-ruamel.yaml==0.17.39
+ruamel.yaml==0.18.2
 ruamel.yaml.clib==0.2.8
 tqdm==4.66.1
 typer==0.9.0
