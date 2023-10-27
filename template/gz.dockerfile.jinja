@@ -3,7 +3,7 @@
 ##################################################
 
 ###########################################
-# Base image 
+# Base image
 ###########################################
 FROM ubuntu:{{ ubuntu_distro }} AS base
 
@@ -24,6 +24,7 @@ RUN apt-get update && apt-get install -q -y \
     wget \
   && wget https://packages.osrfoundation.org/gazebo.gpg -O /usr/share/keyrings/pkgs-osrf-archive-keyring.gpg \
   && echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/pkgs-osrf-archive-keyring.gpg] http://packages.osrfoundation.org/gazebo/ubuntu-stable $(lsb_release -cs) main" | tee /etc/apt/sources.list.d/gazebo-stable.list > /dev/null \
+  {%- if prerelease %}&& echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/pkgs-osrf-archive-keyring.gpg] http://packages.osrfoundation.org/gazebo/ubuntu-prerelease $(lsb_release -cs) main" | sudo tee /etc/apt/sources.list.d/gazebo-prerelease.list > /dev/null \{% endif %}
   && apt-get update && apt-get install -y -q \
     gz-{{ gz_distro }} \
   && rm -rf /var/lib/apt/lists/*
@@ -31,7 +32,7 @@ RUN apt-get update && apt-get install -q -y \
 {% include 'snippits/ros_user.jinja' %}
 
 ###########################################
-# Develop image 
+# Develop image
 ###########################################
 FROM base AS dev
 
@@ -65,14 +66,14 @@ RUN wget https://raw.githubusercontent.com/gazebo-tooling/gazebodistro/master/co
 ENV DEBIAN_FRONTEND=
 
 ###########################################
-# Nvidia image 
+# Nvidia image
 ###########################################
 FROM base AS nvidia
 
 {% include 'snippits/nvidia.jinja' %}
 
 ###########################################
-# Nvidia image 
+# Nvidia image
 ###########################################
 FROM dev AS nvidia-dev
 
