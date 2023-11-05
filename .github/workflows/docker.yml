@@ -46,102 +46,135 @@ jobs:
           - label: ros
             tag: noetic
             target: base
+            platforms: linux/amd64,linux/arm64
           - label: ros
             tag: noetic
             target: dev
+            platforms: linux/amd64,linux/arm64
           - label: ros
             tag: noetic
             target: full
+            platforms: linux/amd64,linux/arm64
           - label: ros
             tag: noetic
             target: gazebo
+            platforms: linux/amd64
           - label: ros2
             tag: iron
             target: base
+            platforms: linux/amd64,linux/arm64
           - label: ros2
             tag: iron
             target: dev
+            platforms: linux/amd64,linux/arm64
           - label: ros2
             tag: iron
             target: full
+            platforms: linux/amd64,linux/arm64
           - label: ros2
             tag: iron
             target: gazebo
+            platforms: linux/amd64
           - label: ros2
             tag: iron-cuda
             target: base
+            platforms: linux/amd64,linux/arm64
           - label: ros2
             tag: iron-cuda
             target: dev
+            platforms: linux/amd64,linux/arm64
           - label: ros2
             tag: iron-cuda
             target: full
+            platforms: linux/amd64,linux/arm64
           - label: ros2
             tag: iron-cuda
             target: gazebo-nvidia
+            platforms: linux/amd64
           - label: ros2
             tag: humble
             target: base
+            platforms: linux/amd64,linux/arm64
           - label: ros2
             tag: humble
             target: dev
+            platforms: linux/amd64,linux/arm64
           - label: ros2
             tag: humble
             target: full
+            platforms: linux/amd64,linux/arm64
           - label: ros2
             tag: humble
             target: gazebo
+            platforms: linux/amd64
           - label: ros2
             tag: humble-cuda
             target: base
+            platforms: linux/amd64,linux/arm64
           - label: ros2
             tag: humble-cuda
             target: dev
+            platforms: linux/amd64,linux/arm64
           - label: ros2
             tag: humble-cuda
             target: full
+            platforms: linux/amd64,linux/arm64
           - label: ros2
             tag: humble-cuda
             target: gazebo-nvidia
+            platforms: linux/amd64
           - label: gazebo
             tag: gazebo11
             target: base
+            platforms: linux/amd64
           - label: gazebo
             tag: gazebo11
             target: dev
+            platforms: linux/amd64
           - label: gazebo
             tag: gazebo11
             target: nvidia
+            platforms: linux/amd64
           - label: ignition
             tag: fortress
             target: base
+            platforms: linux/amd64,linux/arm64
           - label: ignition
             tag: fortress
             target: dev
+            platforms: linux/amd64,linux/arm64
           - label: ignition
             tag: fortress
             target: nvidia
+            platforms: linux/amd64,linux/arm64
           - label: ignition
             tag: citadel
             target: base
+            platforms: linux/amd64,linux/arm64
           - label: ignition
             tag: citadel
             target: dev
+            platforms: linux/amd64,linux/arm64
           - label: ignition
             tag: citadel
             target: nvidia
+            platforms: linux/amd64,linux/arm64
           - label: gz
             tag: garden
             target: base
+            platforms: linux/amd64,linux/arm64
           - label: gz
             tag: garden
             target: dev
+            platforms: linux/amd64,linux/arm64
           - label: gz
             tag: garden
             target: nvidia
+            platforms: linux/amd64,linux/arm64
           - label: gz
             tag: garden
             target: nvidia-dev
+            platforms: linux/amd64,linux/arm64
     steps:
       - name: Set current date
         id: date
@@ -166,6 +199,7 @@ jobs:
           push: ${{ github.ref == 'refs/heads/main' }}
           file: ${{ matrix.label }}/${{ matrix.tag}}.Dockerfile
           target: ${{ matrix.target }}
+          platforms: ${{ matrix.platforms }}
           tags: |
             althack/${{ matrix.label }}:${{ matrix.tag }}-${{ matrix.target }}
             althack/${{ matrix.label }}:${{ matrix.tag }}-${{ matrix.target }}-${{ steps.date.outputs.date }}

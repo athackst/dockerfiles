@@ -1,5 +1,5 @@
 ros:
-  - 
+  -
     name: noetic
     ros_distro: noetic
     targets:
@@ -10,7 +10,7 @@ ros:
     python_env: "3"
     python_version: "3"
     ubuntu_distro: "20.04"
-  - 
+  -
     name: melodic
     ros_distro: melodic
     targets:
@@ -22,7 +22,7 @@ ros:
     python_version: "2.7"
     ubuntu_distro: "18.04"
     eol: true
-  - 
+  -
     name: lunar
     ros_distro: lunar
     targets:
@@ -34,7 +34,7 @@ ros:
     python_version: "2.7"
     ubuntu_distro: "18.04"
     eol: true
-  - 
+  -
     name: kinetic
     ros_distro: kinetic
     targets:
@@ -47,7 +47,7 @@ ros:
     ubuntu_distro: "16.04"
     eol: true
 ros2:
-  - 
+  -
     name: iron
     ros_distro: iron
     targets:
@@ -58,7 +58,7 @@ ros2:
     python_version: "3.10"
     base_image: "ubuntu"
     image_version: "22.04"
-  - 
+  -
     name: iron-cuda
     ros_distro: iron
     targets:
@@ -69,7 +69,7 @@ ros2:
     python_version: "3.10"
     base_image: "nvidia/cuda"
     image_version: "11.8.0-runtime-ubuntu22.04"
-  - 
+  -
     name: humble
     ros_distro: humble
     targets:
@@ -80,7 +80,7 @@ ros2:
     python_version: "3.10"
     base_image: "ubuntu"
     image_version: "22.04"
-  - 
+  -
     name: humble-cuda
     ros_distro: humble
     targets:
@@ -91,7 +91,7 @@ ros2:
     python_version: "3.10"
     base_image: "nvidia/cuda"
     image_version: "11.8.0-runtime-ubuntu22.04"
-  - 
+  -
     name: galactic
     ros_distro: galactic
     targets:
@@ -115,7 +115,7 @@ ros2:
     base_image: "nvidia/cuda"
     image_version: "11.7.0-runtime-ubuntu20.04"
     eol: true
-  - 
+  -
     name: foxy
     ros_distro: foxy
     targets:
@@ -127,7 +127,7 @@ ros2:
     base_image: "ubuntu"
     image_version: "20.04"
     eol: true
-  - 
+  -
     name: foxy-cuda
     ros_distro: foxy
     targets:
@@ -139,7 +139,7 @@ ros2:
     base_image: "nvidia/cuda"
     image_version: "11.8.0-runtime-ubuntu20.04"
     eol: true
-  - 
+  -
     name: eloquent
     ros_distro: eloquent
     targets:
@@ -151,7 +151,7 @@ ros2:
     base_image: "ubuntu"
     image_version: "18.04"
     eol: true
-  - 
+  -
     name: dashing
     ros_distro: dashing
     targets:
@@ -164,7 +164,7 @@ ros2:
     image_version: "18.04"
     eol: true
 gazebo:
-  - 
+  -
     name: gazebo11
     gazebo_release: "11"
     targets:
@@ -172,7 +172,7 @@ gazebo:
       - dev
       - nvidia
     ubuntu_distro: "20.04"
-  - 
+  -
     name: gazebo10
     gazebo_release: "10"
     targets:
@@ -180,7 +180,7 @@ gazebo:
       - dev
     ubuntu_distro: "18.04"
     eol: true
-  - 
+  -
     name: gazebo9
     gazebo_release: "9"
     targets:
@@ -189,7 +189,7 @@ gazebo:
     ubuntu_distro: "18.04"
     eol: true
 ignition:
-  - 
+  -
     name: fortress
     ign_distro: fortress
     targets:
@@ -198,7 +198,7 @@ ignition:
       - nvidia
     gazebo_version: "6"
     ubuntu_distro: "20.04"
-  - 
+  -
     name: edifice
     ign_distro: edifice
     targets:
@@ -208,7 +208,7 @@ ignition:
     gazebo_version: "5"
     ubuntu_distro: "20.04"
     eol: true
-  - 
+  -
     name: dome
     ign_distro: dome
     targets:
@@ -218,7 +218,7 @@ ignition:
     gazebo_version: "4"
     ubuntu_distro: "18.04"
     eol: true
-  - 
+  -
     name: citadel
     ign_distro: citadel
     targets:
@@ -228,7 +228,7 @@ ignition:
     gazebo_version: "3"
     ubuntu_distro: "18.04"
 gz:
-  - 
+  -
     name: garden
     gz_distro: garden
     targets:

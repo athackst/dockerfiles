@@ -89,7 +89,10 @@ class Templates():
                     item = {
                         "label": label,
                         "tag": tag,
-                        "target": target
+                        "target": target,
+                        "platforms": ("linux/amd64"
+                                      if "gazebo" in target or "gazebo" in tag
+                                      else "linux/amd64,linux/arm64")
                     }
                     output.append(item)
         return output
