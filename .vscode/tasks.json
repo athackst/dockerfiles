@@ -88,6 +88,7 @@
       "description": "name of the image to build",
       "options": [
         "noetic",
+        "rolling",
         "iron",
         "iron-cuda",
         "humble",
