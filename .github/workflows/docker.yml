@@ -172,6 +172,22 @@ jobs:
             target: nvidia
             platforms: linux/amd64,linux/arm64
           - label: gz
+            tag: harmonic
+            target: base
+            platforms: linux/amd64,linux/arm64
+          - label: gz
+            tag: harmonic
+            target: dev
+            platforms: linux/amd64,linux/arm64
+          - label: gz
+            tag: harmonic
+            target: nvidia
+            platforms: linux/amd64,linux/arm64
+          - label: gz
+            tag: harmonic
+            target: nvidia-dev
+            platforms: linux/amd64,linux/arm64
+          - label: gz
             tag: garden
             target: base
             platforms: linux/amd64,linux/arm64

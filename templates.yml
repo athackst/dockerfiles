@@ -239,6 +239,16 @@ ignition:
     ubuntu_distro: "18.04"
 gz:
   -
+    name: harmonic
+    gz_distro: harmonic
+    targets:
+      - base
+      - dev
+      - nvidia
+      - nvidia-dev
+    gazebo_version: "8"
+    ubuntu_distro: "22.04"
+  -
     name: garden
     gz_distro: garden
     targets:
