@@ -6,13 +6,20 @@ See [the docs](https://athackst.github.io/dockerfiles) or read about  [how I dev
 ## Usage
 
 ```bash
-docker pull althack/gz:garden-base
+docker pull althack/gz:harmonic-base
 ```
 
 ## Organization
 
 The main docker image tags are:
 
+
+harmonic
+  
+* [harmonic-base](https://github.com/athackst/dockerfiles/blob/main/gz/harmonic.Dockerfile)
+* [harmonic-dev](https://github.com/athackst/dockerfiles/blob/main/gz/harmonic.Dockerfile)
+* [harmonic-nvidia](https://github.com/athackst/dockerfiles/blob/main/gz/harmonic.Dockerfile)
+* [harmonic-nvidia-dev](https://github.com/athackst/dockerfiles/blob/main/gz/harmonic.Dockerfile)
 
 garden
   
