@@ -3,7 +3,7 @@
 ##################################################
 
 ###########################################
-# Base image 
+# Base image
 ###########################################
 FROM ubuntu:22.04 AS base
 
@@ -61,7 +61,7 @@ RUN apt-get update && apt-get install -y git-core bash-completion \
   && rm -rf /var/lib/apt/lists/* 
 
 ###########################################
-# Develop image 
+# Develop image
 ###########################################
 FROM base AS dev
 
@@ -95,7 +95,7 @@ RUN wget https://raw.githubusercontent.com/gazebo-tooling/gazebodistro/master/co
 ENV DEBIAN_FRONTEND=
 
 ###########################################
-# Nvidia image 
+# Nvidia image
 ###########################################
 FROM base AS nvidia
 
@@ -118,7 +118,7 @@ ENV NVIDIA_DRIVER_CAPABILITIES graphics,utility,compute
 ENV QT_X11_NO_MITSHM 1
 
 ###########################################
-# Nvidia image 
+# Nvidia image
 ###########################################
 FROM dev AS nvidia-dev
 
