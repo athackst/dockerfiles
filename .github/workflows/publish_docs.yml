@@ -56,6 +56,10 @@ jobs:
           tree
       - name: Test with htmlproofer
         uses: athackst/htmlproofer-action@main
+        with:
+          ignore_urls: |
+            https://twitter.com/althack
+            https://fonts.gstatic.com
 
   # Deployment job
   deploy:
