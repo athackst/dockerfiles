@@ -17,7 +17,7 @@ requests==2.31.0
 ruamel.yaml==0.18.6
 ruamel.yaml.clib==0.2.8
 tqdm==4.66.2
-typer==0.11.0
+typer==0.11.1
 typing_extensions==4.10.0
 urllib3==2.2.1
 websocket-client==1.7.0
