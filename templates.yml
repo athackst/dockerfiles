@@ -53,6 +53,7 @@ ros2:
     targets:
       - base
       - dev
+      - full
       - gazebo
     python_version: "3.10"
     base_image: "ubuntu"

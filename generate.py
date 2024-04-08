@@ -166,18 +166,15 @@ def generate_readmes(log):
 
 def generate_docker_workflow(log):
     """Generate workflow with non-eol images."""
-    log.info("Generating workflow file.")
-    docker_workflow_file = ".github/workflows/docker.yml"
-    docker_workflow = None
-    with open(docker_workflow_file, "r") as file:
-        docker_workflow = yaml.load(file)
-        docker_workflow["jobs"]["docker"]["strategy"]["matrix"] = {
-            "include": templates.workflow_names()
-        }
+    file_loader = FileSystemLoader("template")
+    env = Environment(loader=file_loader)
 
+    t = templates.raw()
+    template = env.get_template("docker.yml.jinja")
+    output = template.render({"templates": t})
+    docker_workflow_file = ".github/workflows/docker.yml"
     with open(docker_workflow_file, "w") as file:
-        yaml.indent(mapping=2, sequence=4, offset=2)
-        yaml.dump(docker_workflow, file)
+        file.write(output)
 
 
 def generate_readme_workflow(log):

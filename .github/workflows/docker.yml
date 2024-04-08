@@ -15,9 +15,11 @@ on:
   workflow_dispatch:
 
 # Cancel in-progress funs of the same workflow
+
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
+
 
 jobs:
   generate:
@@ -35,175 +37,10 @@ jobs:
           if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
           ./generate.py
           git diff --exit-code
-
-  docker:
-    needs: generate
+  ros-noetic:
     runs-on: ubuntu-latest
-    strategy:
-      fail-fast: false
-      matrix:
-        include:
-          - label: ros
-            tag: noetic
-            target: base
-            platforms: linux/amd64,linux/arm64
-          - label: ros
-            tag: noetic
-            target: dev
-            platforms: linux/amd64,linux/arm64
-          - label: ros
-            tag: noetic
-            target: full
-            platforms: linux/amd64,linux/arm64
-          - label: ros
-            tag: noetic
-            target: gazebo
-            platforms: linux/amd64
-          - label: ros2
-            tag: rolling
-            target: base
-            platforms: linux/amd64,linux/arm64
-          - label: ros2
-            tag: rolling
-            target: dev
-            platforms: linux/amd64,linux/arm64
-          - label: ros2
-            tag: rolling
-            target: gazebo
-            platforms: linux/amd64
-          - label: ros2
-            tag: iron
-            target: base
-            platforms: linux/amd64,linux/arm64
-          - label: ros2
-            tag: iron
-            target: dev
-            platforms: linux/amd64,linux/arm64
-          - label: ros2
-            tag: iron
-            target: full
-            platforms: linux/amd64,linux/arm64
-          - label: ros2
-            tag: iron
-            target: gazebo
-            platforms: linux/amd64
-          - label: ros2
-            tag: iron-cuda
-            target: base
-            platforms: linux/amd64
-          - label: ros2
-            tag: iron-cuda
-            target: dev
-            platforms: linux/amd64
-          - label: ros2
-            tag: iron-cuda
-            target: full
-            platforms: linux/amd64
-          - label: ros2
-            tag: iron-cuda
-            target: gazebo
-            platforms: linux/amd64
-          - label: ros2
-            tag: humble
-            target: base
-            platforms: linux/amd64,linux/arm64
-          - label: ros2
-            tag: humble
-            target: dev
-            platforms: linux/amd64,linux/arm64
-          - label: ros2
-            tag: humble
-            target: full
-            platforms: linux/amd64,linux/arm64
-          - label: ros2
-            tag: humble
-            target: gazebo
-            platforms: linux/amd64
-          - label: ros2
-            tag: humble-cuda
-            target: base
-            platforms: linux/amd64
-          - label: ros2
-            tag: humble-cuda
-            target: dev
-            platforms: linux/amd64
-          - label: ros2
-            tag: humble-cuda
-            target: full
-            platforms: linux/amd64
-          - label: ros2
-            tag: humble-cuda
-            target: gazebo
-            platforms: linux/amd64
-          - label: gazebo
-            tag: gazebo11
-            target: base
-            platforms: linux/amd64
-          - label: gazebo
-            tag: gazebo11
-            target: dev
-            platforms: linux/amd64
-          - label: gazebo
-            tag: gazebo11
-            target: nvidia
-            platforms: linux/amd64
-          - label: ignition
-            tag: fortress
-            target: base
-            platforms: linux/amd64,linux/arm64
-          - label: ignition
-            tag: fortress
-            target: dev
-            platforms: linux/amd64,linux/arm64
-          - label: ignition
-            tag: fortress
-            target: nvidia
-            platforms: linux/amd64,linux/arm64
-          - label: ignition
-            tag: citadel
-            target: base
-            platforms: linux/amd64,linux/arm64
-          - label: ignition
-            tag: citadel
-            target: dev
-            platforms: linux/amd64,linux/arm64
-          - label: ignition
-            tag: citadel
-            target: nvidia
-            platforms: linux/amd64,linux/arm64
-          - label: gz
-            tag: harmonic
-            target: base
-            platforms: linux/amd64,linux/arm64
-          - label: gz
-            tag: harmonic
-            target: dev
-            platforms: linux/amd64,linux/arm64
-          - label: gz
-            tag: harmonic
-            target: nvidia
-            platforms: linux/amd64,linux/arm64
-          - label: gz
-            tag: harmonic
-            target: nvidia-dev
-            platforms: linux/amd64,linux/arm64
-          - label: gz
-            tag: garden
-            target: base
-            platforms: linux/amd64,linux/arm64
-          - label: gz
-            tag: garden
-            target: dev
-            platforms: linux/amd64,linux/arm64
-          - label: gz
-            tag: garden
-            target: nvidia
-            platforms: linux/amd64,linux/arm64
-          - label: gz
-            tag: garden
-            target: nvidia-dev
-            platforms: linux/amd64,linux/arm64
     steps:
+    
       - name: Set current date
         id: date
         run: |
@@ -221,19 +58,652 @@ jobs:
         with:
           username: althack
           password: ${{ secrets.DOCKERHUB_PASSWORD }}
-      - name: Build and push
+    
+      - name: Build and push base
         uses: docker/build-push-action@v5
         with:
           push: ${{ github.ref == 'refs/heads/main' }}
-          file: ${{ matrix.label }}/${{ matrix.tag}}.Dockerfile
-          target: ${{ matrix.target }}
-          platforms: ${{ matrix.platforms }}
+          file: ros/noetic.Dockerfile
+          target: base
+          platforms: linux/amd64,linux/arm64
           tags: |
-            althack/${{ matrix.label }}:${{ matrix.tag }}-${{ matrix.target }}
-            althack/${{ matrix.label }}:${{ matrix.tag }}-${{ matrix.target }}-${{ steps.date.outputs.date }}
+            althack/ros:noetic-base
+            althack/ros:noetic-base-${{ steps.date.outputs.date }}
+      - name: Build and push dev
+        uses: docker/build-push-action@v5
+        with:
+          push: ${{ github.ref == 'refs/heads/main' }}
+          file: ros/noetic.Dockerfile
+          target: dev
+          platforms: linux/amd64,linux/arm64
+          tags: |
+            althack/ros:noetic-dev
+            althack/ros:noetic-dev-${{ steps.date.outputs.date }}
+      - name: Build and push full
+        uses: docker/build-push-action@v5
+        with:
+          push: ${{ github.ref == 'refs/heads/main' }}
+          file: ros/noetic.Dockerfile
+          target: full
+          platforms: linux/amd64,linux/arm64
+          tags: |
+            althack/ros:noetic-full
+            althack/ros:noetic-full-${{ steps.date.outputs.date }}
+      - name: Build and push gazebo
+        uses: docker/build-push-action@v5
+        with:
+          push: ${{ github.ref == 'refs/heads/main' }}
+          file: ros/noetic.Dockerfile
+          target: gazebo
+          platforms: linux/amd64,linux/arm64
+          tags: |
+            althack/ros:noetic-gazebo
+            althack/ros:noetic-gazebo-${{ steps.date.outputs.date }}
+  ros2-rolling:
+    runs-on: ubuntu-latest
+    steps:
+    
+      - name: Set current date
+        id: date
+        run: |
+          echo "date=$(date +%Y-%m-%d)" >> "$GITHUB_OUTPUT"
+      - name: Use current date
+        run: |
+          echo "Current date is ${{ steps.date.outputs.date }}"
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+      - name: Login to Docker Hub
+        uses: docker/login-action@v3
+        if: ${{ github.ref == 'refs/heads/main' }}
+        with:
+          username: althack
+          password: ${{ secrets.DOCKERHUB_PASSWORD }}
+    
+      - name: Build and push base
+        uses: docker/build-push-action@v5
+        with:
+          push: ${{ github.ref == 'refs/heads/main' }}
+          file: ros2/rolling.Dockerfile
+          target: base
+          platforms: linux/amd64,linux/arm64
+          tags: |
+            althack/ros2:rolling-base
+            althack/ros2:rolling-base-${{ steps.date.outputs.date }}
+      - name: Build and push dev
+        uses: docker/build-push-action@v5
+        with:
+          push: ${{ github.ref == 'refs/heads/main' }}
+          file: ros2/rolling.Dockerfile
+          target: dev
+          platforms: linux/amd64,linux/arm64
+          tags: |
+            althack/ros2:rolling-dev
+            althack/ros2:rolling-dev-${{ steps.date.outputs.date }}
+      - name: Build and push full
+        uses: docker/build-push-action@v5
+        with:
+          push: ${{ github.ref == 'refs/heads/main' }}
+          file: ros2/rolling.Dockerfile
+          target: full
+          platforms: linux/amd64,linux/arm64
+          tags: |
+            althack/ros2:rolling-full
+            althack/ros2:rolling-full-${{ steps.date.outputs.date }}
+      - name: Build and push gazebo
+        uses: docker/build-push-action@v5
+        with:
+          push: ${{ github.ref == 'refs/heads/main' }}
+          file: ros2/rolling.Dockerfile
+          target: gazebo
+          platforms: linux/amd64,linux/arm64
+          tags: |
+            althack/ros2:rolling-gazebo
+            althack/ros2:rolling-gazebo-${{ steps.date.outputs.date }}
+  ros2-iron:
+    runs-on: ubuntu-latest
+    steps:
+    
+      - name: Set current date
+        id: date
+        run: |
+          echo "date=$(date +%Y-%m-%d)" >> "$GITHUB_OUTPUT"
+      - name: Use current date
+        run: |
+          echo "Current date is ${{ steps.date.outputs.date }}"
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+      - name: Login to Docker Hub
+        uses: docker/login-action@v3
+        if: ${{ github.ref == 'refs/heads/main' }}
+        with:
+          username: althack
+          password: ${{ secrets.DOCKERHUB_PASSWORD }}
+    
+      - name: Build and push base
+        uses: docker/build-push-action@v5
+        with:
+          push: ${{ github.ref == 'refs/heads/main' }}
+          file: ros2/iron.Dockerfile
+          target: base
+          platforms: linux/amd64,linux/arm64
+          tags: |
+            althack/ros2:iron-base
+            althack/ros2:iron-base-${{ steps.date.outputs.date }}
+      - name: Build and push dev
+        uses: docker/build-push-action@v5
+        with:
+          push: ${{ github.ref == 'refs/heads/main' }}
+          file: ros2/iron.Dockerfile
+          target: dev
+          platforms: linux/amd64,linux/arm64
+          tags: |
+            althack/ros2:iron-dev
+            althack/ros2:iron-dev-${{ steps.date.outputs.date }}
+      - name: Build and push full
+        uses: docker/build-push-action@v5
+        with:
+          push: ${{ github.ref == 'refs/heads/main' }}
+          file: ros2/iron.Dockerfile
+          target: full
+          platforms: linux/amd64,linux/arm64
+          tags: |
+            althack/ros2:iron-full
+            althack/ros2:iron-full-${{ steps.date.outputs.date }}
+      - name: Build and push gazebo
+        uses: docker/build-push-action@v5
+        with:
+          push: ${{ github.ref == 'refs/heads/main' }}
+          file: ros2/iron.Dockerfile
+          target: gazebo
+          platforms: linux/amd64,linux/arm64
+          tags: |
+            althack/ros2:iron-gazebo
+            althack/ros2:iron-gazebo-${{ steps.date.outputs.date }}
+  ros2-iron-cuda:
+    runs-on: ubuntu-latest
+    steps:
+    
+      - name: Set current date
+        id: date
+        run: |
+          echo "date=$(date +%Y-%m-%d)" >> "$GITHUB_OUTPUT"
+      - name: Use current date
+        run: |
+          echo "Current date is ${{ steps.date.outputs.date }}"
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+      - name: Login to Docker Hub
+        uses: docker/login-action@v3
+        if: ${{ github.ref == 'refs/heads/main' }}
+        with:
+          username: althack
+          password: ${{ secrets.DOCKERHUB_PASSWORD }}
+    
+      - name: Build and push base
+        uses: docker/build-push-action@v5
+        with:
+          push: ${{ github.ref == 'refs/heads/main' }}
+          file: ros2/iron-cuda.Dockerfile
+          target: base
+          platforms: linux/amd64
+          tags: |
+            althack/ros2:iron-cuda-base
+            althack/ros2:iron-cuda-base-${{ steps.date.outputs.date }}
+      - name: Build and push dev
+        uses: docker/build-push-action@v5
+        with:
+          push: ${{ github.ref == 'refs/heads/main' }}
+          file: ros2/iron-cuda.Dockerfile
+          target: dev
+          platforms: linux/amd64
+          tags: |
+            althack/ros2:iron-cuda-dev
+            althack/ros2:iron-cuda-dev-${{ steps.date.outputs.date }}
+      - name: Build and push full
+        uses: docker/build-push-action@v5
+        with:
+          push: ${{ github.ref == 'refs/heads/main' }}
+          file: ros2/iron-cuda.Dockerfile
+          target: full
+          platforms: linux/amd64
+          tags: |
+            althack/ros2:iron-cuda-full
+            althack/ros2:iron-cuda-full-${{ steps.date.outputs.date }}
+      - name: Build and push gazebo
+        uses: docker/build-push-action@v5
+        with:
+          push: ${{ github.ref == 'refs/heads/main' }}
+          file: ros2/iron-cuda.Dockerfile
+          target: gazebo
+          platforms: linux/amd64
+          tags: |
+            althack/ros2:iron-cuda-gazebo
+            althack/ros2:iron-cuda-gazebo-${{ steps.date.outputs.date }}
+  ros2-humble:
+    runs-on: ubuntu-latest
+    steps:
+    
+      - name: Set current date
+        id: date
+        run: |
+          echo "date=$(date +%Y-%m-%d)" >> "$GITHUB_OUTPUT"
+      - name: Use current date
+        run: |
+          echo "Current date is ${{ steps.date.outputs.date }}"
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+      - name: Login to Docker Hub
+        uses: docker/login-action@v3
+        if: ${{ github.ref == 'refs/heads/main' }}
+        with:
+          username: althack
+          password: ${{ secrets.DOCKERHUB_PASSWORD }}
+    
+      - name: Build and push base
+        uses: docker/build-push-action@v5
+        with:
+          push: ${{ github.ref == 'refs/heads/main' }}
+          file: ros2/humble.Dockerfile
+          target: base
+          platforms: linux/amd64,linux/arm64
+          tags: |
+            althack/ros2:humble-base
+            althack/ros2:humble-base-${{ steps.date.outputs.date }}
+      - name: Build and push dev
+        uses: docker/build-push-action@v5
+        with:
+          push: ${{ github.ref == 'refs/heads/main' }}
+          file: ros2/humble.Dockerfile
+          target: dev
+          platforms: linux/amd64,linux/arm64
+          tags: |
+            althack/ros2:humble-dev
+            althack/ros2:humble-dev-${{ steps.date.outputs.date }}
+      - name: Build and push full
+        uses: docker/build-push-action@v5
+        with:
+          push: ${{ github.ref == 'refs/heads/main' }}
+          file: ros2/humble.Dockerfile
+          target: full
+          platforms: linux/amd64,linux/arm64
+          tags: |
+            althack/ros2:humble-full
+            althack/ros2:humble-full-${{ steps.date.outputs.date }}
+      - name: Build and push gazebo
+        uses: docker/build-push-action@v5
+        with:
+          push: ${{ github.ref == 'refs/heads/main' }}
+          file: ros2/humble.Dockerfile
+          target: gazebo
+          platforms: linux/amd64,linux/arm64
+          tags: |
+            althack/ros2:humble-gazebo
+            althack/ros2:humble-gazebo-${{ steps.date.outputs.date }}
+  ros2-humble-cuda:
+    runs-on: ubuntu-latest
+    steps:
+    
+      - name: Set current date
+        id: date
+        run: |
+          echo "date=$(date +%Y-%m-%d)" >> "$GITHUB_OUTPUT"
+      - name: Use current date
+        run: |
+          echo "Current date is ${{ steps.date.outputs.date }}"
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+      - name: Login to Docker Hub
+        uses: docker/login-action@v3
+        if: ${{ github.ref == 'refs/heads/main' }}
+        with:
+          username: althack
+          password: ${{ secrets.DOCKERHUB_PASSWORD }}
+    
+      - name: Build and push base
+        uses: docker/build-push-action@v5
+        with:
+          push: ${{ github.ref == 'refs/heads/main' }}
+          file: ros2/humble-cuda.Dockerfile
+          target: base
+          platforms: linux/amd64
+          tags: |
+            althack/ros2:humble-cuda-base
+            althack/ros2:humble-cuda-base-${{ steps.date.outputs.date }}
+      - name: Build and push dev
+        uses: docker/build-push-action@v5
+        with:
+          push: ${{ github.ref == 'refs/heads/main' }}
+          file: ros2/humble-cuda.Dockerfile
+          target: dev
+          platforms: linux/amd64
+          tags: |
+            althack/ros2:humble-cuda-dev
+            althack/ros2:humble-cuda-dev-${{ steps.date.outputs.date }}
+      - name: Build and push full
+        uses: docker/build-push-action@v5
+        with:
+          push: ${{ github.ref == 'refs/heads/main' }}
+          file: ros2/humble-cuda.Dockerfile
+          target: full
+          platforms: linux/amd64
+          tags: |
+            althack/ros2:humble-cuda-full
+            althack/ros2:humble-cuda-full-${{ steps.date.outputs.date }}
+      - name: Build and push gazebo
+        uses: docker/build-push-action@v5
+        with:
+          push: ${{ github.ref == 'refs/heads/main' }}
+          file: ros2/humble-cuda.Dockerfile
+          target: gazebo
+          platforms: linux/amd64
+          tags: |
+            althack/ros2:humble-cuda-gazebo
+            althack/ros2:humble-cuda-gazebo-${{ steps.date.outputs.date }}
+  gazebo-gazebo11:
+    runs-on: ubuntu-latest
+    steps:
+    
+      - name: Set current date
+        id: date
+        run: |
+          echo "date=$(date +%Y-%m-%d)" >> "$GITHUB_OUTPUT"
+      - name: Use current date
+        run: |
+          echo "Current date is ${{ steps.date.outputs.date }}"
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+      - name: Login to Docker Hub
+        uses: docker/login-action@v3
+        if: ${{ github.ref == 'refs/heads/main' }}
+        with:
+          username: althack
+          password: ${{ secrets.DOCKERHUB_PASSWORD }}
+    
+      - name: Build and push base
+        uses: docker/build-push-action@v5
+        with:
+          push: ${{ github.ref == 'refs/heads/main' }}
+          file: gazebo/gazebo11.Dockerfile
+          target: base
+          platforms: linux/amd64,linux/arm64
+          tags: |
+            althack/gazebo:gazebo11-base
+            althack/gazebo:gazebo11-base-${{ steps.date.outputs.date }}
+      - name: Build and push dev
+        uses: docker/build-push-action@v5
+        with:
+          push: ${{ github.ref == 'refs/heads/main' }}
+          file: gazebo/gazebo11.Dockerfile
+          target: dev
+          platforms: linux/amd64,linux/arm64
+          tags: |
+            althack/gazebo:gazebo11-dev
+            althack/gazebo:gazebo11-dev-${{ steps.date.outputs.date }}
+      - name: Build and push nvidia
+        uses: docker/build-push-action@v5
+        with:
+          push: ${{ github.ref == 'refs/heads/main' }}
+          file: gazebo/gazebo11.Dockerfile
+          target: nvidia
+          platforms: linux/amd64
+          tags: |
+            althack/gazebo:gazebo11-nvidia
+            althack/gazebo:gazebo11-nvidia-${{ steps.date.outputs.date }}
+  ignition-fortress:
+    runs-on: ubuntu-latest
+    steps:
+    
+      - name: Set current date
+        id: date
+        run: |
+          echo "date=$(date +%Y-%m-%d)" >> "$GITHUB_OUTPUT"
+      - name: Use current date
+        run: |
+          echo "Current date is ${{ steps.date.outputs.date }}"
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+      - name: Login to Docker Hub
+        uses: docker/login-action@v3
+        if: ${{ github.ref == 'refs/heads/main' }}
+        with:
+          username: althack
+          password: ${{ secrets.DOCKERHUB_PASSWORD }}
+    
+      - name: Build and push base
+        uses: docker/build-push-action@v5
+        with:
+          push: ${{ github.ref == 'refs/heads/main' }}
+          file: ignition/fortress.Dockerfile
+          target: base
+          platforms: linux/amd64,linux/arm64
+          tags: |
+            althack/ignition:fortress-base
+            althack/ignition:fortress-base-${{ steps.date.outputs.date }}
+      - name: Build and push dev
+        uses: docker/build-push-action@v5
+        with:
+          push: ${{ github.ref == 'refs/heads/main' }}
+          file: ignition/fortress.Dockerfile
+          target: dev
+          platforms: linux/amd64,linux/arm64
+          tags: |
+            althack/ignition:fortress-dev
+            althack/ignition:fortress-dev-${{ steps.date.outputs.date }}
+      - name: Build and push nvidia
+        uses: docker/build-push-action@v5
+        with:
+          push: ${{ github.ref == 'refs/heads/main' }}
+          file: ignition/fortress.Dockerfile
+          target: nvidia
+          platforms: linux/amd64
+          tags: |
+            althack/ignition:fortress-nvidia
+            althack/ignition:fortress-nvidia-${{ steps.date.outputs.date }}
+  ignition-citadel:
+    runs-on: ubuntu-latest
+    steps:
+    
+      - name: Set current date
+        id: date
+        run: |
+          echo "date=$(date +%Y-%m-%d)" >> "$GITHUB_OUTPUT"
+      - name: Use current date
+        run: |
+          echo "Current date is ${{ steps.date.outputs.date }}"
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+      - name: Login to Docker Hub
+        uses: docker/login-action@v3
+        if: ${{ github.ref == 'refs/heads/main' }}
+        with:
+          username: althack
+          password: ${{ secrets.DOCKERHUB_PASSWORD }}
+    
+      - name: Build and push base
+        uses: docker/build-push-action@v5
+        with:
+          push: ${{ github.ref == 'refs/heads/main' }}
+          file: ignition/citadel.Dockerfile
+          target: base
+          platforms: linux/amd64,linux/arm64
+          tags: |
+            althack/ignition:citadel-base
+            althack/ignition:citadel-base-${{ steps.date.outputs.date }}
+      - name: Build and push dev
+        uses: docker/build-push-action@v5
+        with:
+          push: ${{ github.ref == 'refs/heads/main' }}
+          file: ignition/citadel.Dockerfile
+          target: dev
+          platforms: linux/amd64,linux/arm64
+          tags: |
+            althack/ignition:citadel-dev
+            althack/ignition:citadel-dev-${{ steps.date.outputs.date }}
+      - name: Build and push nvidia
+        uses: docker/build-push-action@v5
+        with:
+          push: ${{ github.ref == 'refs/heads/main' }}
+          file: ignition/citadel.Dockerfile
+          target: nvidia
+          platforms: linux/amd64
+          tags: |
+            althack/ignition:citadel-nvidia
+            althack/ignition:citadel-nvidia-${{ steps.date.outputs.date }}
+  gz-harmonic:
+    runs-on: ubuntu-latest
+    steps:
+    
+      - name: Set current date
+        id: date
+        run: |
+          echo "date=$(date +%Y-%m-%d)" >> "$GITHUB_OUTPUT"
+      - name: Use current date
+        run: |
+          echo "Current date is ${{ steps.date.outputs.date }}"
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+      - name: Login to Docker Hub
+        uses: docker/login-action@v3
+        if: ${{ github.ref == 'refs/heads/main' }}
+        with:
+          username: althack
+          password: ${{ secrets.DOCKERHUB_PASSWORD }}
+    
+      - name: Build and push base
+        uses: docker/build-push-action@v5
+        with:
+          push: ${{ github.ref == 'refs/heads/main' }}
+          file: gz/harmonic.Dockerfile
+          target: base
+          platforms: linux/amd64,linux/arm64
+          tags: |
+            althack/gz:harmonic-base
+            althack/gz:harmonic-base-${{ steps.date.outputs.date }}
+      - name: Build and push dev
+        uses: docker/build-push-action@v5
+        with:
+          push: ${{ github.ref == 'refs/heads/main' }}
+          file: gz/harmonic.Dockerfile
+          target: dev
+          platforms: linux/amd64,linux/arm64
+          tags: |
+            althack/gz:harmonic-dev
+            althack/gz:harmonic-dev-${{ steps.date.outputs.date }}
+      - name: Build and push nvidia
+        uses: docker/build-push-action@v5
+        with:
+          push: ${{ github.ref == 'refs/heads/main' }}
+          file: gz/harmonic.Dockerfile
+          target: nvidia
+          platforms: linux/amd64
+          tags: |
+            althack/gz:harmonic-nvidia
+            althack/gz:harmonic-nvidia-${{ steps.date.outputs.date }}
+      - name: Build and push nvidia-dev
+        uses: docker/build-push-action@v5
+        with:
+          push: ${{ github.ref == 'refs/heads/main' }}
+          file: gz/harmonic.Dockerfile
+          target: nvidia-dev
+          platforms: linux/amd64
+          tags: |
+            althack/gz:harmonic-nvidia-dev
+            althack/gz:harmonic-nvidia-dev-${{ steps.date.outputs.date }}
+  gz-garden:
+    runs-on: ubuntu-latest
+    steps:
+    
+      - name: Set current date
+        id: date
+        run: |
+          echo "date=$(date +%Y-%m-%d)" >> "$GITHUB_OUTPUT"
+      - name: Use current date
+        run: |
+          echo "Current date is ${{ steps.date.outputs.date }}"
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+      - name: Login to Docker Hub
+        uses: docker/login-action@v3
+        if: ${{ github.ref == 'refs/heads/main' }}
+        with:
+          username: althack
+          password: ${{ secrets.DOCKERHUB_PASSWORD }}
+    
+      - name: Build and push base
+        uses: docker/build-push-action@v5
+        with:
+          push: ${{ github.ref == 'refs/heads/main' }}
+          file: gz/garden.Dockerfile
+          target: base
+          platforms: linux/amd64,linux/arm64
+          tags: |
+            althack/gz:garden-base
+            althack/gz:garden-base-${{ steps.date.outputs.date }}
+      - name: Build and push dev
+        uses: docker/build-push-action@v5
+        with:
+          push: ${{ github.ref == 'refs/heads/main' }}
+          file: gz/garden.Dockerfile
+          target: dev
+          platforms: linux/amd64,linux/arm64
+          tags: |
+            althack/gz:garden-dev
+            althack/gz:garden-dev-${{ steps.date.outputs.date }}
+      - name: Build and push nvidia
+        uses: docker/build-push-action@v5
+        with:
+          push: ${{ github.ref == 'refs/heads/main' }}
+          file: gz/garden.Dockerfile
+          target: nvidia
+          platforms: linux/amd64
+          tags: |
+            althack/gz:garden-nvidia
+            althack/gz:garden-nvidia-${{ steps.date.outputs.date }}
+      - name: Build and push nvidia-dev
+        uses: docker/build-push-action@v5
+        with:
+          push: ${{ github.ref == 'refs/heads/main' }}
+          file: gz/garden.Dockerfile
+          target: nvidia-dev
+          platforms: linux/amd64
+          tags: |
+            althack/gz:garden-nvidia-dev
+            althack/gz:garden-nvidia-dev-${{ steps.date.outputs.date }}
 
   complete:
-    needs: docker
+    needs:
+        - generate
+        - ros-noetic
+        - ros2-rolling
+        - ros2-iron
+        - ros2-iron-cuda
+        - ros2-humble
+        - ros2-humble-cuda
+        - gazebo-gazebo11
+        - ignition-fortress
+        - ignition-citadel
+        - gz-harmonic
+        - gz-garden
     runs-on: ubuntu-latest
     steps:
       - name: Check

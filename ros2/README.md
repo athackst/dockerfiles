@@ -18,6 +18,7 @@ rolling
   
 * [rolling-base](https://github.com/athackst/dockerfiles/blob/main/ros2/rolling.Dockerfile)
 * [rolling-dev](https://github.com/athackst/dockerfiles/blob/main/ros2/rolling.Dockerfile)
+* [rolling-full](https://github.com/athackst/dockerfiles/blob/main/ros2/rolling.Dockerfile)
 * [rolling-gazebo](https://github.com/athackst/dockerfiles/blob/main/ros2/rolling.Dockerfile)
 
 iron
