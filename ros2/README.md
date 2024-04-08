@@ -32,7 +32,7 @@ iron-cuda
 * [iron-cuda-base](https://github.com/athackst/dockerfiles/blob/main/ros2/iron-cuda.Dockerfile)
 * [iron-cuda-dev](https://github.com/athackst/dockerfiles/blob/main/ros2/iron-cuda.Dockerfile)
 * [iron-cuda-full](https://github.com/athackst/dockerfiles/blob/main/ros2/iron-cuda.Dockerfile)
-* [iron-cuda-gazebo-nvidia](https://github.com/athackst/dockerfiles/blob/main/ros2/iron-cuda.Dockerfile)
+* [iron-cuda-gazebo](https://github.com/athackst/dockerfiles/blob/main/ros2/iron-cuda.Dockerfile)
 
 humble
   
@@ -46,7 +46,7 @@ humble-cuda
 * [humble-cuda-base](https://github.com/athackst/dockerfiles/blob/main/ros2/humble-cuda.Dockerfile)
 * [humble-cuda-dev](https://github.com/athackst/dockerfiles/blob/main/ros2/humble-cuda.Dockerfile)
 * [humble-cuda-full](https://github.com/athackst/dockerfiles/blob/main/ros2/humble-cuda.Dockerfile)
-* [humble-cuda-gazebo-nvidia](https://github.com/athackst/dockerfiles/blob/main/ros2/humble-cuda.Dockerfile)
+* [humble-cuda-gazebo](https://github.com/athackst/dockerfiles/blob/main/ros2/humble-cuda.Dockerfile)
 
 galactic (eol)
   
@@ -60,7 +60,7 @@ galactic-cuda (eol)
 * [galactic-cuda-base](https://github.com/athackst/dockerfiles/blob/main/ros2/galactic-cuda.Dockerfile)
 * [galactic-cuda-dev](https://github.com/athackst/dockerfiles/blob/main/ros2/galactic-cuda.Dockerfile)
 * [galactic-cuda-full](https://github.com/athackst/dockerfiles/blob/main/ros2/galactic-cuda.Dockerfile)
-* [galactic-cuda-gazebo-nvidia](https://github.com/athackst/dockerfiles/blob/main/ros2/galactic-cuda.Dockerfile)
+* [galactic-cuda-gazebo](https://github.com/athackst/dockerfiles/blob/main/ros2/galactic-cuda.Dockerfile)
 
 foxy (eol)
   
@@ -74,7 +74,7 @@ foxy-cuda (eol)
 * [foxy-cuda-base](https://github.com/athackst/dockerfiles/blob/main/ros2/foxy-cuda.Dockerfile)
 * [foxy-cuda-dev](https://github.com/athackst/dockerfiles/blob/main/ros2/foxy-cuda.Dockerfile)
 * [foxy-cuda-full](https://github.com/athackst/dockerfiles/blob/main/ros2/foxy-cuda.Dockerfile)
-* [foxy-cuda-gazebo-nvidia](https://github.com/athackst/dockerfiles/blob/main/ros2/foxy-cuda.Dockerfile)
+* [foxy-cuda-gazebo](https://github.com/athackst/dockerfiles/blob/main/ros2/foxy-cuda.Dockerfile)
 
 eloquent (eol)
   

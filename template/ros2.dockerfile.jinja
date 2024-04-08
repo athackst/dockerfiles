@@ -35,12 +35,17 @@ RUN sudo add-apt-repository universe \
     python3-argcomplete \
   && rm -rf /var/lib/apt/lists/*
 
+{%- if 'nvidia' in base_image %}
+
+{% include 'snippits/nvidia.jinja' %}
+{%- endif %}
+
 ENV ROS_DISTRO={{ ros_distro }}
 ENV AMENT_PREFIX_PATH=/opt/ros/{{ ros_distro }}
 ENV COLCON_PREFIX_PATH=/opt/ros/{{ ros_distro }}
 ENV LD_LIBRARY_PATH=/opt/ros/{{ ros_distro }}/lib
 ENV PATH=/opt/ros/{{ ros_distro }}/bin:$PATH
-ENV PYTHONPATH=/opt/ros/{{ ros_distro }}/lib/python{{ python_version }}/site-packages
+ENV PYTHONPATH=/opt/ros/{{ ros_distro }}/local/lib/python{{ python_version }}/dist-packages:/opt/ros/{{ ros_distro }}/lib/python{{ python_version }}/site-packages
 ENV ROS_PYTHON_VERSION=3
 ENV ROS_VERSION=2
 ENV DEBIAN_FRONTEND=
@@ -84,6 +89,12 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
   && rm -rf /var/lib/apt/lists/*
 ENV DEBIAN_FRONTEND=
 
+{%- if base_image == 'ubuntu' %}
+ENV LD_LIBRARY_PATH=/opt/ros/{{ ros_distro }}/opt/rviz_ogre_vendor/lib:/opt/ros/{{ ros_distro }}/lib/x86_64-linux-gnu:/opt/ros/{{ ros_distro }}/lib
+{%- else %}
+ENV LD_LIBRARY_PATH=/opt/ros/{{ ros_distro }}/lib
+{%- endif %}
+
 ###########################################
 #  Full+Gazebo image
 ###########################################
@@ -97,11 +108,3 @@ RUN wget https://packages.osrfoundation.org/gazebo.gpg -O /usr/share/keyrings/pk
     ros-{{ ros_distro }}-ros-gz \
   && rm -rf /var/lib/apt/lists/*
 ENV DEBIAN_FRONTEND=
-
-###########################################
-#  Full+Gazebo+Nvidia image
-###########################################
-
-FROM gazebo AS gazebo-nvidia
-
-{% include 'snippits/nvidia.jinja' %}

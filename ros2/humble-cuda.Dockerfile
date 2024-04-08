@@ -47,12 +47,30 @@ RUN sudo add-apt-repository universe \
     python3-argcomplete \
   && rm -rf /var/lib/apt/lists/*
 
+################
+# Expose the nvidia driver to allow opengl 
+# Dependencies for glvnd and X11.
+################
+RUN apt-get update \
+ && apt-get install -y -qq --no-install-recommends \
+  libglvnd0 \
+  libgl1 \
+  libglx0 \
+  libegl1 \
+  libxext6 \
+  libx11-6
+
+# Env vars for the nvidia-container-runtime.
+ENV NVIDIA_VISIBLE_DEVICES all
+ENV NVIDIA_DRIVER_CAPABILITIES graphics,utility,compute
+ENV QT_X11_NO_MITSHM 1
+
 ENV ROS_DISTRO=humble
 ENV AMENT_PREFIX_PATH=/opt/ros/humble
 ENV COLCON_PREFIX_PATH=/opt/ros/humble
 ENV LD_LIBRARY_PATH=/opt/ros/humble/lib
 ENV PATH=/opt/ros/humble/bin:$PATH
-ENV PYTHONPATH=/opt/ros/humble/lib/python3.10/site-packages
+ENV PYTHONPATH=/opt/ros/humble/local/lib/python3.10/dist-packages:/opt/ros/humble/lib/python3.10/site-packages
 ENV ROS_PYTHON_VERSION=3
 ENV ROS_VERSION=2
 ENV DEBIAN_FRONTEND=
@@ -113,6 +131,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
   ros-humble-desktop \
   && rm -rf /var/lib/apt/lists/*
 ENV DEBIAN_FRONTEND=
+ENV LD_LIBRARY_PATH=/opt/ros/humble/lib
 
 ###########################################
 #  Full+Gazebo image
@@ -127,27 +146,3 @@ RUN wget https://packages.osrfoundation.org/gazebo.gpg -O /usr/share/keyrings/pk
     ros-humble-ros-gz \
   && rm -rf /var/lib/apt/lists/*
 ENV DEBIAN_FRONTEND=
-
-###########################################
-#  Full+Gazebo+Nvidia image
-###########################################
-
-FROM gazebo AS gazebo-nvidia
-
-################
-# Expose the nvidia driver to allow opengl 
-# Dependencies for glvnd and X11.
-################
-RUN apt-get update \
- && apt-get install -y -qq --no-install-recommends \
-  libglvnd0 \
-  libgl1 \
-  libglx0 \
-  libegl1 \
-  libxext6 \
-  libx11-6
-
-# Env vars for the nvidia-container-runtime.
-ENV NVIDIA_VISIBLE_DEVICES all
-ENV NVIDIA_DRIVER_CAPABILITIES graphics,utility,compute
-ENV QT_X11_NO_MITSHM 1
