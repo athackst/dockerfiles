@@ -75,7 +75,7 @@ ros2:
       - base
       - dev
       - full
-      - gazebo-nvidia
+      - gazebo
     python_version: "3.10"
     base_image: "nvidia/cuda"
     image_version: "11.8.0-runtime-ubuntu22.04"
@@ -97,7 +97,7 @@ ros2:
       - base
       - dev
       - full
-      - gazebo-nvidia
+      - gazebo
     python_version: "3.10"
     base_image: "nvidia/cuda"
     image_version: "11.8.0-runtime-ubuntu22.04"
@@ -120,7 +120,7 @@ ros2:
       - base
       - dev
       - full
-      - gazebo-nvidia
+      - gazebo
     python_version: "3.8"
     base_image: "nvidia/cuda"
     image_version: "11.7.0-runtime-ubuntu20.04"
@@ -144,7 +144,7 @@ ros2:
       - base
       - dev
       - full
-      - gazebo-nvidia
+      - gazebo
     python_version: "3.8"
     base_image: "nvidia/cuda"
     image_version: "11.8.0-runtime-ubuntu20.04"

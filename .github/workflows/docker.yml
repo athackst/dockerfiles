@@ -101,7 +101,7 @@ jobs:
             platforms: linux/amd64
           - label: ros2
             tag: iron-cuda
-            target: gazebo-nvidia
+            target: gazebo
             platforms: linux/amd64
           - label: ros2
             tag: humble
@@ -133,7 +133,7 @@ jobs:
             platforms: linux/amd64
           - label: ros2
             tag: humble-cuda
-            target: gazebo-nvidia
+            target: gazebo
             platforms: linux/amd64
           - label: gazebo
             tag: gazebo11
