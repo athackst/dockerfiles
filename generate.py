@@ -12,13 +12,13 @@ yaml = ruamel.yaml.YAML()
 yaml.preserve_quotes = True
 
 
-class Templates():
+class Templates:
     """Accessor to the templates file."""
 
     def __init__(self):
         """Initialize with a cache the templates.yml file."""
         self._settings = None
-        with open('templates.yml', 'r') as file:
+        with open("templates.yml", "r") as file:
             self._settings = yaml.load(file)
 
     def raw(self) -> dict:
@@ -65,7 +65,7 @@ class Templates():
                     continue
                 image_list[dockerfile["name"]] = {
                     "repository": repository,
-                    "targets": dockerfile["targets"]
+                    "targets": dockerfile["targets"],
                 }
         return image_list
 
@@ -80,19 +80,23 @@ class Templates():
         """
         data = self._settings
         output = []
+
+        def get_platforms(target, tag):
+            if "gazebo" in target or "gazebo" in tag or "cuda" in tag:
+                return "linux/amd64"
+            return "linux/amd64,linux/arm64"
+
         for label in data:
             for entry in data[label]:
-                tag = entry['name']
+                tag = entry["name"]
                 if not eol and "eol" in entry.keys():
                     continue
-                for target in entry['targets']:
+                for target in entry["targets"]:
                     item = {
                         "label": label,
                         "tag": tag,
                         "target": target,
-                        "platforms": ("linux/amd64"
-                                      if "gazebo" in target or "gazebo" in tag
-                                      else "linux/amd64,linux/arm64")
+                        "platforms": get_platforms(target, tag),
                     }
                     output.append(item)
         return output
@@ -128,7 +132,7 @@ templates = Templates()
 
 def generate_dockerfiles(log):
     """Generate the dockerfiles for this repo."""
-    file_loader = FileSystemLoader('template')
+    file_loader = FileSystemLoader("template")
     env = Environment(loader=file_loader)
 
     for dockerfile in templates.dockerfile_settings():
@@ -144,42 +148,47 @@ def generate_dockerfiles(log):
 
 def generate_readmes(log):
     """Generate the readme files."""
-    file_loader = FileSystemLoader('template')
+    file_loader = FileSystemLoader("template")
     env = Environment(loader=file_loader)
     repositories = templates.repo_names()
     for repository in repositories:
         dockerfiles = templates.raw()[repository]
         log.info("Generating readme for {}".format(repository))
-        readme_template = env.get_template('readme.md.jinja')
+        readme_template = env.get_template("readme.md.jinja")
         readme_output = readme_template.render(
-            {"repo_name": repository,
-             "dockerfiles": dockerfiles})
+            {"repo_name": repository, "dockerfiles": dockerfiles}
+        )
         readme_file = f"{repository}/README.md"
         readme_out = open(readme_file, "w")
         readme_out.write(readme_output)
         readme_out.close()
 
 
-def generate_workflow(log):
+def generate_docker_workflow(log):
     """Generate workflow with non-eol images."""
     log.info("Generating workflow file.")
-    workflow_file = ".github/workflows/docker.yml"
+    docker_workflow_file = ".github/workflows/docker.yml"
     docker_workflow = None
-    with open(workflow_file, 'r') as file:
+    with open(docker_workflow_file, "r") as file:
         docker_workflow = yaml.load(file)
         docker_workflow["jobs"]["docker"]["strategy"]["matrix"] = {
-            "include": templates.workflow_names()}
+            "include": templates.workflow_names()
+        }
 
-    with open(workflow_file, "w") as file:
+    with open(docker_workflow_file, "w") as file:
         yaml.indent(mapping=2, sequence=4, offset=2)
         yaml.dump(docker_workflow, file)
 
+
+def generate_readme_workflow(log):
+    """Generate docker readme file workflow."""
     workflow_file = ".github/workflows/docker_readme.yml"
     docker_workflow = None
-    with open(workflow_file, 'r') as file:
+    with open(workflow_file, "r") as file:
         docker_workflow = yaml.load(file)
-        (docker_workflow["jobs"]["readme"]["strategy"]
-         ["matrix"]["docker_repo"]) = templates.repo_names()
+        docker_workflow["jobs"]["readme"]["strategy"]["matrix"] = {
+            "docker_repo": templates.repo_names()
+        }
 
     with open(workflow_file, "w") as file:
         yaml.indent(mapping=2, sequence=4, offset=2)
@@ -190,11 +199,11 @@ def generate_tasks(log):
     """Generate tasks with non-eol images."""
     log.info("Generating tasks.")
     tasks_file = ".vscode/tasks.json"
-    with open(tasks_file, 'r') as file:
+    with open(tasks_file, "r") as file:
         tasks = json_parser.load(file)
         for input in tasks["inputs"]:
             if input["id"] == "build_name":
-                input["options"] = templates.task_names() + ['all']
+                input["options"] = templates.task_names() + ["all"]
     with open(tasks_file, "w") as file:
         json_parser.dump(tasks, file, indent=2)
 
@@ -202,7 +211,7 @@ def generate_tasks(log):
 if __name__ == "__main__":
     # Set up logger.
     log.setLevel(logging.INFO)
-    formatter = logging.Formatter('%(message)s')
+    formatter = logging.Formatter("%(message)s")
     stream_handler = logging.StreamHandler()
     stream_handler.setLevel(logging.INFO)
     stream_handler.setFormatter(formatter)
@@ -210,6 +219,7 @@ if __name__ == "__main__":
 
     generate_dockerfiles(log)
     generate_readmes(log)
-    generate_workflow(log)
+    generate_docker_workflow(log)
+    generate_readme_workflow(log)
     generate_tasks(log)
     log.info("Finished generating dockerfiles.")

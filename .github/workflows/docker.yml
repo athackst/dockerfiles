@@ -90,15 +90,15 @@ jobs:
           - label: ros2
             tag: iron-cuda
             target: base
-            platforms: linux/amd64,linux/arm64
+            platforms: linux/amd64
           - label: ros2
             tag: iron-cuda
             target: dev
-            platforms: linux/amd64,linux/arm64
+            platforms: linux/amd64
           - label: ros2
             tag: iron-cuda
             target: full
-            platforms: linux/amd64,linux/arm64
+            platforms: linux/amd64
           - label: ros2
             tag: iron-cuda
             target: gazebo-nvidia
@@ -122,15 +122,15 @@ jobs:
           - label: ros2
             tag: humble-cuda
             target: base
-            platforms: linux/amd64,linux/arm64
+            platforms: linux/amd64
           - label: ros2
             tag: humble-cuda
             target: dev
-            platforms: linux/amd64,linux/arm64
+            platforms: linux/amd64
           - label: ros2
             tag: humble-cuda
             target: full
-            platforms: linux/amd64,linux/arm64
+            platforms: linux/amd64
           - label: ros2
             tag: humble-cuda
             target: gazebo-nvidia
