@@ -26,7 +26,8 @@
 				"ms-python.python",
 				"redhat.vscode-yaml",
 				"njpwerner.autodocstring",
-				"eamodio.gitlens"
+				"eamodio.gitlens",
+				"ms-python.black-formatter"
 			]
 		}
 	},
