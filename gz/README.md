@@ -18,15 +18,21 @@ harmonic
   
 * [harmonic-base](https://github.com/athackst/dockerfiles/blob/main/gz/harmonic.Dockerfile)
 * [harmonic-dev](https://github.com/athackst/dockerfiles/blob/main/gz/harmonic.Dockerfile)
-* [harmonic-nvidia](https://github.com/athackst/dockerfiles/blob/main/gz/harmonic.Dockerfile)
-* [harmonic-nvidia-dev](https://github.com/athackst/dockerfiles/blob/main/gz/harmonic.Dockerfile)
+
+harmonic-cuda
+  
+* [harmonic-cuda-base](https://github.com/athackst/dockerfiles/blob/main/gz/harmonic-cuda.Dockerfile)
+* [harmonic-cuda-dev](https://github.com/athackst/dockerfiles/blob/main/gz/harmonic-cuda.Dockerfile)
 
 garden
   
 * [garden-base](https://github.com/athackst/dockerfiles/blob/main/gz/garden.Dockerfile)
 * [garden-dev](https://github.com/athackst/dockerfiles/blob/main/gz/garden.Dockerfile)
-* [garden-nvidia](https://github.com/athackst/dockerfiles/blob/main/gz/garden.Dockerfile)
-* [garden-nvidia-dev](https://github.com/athackst/dockerfiles/blob/main/gz/garden.Dockerfile)
+
+garden-cuda
+  
+* [garden-cuda-base](https://github.com/athackst/dockerfiles/blob/main/gz/garden-cuda.Dockerfile)
+* [garden-cuda-dev](https://github.com/athackst/dockerfiles/blob/main/gz/garden-cuda.Dockerfile)
 
 
 Each image is additionally tagged with the date of creation, which lets you peg to a specific version of packages.

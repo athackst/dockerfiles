@@ -5,7 +5,7 @@
 ###########################################
 # Base image
 ###########################################
-FROM ubuntu:22.04 AS base
+FROM ubuntu:20.04 AS base
 
 # Avoid warnings by switching to noninteractive
 ENV DEBIAN_FRONTEND=noninteractive
@@ -93,49 +93,3 @@ RUN wget https://raw.githubusercontent.com/gazebo-tooling/gazebodistro/master/co
       $(sort -u $(find . -iname 'packages-'`lsb_release -cs`'.apt' -o -iname 'packages.apt' | grep -v '/\.git/') | sed '/gz\|sdf/d' | tr '\n' ' ')
 
 ENV DEBIAN_FRONTEND=
-
-###########################################
-# Nvidia image
-###########################################
-FROM base AS nvidia
-
-################
-# Expose the nvidia driver to allow opengl 
-# Dependencies for glvnd and X11.
-################
-RUN apt-get update \
- && apt-get install -y -qq --no-install-recommends \
-  libglvnd0 \
-  libgl1 \
-  libglx0 \
-  libegl1 \
-  libxext6 \
-  libx11-6
-
-# Env vars for the nvidia-container-runtime.
-ENV NVIDIA_VISIBLE_DEVICES all
-ENV NVIDIA_DRIVER_CAPABILITIES graphics,utility,compute
-ENV QT_X11_NO_MITSHM 1
-
-###########################################
-# Nvidia image
-###########################################
-FROM dev AS nvidia-dev
-
-################
-# Expose the nvidia driver to allow opengl 
-# Dependencies for glvnd and X11.
-################
-RUN apt-get update \
- && apt-get install -y -qq --no-install-recommends \
-  libglvnd0 \
-  libgl1 \
-  libglx0 \
-  libegl1 \
-  libxext6 \
-  libx11-6
-
-# Env vars for the nvidia-container-runtime.
-ENV NVIDIA_VISIBLE_DEVICES all
-ENV NVIDIA_DRIVER_CAPABILITIES graphics,utility,compute
-ENV QT_X11_NO_MITSHM 1

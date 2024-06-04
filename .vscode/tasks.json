@@ -97,7 +97,9 @@
         "fortress",
         "citadel",
         "harmonic",
+        "harmonic-cuda",
         "garden",
+        "garden-cuda",
         "all"
       ],
       "default": "foxy"

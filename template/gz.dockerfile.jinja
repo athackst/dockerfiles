@@ -5,7 +5,7 @@
 ###########################################
 # Base image
 ###########################################
-FROM ubuntu:{{ ubuntu_distro }} AS base
+FROM {{ base_image }}:{{ image_version }} AS base
 
 # Avoid warnings by switching to noninteractive
 ENV DEBIAN_FRONTEND=noninteractive
@@ -28,6 +28,11 @@ RUN apt-get update && apt-get install -q -y \
   && apt-get update && apt-get install -y -q \
     gz-{{ gz_distro }} \
   && rm -rf /var/lib/apt/lists/*
+
+{%- if 'nvidia' in base_image %}
+
+{% include 'snippits/nvidia.jinja' %}
+{%- endif %}
 
 {% include 'snippits/ros_user.jinja' %}
 
@@ -64,17 +69,3 @@ RUN wget https://raw.githubusercontent.com/gazebo-tooling/gazebodistro/master/co
       $(sort -u $(find . -iname 'packages-'`lsb_release -cs`'.apt' -o -iname 'packages.apt' | grep -v '/\.git/') | sed '/gz\|sdf/d' | tr '\n' ' ')
 
 ENV DEBIAN_FRONTEND=
-
-###########################################
-# Nvidia image
-###########################################
-FROM base AS nvidia
-
-{% include 'snippits/nvidia.jinja' %}
-
-###########################################
-# Nvidia image
-###########################################
-FROM dev AS nvidia-dev
-
-{% include 'snippits/nvidia.jinja' %}

@@ -451,16 +451,6 @@ jobs:
           tags: |
             althack/gazebo:gazebo11-dev
             althack/gazebo:gazebo11-dev-${{ steps.date.outputs.date }}
-      - name: Build and push nvidia
-        uses: docker/build-push-action@v5
-        with:
-          push: ${{ github.ref == 'refs/heads/main' }}
-          file: gazebo/gazebo11.Dockerfile
-          target: nvidia
-          platforms: linux/amd64
-          tags: |
-            althack/gazebo:gazebo11-nvidia
-            althack/gazebo:gazebo11-nvidia-${{ steps.date.outputs.date }}
   ignition-fortress:
     runs-on: ubuntu-latest
     steps:
@@ -503,16 +493,6 @@ jobs:
           tags: |
             althack/ignition:fortress-dev
             althack/ignition:fortress-dev-${{ steps.date.outputs.date }}
-      - name: Build and push nvidia
-        uses: docker/build-push-action@v5
-        with:
-          push: ${{ github.ref == 'refs/heads/main' }}
-          file: ignition/fortress.Dockerfile
-          target: nvidia
-          platforms: linux/amd64
-          tags: |
-            althack/ignition:fortress-nvidia
-            althack/ignition:fortress-nvidia-${{ steps.date.outputs.date }}
   ignition-citadel:
     runs-on: ubuntu-latest
     steps:
@@ -555,16 +535,6 @@ jobs:
           tags: |
             althack/ignition:citadel-dev
             althack/ignition:citadel-dev-${{ steps.date.outputs.date }}
-      - name: Build and push nvidia
-        uses: docker/build-push-action@v5
-        with:
-          push: ${{ github.ref == 'refs/heads/main' }}
-          file: ignition/citadel.Dockerfile
-          target: nvidia
-          platforms: linux/amd64
-          tags: |
-            althack/ignition:citadel-nvidia
-            althack/ignition:citadel-nvidia-${{ steps.date.outputs.date }}
   gz-harmonic:
     runs-on: ubuntu-latest
     steps:
@@ -607,26 +577,48 @@ jobs:
           tags: |
             althack/gz:harmonic-dev
             althack/gz:harmonic-dev-${{ steps.date.outputs.date }}
-      - name: Build and push nvidia
+  gz-harmonic-cuda:
+    runs-on: ubuntu-latest
+    steps:
+    
+      - name: Set current date
+        id: date
+        run: |
+          echo "date=$(date +%Y-%m-%d)" >> "$GITHUB_OUTPUT"
+      - name: Use current date
+        run: |
+          echo "Current date is ${{ steps.date.outputs.date }}"
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+      - name: Login to Docker Hub
+        uses: docker/login-action@v3
+        if: ${{ github.ref == 'refs/heads/main' }}
+        with:
+          username: althack
+          password: ${{ secrets.DOCKERHUB_PASSWORD }}
+    
+      - name: Build and push base
         uses: docker/build-push-action@v5
         with:
           push: ${{ github.ref == 'refs/heads/main' }}
-          file: gz/harmonic.Dockerfile
-          target: nvidia
+          file: gz/harmonic-cuda.Dockerfile
+          target: base
           platforms: linux/amd64
           tags: |
-            althack/gz:harmonic-nvidia
-            althack/gz:harmonic-nvidia-${{ steps.date.outputs.date }}
-      - name: Build and push nvidia-dev
+            althack/gz:harmonic-cuda-base
+            althack/gz:harmonic-cuda-base-${{ steps.date.outputs.date }}
+      - name: Build and push dev
         uses: docker/build-push-action@v5
         with:
           push: ${{ github.ref == 'refs/heads/main' }}
-          file: gz/harmonic.Dockerfile
-          target: nvidia-dev
+          file: gz/harmonic-cuda.Dockerfile
+          target: dev
           platforms: linux/amd64
           tags: |
-            althack/gz:harmonic-nvidia-dev
-            althack/gz:harmonic-nvidia-dev-${{ steps.date.outputs.date }}
+            althack/gz:harmonic-cuda-dev
+            althack/gz:harmonic-cuda-dev-${{ steps.date.outputs.date }}
   gz-garden:
     runs-on: ubuntu-latest
     steps:
@@ -669,26 +661,48 @@ jobs:
           tags: |
             althack/gz:garden-dev
             althack/gz:garden-dev-${{ steps.date.outputs.date }}
-      - name: Build and push nvidia
+  gz-garden-cuda:
+    runs-on: ubuntu-latest
+    steps:
+    
+      - name: Set current date
+        id: date
+        run: |
+          echo "date=$(date +%Y-%m-%d)" >> "$GITHUB_OUTPUT"
+      - name: Use current date
+        run: |
+          echo "Current date is ${{ steps.date.outputs.date }}"
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+      - name: Login to Docker Hub
+        uses: docker/login-action@v3
+        if: ${{ github.ref == 'refs/heads/main' }}
+        with:
+          username: althack
+          password: ${{ secrets.DOCKERHUB_PASSWORD }}
+    
+      - name: Build and push base
         uses: docker/build-push-action@v5
         with:
           push: ${{ github.ref == 'refs/heads/main' }}
-          file: gz/garden.Dockerfile
-          target: nvidia
+          file: gz/garden-cuda.Dockerfile
+          target: base
           platforms: linux/amd64
           tags: |
-            althack/gz:garden-nvidia
-            althack/gz:garden-nvidia-${{ steps.date.outputs.date }}
-      - name: Build and push nvidia-dev
+            althack/gz:garden-cuda-base
+            althack/gz:garden-cuda-base-${{ steps.date.outputs.date }}
+      - name: Build and push dev
         uses: docker/build-push-action@v5
         with:
           push: ${{ github.ref == 'refs/heads/main' }}
-          file: gz/garden.Dockerfile
-          target: nvidia-dev
+          file: gz/garden-cuda.Dockerfile
+          target: dev
           platforms: linux/amd64
           tags: |
-            althack/gz:garden-nvidia-dev
-            althack/gz:garden-nvidia-dev-${{ steps.date.outputs.date }}
+            althack/gz:garden-cuda-dev
+            althack/gz:garden-cuda-dev-${{ steps.date.outputs.date }}
 
   complete:
     needs:
@@ -703,7 +717,9 @@ jobs:
         - ignition-fortress
         - ignition-citadel
         - gz-harmonic
+        - gz-harmonic-cuda
         - gz-garden
+        - gz-garden-cuda
     runs-on: ubuntu-latest
     steps:
       - name: Check
