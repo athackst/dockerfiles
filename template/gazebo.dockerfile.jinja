@@ -3,7 +3,7 @@
 ##################################################
 
 ###########################################
-# Base image 
+# Base image
 ###########################################
 FROM ubuntu:{{ ubuntu_distro }} AS base
 
@@ -16,18 +16,17 @@ ENV DEBIAN_FRONTEND=noninteractive
 
 # Install gazebo
 RUN apt-get update && apt-get install -q -y \
-    dirmngr \
-    gnupg2 \
+    gnupg \
     lsb-release \
     wget \
-  && sh -c 'echo "deb http://packages.osrfoundation.org/gazebo/ubuntu-stable `lsb_release -cs` main" > /etc/apt/sources.list.d/gazebo-stable.list' \
-  && wget http://packages.osrfoundation.org/gazebo.key -O - | apt-key add - \
-  && apt-get update && apt-get install -y \
+    && sh -c 'echo "deb http://packages.osrfoundation.org/gazebo/ubuntu-stable `lsb_release -cs` main" > /etc/apt/sources.list.d/gazebo-stable.list' \
+    && wget https://packages.osrfoundation.org/gazebo.key -O - | apt-key add - \
+    && apt-get update && apt-get install -y \
     gazebo{{ gazebo_release }} \
   && rm -rf /var/lib/apt/lists/*
 
 ###########################################
-# Develop image 
+# Develop image
 ###########################################
 FROM base AS dev
 
@@ -41,7 +40,7 @@ RUN apt-get update && apt-get install -y \
 ENV DEBIAN_FRONTEND=
 
 ###########################################
-#  Full+Gazebo+Nvidia image 
+#  Full+Gazebo+Nvidia image
 ###########################################
 
 FROM gazebo AS nvidia

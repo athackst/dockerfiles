@@ -95,7 +95,7 @@ jobs:
           push: ${{ github.ref == 'refs/heads/main' }}
           file: ros/noetic.Dockerfile
           target: gazebo
-          platforms: linux/amd64,linux/arm64
+          platforms: linux/amd64
           tags: |
             althack/ros:noetic-gazebo
             althack/ros:noetic-gazebo-${{ steps.date.outputs.date }}
@@ -157,7 +157,7 @@ jobs:
           push: ${{ github.ref == 'refs/heads/main' }}
           file: ros2/rolling.Dockerfile
           target: gazebo
-          platforms: linux/amd64,linux/arm64
+          platforms: linux/amd64
           tags: |
             althack/ros2:rolling-gazebo
             althack/ros2:rolling-gazebo-${{ steps.date.outputs.date }}
@@ -219,7 +219,7 @@ jobs:
           push: ${{ github.ref == 'refs/heads/main' }}
           file: ros2/iron.Dockerfile
           target: gazebo
-          platforms: linux/amd64,linux/arm64
+          platforms: linux/amd64
           tags: |
             althack/ros2:iron-gazebo
             althack/ros2:iron-gazebo-${{ steps.date.outputs.date }}
@@ -343,7 +343,7 @@ jobs:
           push: ${{ github.ref == 'refs/heads/main' }}
           file: ros2/humble.Dockerfile
           target: gazebo
-          platforms: linux/amd64,linux/arm64
+          platforms: linux/amd64
           tags: |
             althack/ros2:humble-gazebo
             althack/ros2:humble-gazebo-${{ steps.date.outputs.date }}
@@ -437,7 +437,7 @@ jobs:
           push: ${{ github.ref == 'refs/heads/main' }}
           file: gazebo/gazebo11.Dockerfile
           target: base
-          platforms: linux/amd64,linux/arm64
+          platforms: linux/amd64
           tags: |
             althack/gazebo:gazebo11-base
             althack/gazebo:gazebo11-base-${{ steps.date.outputs.date }}
@@ -447,7 +447,7 @@ jobs:
           push: ${{ github.ref == 'refs/heads/main' }}
           file: gazebo/gazebo11.Dockerfile
           target: dev
-          platforms: linux/amd64,linux/arm64
+          platforms: linux/amd64
           tags: |
             althack/gazebo:gazebo11-dev
             althack/gazebo:gazebo11-dev-${{ steps.date.outputs.date }}
@@ -489,7 +489,7 @@ jobs:
           push: ${{ github.ref == 'refs/heads/main' }}
           file: ignition/fortress.Dockerfile
           target: base
-          platforms: linux/amd64,linux/arm64
+          platforms: linux/amd64
           tags: |
             althack/ignition:fortress-base
             althack/ignition:fortress-base-${{ steps.date.outputs.date }}
@@ -499,7 +499,7 @@ jobs:
           push: ${{ github.ref == 'refs/heads/main' }}
           file: ignition/fortress.Dockerfile
           target: dev
-          platforms: linux/amd64,linux/arm64
+          platforms: linux/amd64
           tags: |
             althack/ignition:fortress-dev
             althack/ignition:fortress-dev-${{ steps.date.outputs.date }}
@@ -541,7 +541,7 @@ jobs:
           push: ${{ github.ref == 'refs/heads/main' }}
           file: ignition/citadel.Dockerfile
           target: base
-          platforms: linux/amd64,linux/arm64
+          platforms: linux/amd64
           tags: |
             althack/ignition:citadel-base
             althack/ignition:citadel-base-${{ steps.date.outputs.date }}
@@ -551,7 +551,7 @@ jobs:
           push: ${{ github.ref == 'refs/heads/main' }}
           file: ignition/citadel.Dockerfile
           target: dev
-          platforms: linux/amd64,linux/arm64
+          platforms: linux/amd64
           tags: |
             althack/ignition:citadel-dev
             althack/ignition:citadel-dev-${{ steps.date.outputs.date }}
@@ -593,7 +593,7 @@ jobs:
           push: ${{ github.ref == 'refs/heads/main' }}
           file: gz/harmonic.Dockerfile
           target: base
-          platforms: linux/amd64,linux/arm64
+          platforms: linux/amd64
           tags: |
             althack/gz:harmonic-base
             althack/gz:harmonic-base-${{ steps.date.outputs.date }}
@@ -603,7 +603,7 @@ jobs:
           push: ${{ github.ref == 'refs/heads/main' }}
           file: gz/harmonic.Dockerfile
           target: dev
-          platforms: linux/amd64,linux/arm64
+          platforms: linux/amd64
           tags: |
             althack/gz:harmonic-dev
             althack/gz:harmonic-dev-${{ steps.date.outputs.date }}
@@ -655,7 +655,7 @@ jobs:
           push: ${{ github.ref == 'refs/heads/main' }}
           file: gz/garden.Dockerfile
           target: base
-          platforms: linux/amd64,linux/arm64
+          platforms: linux/amd64
           tags: |
             althack/gz:garden-base
             althack/gz:garden-base-${{ steps.date.outputs.date }}
@@ -665,7 +665,7 @@ jobs:
           push: ${{ github.ref == 'refs/heads/main' }}
           file: gz/garden.Dockerfile
           target: dev
-          platforms: linux/amd64,linux/arm64
+          platforms: linux/amd64
           tags: |
             althack/gz:garden-dev
             althack/gz:garden-dev-${{ steps.date.outputs.date }}
