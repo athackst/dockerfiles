@@ -39,28 +39,19 @@ jobs:
           git diff --exit-code
 
 {%- for template in templates %}
-    {%- set label = template %}
-    {%- set jobs = templates[template] %}
-    {%- for job in jobs %}
-        {%- set tag = job["name"] %}
-        {%- if not job["eol"] %}
+    {%- set label = template["label"] %}
+    {%- set tag = template["tag"] %}
+    {%- set steps = template["steps"] %}
   {% include 'snippits/docker_job.workflow.jinja' %}
-        {%- endif %}
-    {%- endfor %}
 {%- endfor %}
 
   complete:
     needs:
         - generate
 {%- for template in templates %}
-    {%- set label = template %}
-    {%- set jobs = templates[template] %}
-    {%- for job in jobs %}
-        {%- set tag = job["name"] %}
-        {%- if not job["eol"] %}
+    {%- set label = template["label"] %}
+    {%- set tag = template["tag"] %}
         - {{ label }}-{{ tag }}
-        {%- endif %}
-    {%- endfor %}
 {%- endfor %}
     runs-on: ubuntu-latest
     steps:

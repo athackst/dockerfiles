@@ -63,9 +63,12 @@ class Templates:
             for dockerfile in self._settings[repository]:
                 if not eol and "eol" in dockerfile:
                     continue
+                targets = list()
+                for target in dockerfile["targets"]:
+                    targets.append(target["target"])
                 image_list[dockerfile["name"]] = {
                     "repository": repository,
-                    "targets": dockerfile["targets"],
+                    "targets": targets,
                 }
         return image_list
 
@@ -81,24 +84,26 @@ class Templates:
         data = self._settings
         output = []
 
-        def get_platforms(target, tag):
-            if "gazebo" in target or "gazebo" in tag or "cuda" in tag:
-                return "linux/amd64"
-            return "linux/amd64,linux/arm64"
-
-        for label in data:
-            for entry in data[label]:
+        for repo in data:
+            for entry in data[repo]:
                 tag = entry["name"]
                 if not eol and "eol" in entry.keys():
                     continue
+                steps = list()
+
                 for target in entry["targets"]:
-                    item = {
-                        "label": label,
-                        "tag": tag,
-                        "target": target,
-                        "platforms": get_platforms(target, tag),
+                    step = {
+                        "target": target["target"],
+                        "platforms": target["platforms"],
                     }
-                    output.append(item)
+                    steps.append(step)
+
+                item = {
+                    "label": repo,
+                    "tag": tag,
+                    "steps": steps
+                    }
+                output.append(item)
         return output
 
     def task_names(self, eol: bool = False) -> list:
@@ -169,9 +174,8 @@ def generate_docker_workflow(log):
     file_loader = FileSystemLoader("template")
     env = Environment(loader=file_loader)
 
-    t = templates.raw()
     template = env.get_template("docker.yml.jinja")
-    output = template.render({"templates": t})
+    output = template.render({"templates": templates.workflow_names()})
     docker_workflow_file = ".github/workflows/docker.yml"
     with open(docker_workflow_file, "w") as file:
         file.write(output)

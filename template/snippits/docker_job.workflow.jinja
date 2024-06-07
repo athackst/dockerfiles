@@ -1,17 +1,11 @@
-{% macro build_step(label, tag, target) -%}
+{% macro build_step(label, tag, target, platforms) -%}
       - name: Build and push {{ target }}
         uses: docker/build-push-action@v5
         with:
           push: {% raw %}${{ github.ref == 'refs/heads/main' }}{% endraw %}
           file: {{ label }}/{{ tag }}.Dockerfile
           target: {{ target }}
-          {%- if "nvidia" in target %}
-          platforms: linux/amd64
-          {%- elif "cuda" in tag %}
-          platforms: linux/amd64
-          {%- else %}
-          platforms: linux/amd64,linux/arm64
-          {%- endif %}
+          platforms: {{ platforms }}
           tags: |
             althack/{{ label }}:{{ tag }}-{{ target }}
             althack/{{ label }}:{{ tag }}-{{ target }}-{% raw %}${{ steps.date.outputs.date }}{% endraw %}
@@ -39,7 +33,6 @@
           username: althack
           password: ${{ secrets.DOCKERHUB_PASSWORD }}
     {% endraw %}
-      {%- set targets = job["targets"] %}
-      {%- for target in targets %}
-      {{ build_step(label, tag, target) }}
+      {%- for step in steps %}
+      {{ build_step(label, tag, step["target"], step["platforms"]) }}
       {%- endfor %}
