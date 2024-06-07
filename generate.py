@@ -89,21 +89,15 @@ class Templates:
                 tag = entry["name"]
                 if not eol and "eol" in entry.keys():
                     continue
-                steps = list()
 
                 for target in entry["targets"]:
-                    step = {
+                    item = {
+                        "label": repo,
+                        "tag": tag,
                         "target": target["target"],
                         "platforms": target["platforms"],
-                    }
-                    steps.append(step)
-
-                item = {
-                    "label": repo,
-                    "tag": tag,
-                    "steps": steps
-                    }
-                output.append(item)
+                        }
+                    output.append(item)
         return output
 
     def task_names(self, eol: bool = False) -> list:
@@ -171,14 +165,17 @@ def generate_readmes(log):
 
 def generate_docker_workflow(log):
     """Generate workflow with non-eol images."""
-    file_loader = FileSystemLoader("template")
-    env = Environment(loader=file_loader)
-
-    template = env.get_template("docker.yml.jinja")
-    output = template.render({"templates": templates.workflow_names()})
-    docker_workflow_file = ".github/workflows/docker.yml"
-    with open(docker_workflow_file, "w") as file:
-        file.write(output)
+    log.info("Generating workflow file.")
+    workflow_file = ".github/workflows/docker.yml"
+    docker_workflow = None
+    with open(workflow_file, 'r') as file:
+        docker_workflow = yaml.load(file)
+        docker_workflow["jobs"]["docker"]["strategy"]["matrix"] = {
+            "include": templates.workflow_names()}
+    with open(workflow_file, "w") as file:
+        yaml.indent(mapping=2, sequence=4, offset=2)
+        yaml.width = 4294967296  # A very large number
+        yaml.dump(docker_workflow, file)
 
 
 def generate_readme_workflow(log):
