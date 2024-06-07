@@ -1,4 +1,7 @@
 {
     "python.defaultInterpreterPath": "/usr/bin/python3",
-    "editor.rulers": [80]
+    "editor.rulers": [80],
+    "black-formatter.args": [
+        "--line-length=80"
+    ],
 }

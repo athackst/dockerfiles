@@ -3,7 +3,7 @@
 #############################################
 
 ###########################################
-# Base image 
+# Base image
 ###########################################
 FROM ubuntu:{{ ubuntu_distro }} AS base
 
@@ -43,7 +43,7 @@ ENV CMAKE_PREFIX_PATH=/opt/ros/{{ ros_distro }}
 ENV DEBIAN_FRONTEND=
 
 ###########################################
-# Develop image 
+# Develop image
 ###########################################
 FROM base AS dev
 
@@ -69,7 +69,7 @@ RUN apt-get update && apt-get install -y \
 ENV DEBIAN_FRONTEND=
 
 ###########################################
-# Full image 
+# Full image
 ###########################################
 FROM dev AS full
 
@@ -81,19 +81,19 @@ RUN apt-get update && apt-get install -y \
 ENV DEBIAN_FRONTEND=
 
 ###########################################
-#  Full+Gazebo image 
+#  Full+Gazebo image
 ###########################################
 FROM full AS gazebo
 
 ENV DEBIAN_FRONTEND=noninteractive
 # Install gazebo
 RUN apt-get update && apt-get install -y \
-  ros-{{ ros_distro }}-gazebo* \
+   ros-{{ ros_distro }}-gazebo-ros-pkgs ros-{{ ros_distro }}-gazebo-ros-control \
   && rm -rf /var/lib/apt/lists/*
 ENV DEBIAN_FRONTEND=
 
 ###########################################
-#  Full+Gazebo+Nvidia image 
+#  Full+Gazebo+Nvidia image
 ###########################################
 
 FROM gazebo AS gazebo-nvidia

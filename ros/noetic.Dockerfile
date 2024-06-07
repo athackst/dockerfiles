@@ -3,7 +3,7 @@
 #############################################
 
 ###########################################
-# Base image 
+# Base image
 ###########################################
 FROM ubuntu:20.04 AS base
 
@@ -55,7 +55,7 @@ ENV CMAKE_PREFIX_PATH=/opt/ros/noetic
 ENV DEBIAN_FRONTEND=
 
 ###########################################
-# Develop image 
+# Develop image
 ###########################################
 FROM base AS dev
 
@@ -99,7 +99,7 @@ RUN apt-get update && apt-get install -y git-core bash-completion \
 ENV DEBIAN_FRONTEND=
 
 ###########################################
-# Full image 
+# Full image
 ###########################################
 FROM dev AS full
 
@@ -111,19 +111,19 @@ RUN apt-get update && apt-get install -y \
 ENV DEBIAN_FRONTEND=
 
 ###########################################
-#  Full+Gazebo image 
+#  Full+Gazebo image
 ###########################################
 FROM full AS gazebo
 
 ENV DEBIAN_FRONTEND=noninteractive
 # Install gazebo
 RUN apt-get update && apt-get install -y \
-  ros-noetic-gazebo* \
+   ros-noetic-gazebo-ros-pkgs ros-noetic-gazebo-ros-control \
   && rm -rf /var/lib/apt/lists/*
 ENV DEBIAN_FRONTEND=
 
 ###########################################
-#  Full+Gazebo+Nvidia image 
+#  Full+Gazebo+Nvidia image
 ###########################################
 
 FROM gazebo AS gazebo-nvidia

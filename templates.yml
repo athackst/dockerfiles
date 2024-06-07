@@ -3,10 +3,14 @@ ros:
     name: noetic
     ros_distro: noetic
     targets:
-      - base
-      - dev
-      - full
-      - gazebo
+      - target: base
+        platforms: "linux/amd64,linux/arm64"
+      - target: dev
+        platforms: "linux/amd64,linux/arm64"
+      - target: full
+        platforms: "linux/amd64,linux/arm64"
+      - target: gazebo
+        platforms: "linux/amd64"
     python_env: "3"
     python_version: "3"
     ubuntu_distro: "20.04"
@@ -14,10 +18,14 @@ ros:
     name: melodic
     ros_distro: melodic
     targets:
-      - base
-      - dev
-      - full
-      - gazebo
+      - target: base
+        platforms: "linux/amd64,linux/arm64"
+      - target: dev
+        platforms: "linux/amd64,linux/arm64"
+      - target: full
+        platforms: "linux/amd64,linux/arm64"
+      - target: gazebo
+        platforms: "linux/amd64"
     python_env: ""
     python_version: "2.7"
     ubuntu_distro: "18.04"
@@ -26,10 +34,14 @@ ros:
     name: lunar
     ros_distro: lunar
     targets:
-      - base
-      - dev
-      - full
-      - gazebo
+      - target: base
+        platforms: "linux/amd64,linux/arm64"
+      - target: dev
+        platforms: "linux/amd64,linux/arm64"
+      - target: full
+        platforms: "linux/amd64,linux/arm64"
+      - target: gazebo
+        platforms: "linux/amd64"
     python_env: ""
     python_version: "2.7"
     ubuntu_distro: "18.04"
@@ -38,10 +50,14 @@ ros:
     name: kinetic
     ros_distro: kinetic
     targets:
-      - base
-      - dev
-      - full
-      - gazebo
+      - target: base
+        platforms: "linux/amd64,linux/arm64"
+      - target: dev
+        platforms: "linux/amd64,linux/arm64"
+      - target: full
+        platforms: "linux/amd64,linux/arm64"
+      - target: gazebo
+        platforms: "linux/amd64"
     python_env: ""
     python_version: "2.7"
     ubuntu_distro: "16.04"
@@ -51,10 +67,14 @@ ros2:
     name: rolling
     ros_distro: rolling
     targets:
-      - base
-      - dev
-      - full
-      - gazebo
+      - target: base
+        platforms: "linux/amd64,linux/arm64"
+      - target: dev
+        platforms: "linux/amd64,linux/arm64"
+      - target: full
+        platforms: "linux/amd64,linux/arm64"
+      - target: gazebo
+        platforms: "linux/amd64"
     python_version: "3.10"
     base_image: "ubuntu"
     image_version: "22.04"
@@ -62,10 +82,14 @@ ros2:
     name: iron
     ros_distro: iron
     targets:
-      - base
-      - dev
-      - full
-      - gazebo
+      - target: base
+        platforms: "linux/amd64,linux/arm64"
+      - target: dev
+        platforms: "linux/amd64,linux/arm64"
+      - target: full
+        platforms: "linux/amd64,linux/arm64"
+      - target: gazebo
+        platforms: "linux/amd64"
     python_version: "3.10"
     base_image: "ubuntu"
     image_version: "22.04"
@@ -73,10 +97,14 @@ ros2:
     name: iron-cuda
     ros_distro: iron
     targets:
-      - base
-      - dev
-      - full
-      - gazebo
+      - target: base
+        platforms: "linux/amd64"
+      - target: dev
+        platforms: "linux/amd64"
+      - target: full
+        platforms: "linux/amd64"
+      - target: gazebo
+        platforms: "linux/amd64"
     python_version: "3.10"
     base_image: "nvidia/cuda"
     image_version: "11.8.0-runtime-ubuntu22.04"
@@ -84,10 +112,14 @@ ros2:
     name: humble
     ros_distro: humble
     targets:
-      - base
-      - dev
-      - full
-      - gazebo
+      - target: base
+        platforms: "linux/amd64,linux/arm64"
+      - target: dev
+        platforms: "linux/amd64,linux/arm64"
+      - target: full
+        platforms: "linux/amd64,linux/arm64"
+      - target: gazebo
+        platforms: "linux/amd64"
     python_version: "3.10"
     base_image: "ubuntu"
     image_version: "22.04"
@@ -95,10 +127,14 @@ ros2:
     name: humble-cuda
     ros_distro: humble
     targets:
-      - base
-      - dev
-      - full
-      - gazebo
+      - target: base
+        platforms: "linux/amd64"
+      - target: dev
+        platforms: "linux/amd64"
+      - target: full
+        platforms: "linux/amd64"
+      - target: gazebo
+        platforms: "linux/amd64"
     python_version: "3.10"
     base_image: "nvidia/cuda"
     image_version: "11.8.0-runtime-ubuntu22.04"
@@ -106,10 +142,14 @@ ros2:
     name: galactic
     ros_distro: galactic
     targets:
-      - base
-      - dev
-      - full
-      - gazebo
+      - target: base
+        platforms: "linux/amd64,linux/arm64"
+      - target: dev
+        platforms: "linux/amd64,linux/arm64"
+      - target: full
+        platforms: "linux/amd64,linux/arm64"
+      - target: gazebo
+        platforms: "linux/amd64"
     python_version: "3.8"
     base_image: "ubuntu"
     image_version: "20.04"
@@ -118,10 +158,14 @@ ros2:
     name: galactic-cuda
     ros_distro: galactic
     targets:
-      - base
-      - dev
-      - full
-      - gazebo
+      - target: base
+        platforms: "linux/amd64"
+      - target: dev
+        platforms: "linux/amd64"
+      - target: full
+        platforms: "linux/amd64"
+      - target: gazebo
+        platforms: "linux/amd64"
     python_version: "3.8"
     base_image: "nvidia/cuda"
     image_version: "11.7.0-runtime-ubuntu20.04"
@@ -130,10 +174,14 @@ ros2:
     name: foxy
     ros_distro: foxy
     targets:
-      - base
-      - dev
-      - full
-      - gazebo
+      - target: base
+        platforms: "linux/amd64,linux/arm64"
+      - target: dev
+        platforms: "linux/amd64,linux/arm64"
+      - target: full
+        platforms: "linux/amd64,linux/arm64"
+      - target: gazebo
+        platforms: "linux/amd64"
     python_version: "3.8"
     base_image: "ubuntu"
     image_version: "20.04"
@@ -142,10 +190,14 @@ ros2:
     name: foxy-cuda
     ros_distro: foxy
     targets:
-      - base
-      - dev
-      - full
-      - gazebo
+      - target: base
+        platforms: "linux/amd64"
+      - target: dev
+        platforms: "linux/amd64"
+      - target: full
+        platforms: "linux/amd64"
+      - target: gazebo
+        platforms: "linux/amd64"
     python_version: "3.8"
     base_image: "nvidia/cuda"
     image_version: "11.8.0-runtime-ubuntu20.04"
@@ -154,10 +206,14 @@ ros2:
     name: eloquent
     ros_distro: eloquent
     targets:
-      - base
-      - dev
-      - full
-      - gazebo
+      - target: base
+        platforms: "linux/amd64,linux/arm64"
+      - target: dev
+        platforms: "linux/amd64,linux/arm64"
+      - target: full
+        platforms: "linux/amd64,linux/arm64"
+      - target: gazebo
+        platforms: "linux/amd64"
     python_version: "3.6"
     base_image: "ubuntu"
     image_version: "18.04"
@@ -166,10 +222,14 @@ ros2:
     name: dashing
     ros_distro: dashing
     targets:
-      - base
-      - dev
-      - full
-      - gazebo
+      - target: base
+        platforms: "linux/amd64,linux/arm64"
+      - target: dev
+        platforms: "linux/amd64,linux/arm64"
+      - target: full
+        platforms: "linux/amd64,linux/arm64"
+      - target: gazebo
+        platforms: "linux/amd64"
     python_version: "3.6"
     base_image: "ubuntu"
     image_version: "18.04"
@@ -179,24 +239,31 @@ gazebo:
     name: gazebo11
     gazebo_release: "11"
     targets:
-      - base
-      - dev
-      - nvidia
+      - target: base
+        platforms: "linux/amd64"
+      - target: dev
+        platforms: "linux/amd64"
+      - target: nvidia
+        platforms: "linux/amd64"
     ubuntu_distro: "20.04"
   -
     name: gazebo10
     gazebo_release: "10"
     targets:
-      - base
-      - dev
+      - target: base
+        platforms: "linux/amd64"
+      - target: dev
+        platforms: "linux/amd64"
     ubuntu_distro: "18.04"
     eol: true
   -
     name: gazebo9
     gazebo_release: "9"
     targets:
-      - base
-      - dev
+      - target: base
+        platforms: "linux/amd64"
+      - target: dev
+        platforms: "linux/amd64"
     ubuntu_distro: "18.04"
     eol: true
 ignition:
@@ -204,18 +271,24 @@ ignition:
     name: fortress
     ign_distro: fortress
     targets:
-      - base
-      - dev
-      - nvidia
+      - target: base
+        platforms: "linux/amd64"
+      - target: dev
+        platforms: "linux/amd64"
+      - target: nvidia
+        platforms: "linux/amd64"
     gazebo_version: "6"
     ubuntu_distro: "20.04"
   -
     name: edifice
     ign_distro: edifice
     targets:
-      - base
-      - dev
-      - nvidia
+      - target: base
+        platforms: "linux/amd64"
+      - target: dev
+        platforms: "linux/amd64"
+      - target: nvidia
+        platforms: "linux/amd64"
     gazebo_version: "5"
     ubuntu_distro: "20.04"
     eol: true
@@ -223,9 +296,12 @@ ignition:
     name: dome
     ign_distro: dome
     targets:
-      - base
-      - dev
-      - nvidia
+      - target: base
+        platforms: "linux/amd64"
+      - target: dev
+        platforms: "linux/amd64"
+      - target: nvidia
+        platforms: "linux/amd64"
     gazebo_version: "4"
     ubuntu_distro: "18.04"
     eol: true
@@ -233,9 +309,12 @@ ignition:
     name: citadel
     ign_distro: citadel
     targets:
-      - base
-      - dev
-      - nvidia
+      - target: base
+        platforms: "linux/amd64"
+      - target: dev
+        platforms: "linux/amd64"
+      - target: nvidia
+        platforms: "linux/amd64"
     gazebo_version: "3"
     ubuntu_distro: "18.04"
 gz:
@@ -243,19 +322,27 @@ gz:
     name: harmonic
     gz_distro: harmonic
     targets:
-      - base
-      - dev
-      - nvidia
-      - nvidia-dev
+      - target: base
+        platforms: "linux/amd64"
+      - target: dev
+        platforms: "linux/amd64"
+      - target: nvidia
+        platforms: "linux/amd64"
+      - target: nvidia-dev
+        platforms: "linux/amd64"
     gazebo_version: "8"
     ubuntu_distro: "22.04"
   -
     name: garden
     gz_distro: garden
     targets:
-      - base
-      - dev
-      - nvidia
-      - nvidia-dev
+      - target: base
+        platforms: "linux/amd64"
+      - target: dev
+        platforms: "linux/amd64"
+      - target: nvidia
+        platforms: "linux/amd64"
+      - target: nvidia-dev
+        platforms: "linux/amd64"
     gazebo_version: "7"
     ubuntu_distro: "22.04"
