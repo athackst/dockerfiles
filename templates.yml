@@ -243,8 +243,6 @@ gazebo:
         platforms: "linux/amd64"
       - target: dev
         platforms: "linux/amd64"
-      - target: nvidia
-        platforms: "linux/amd64"
     ubuntu_distro: "20.04"
   -
     name: gazebo10
@@ -275,8 +273,6 @@ ignition:
         platforms: "linux/amd64"
       - target: dev
         platforms: "linux/amd64"
-      - target: nvidia
-        platforms: "linux/amd64"
     gazebo_version: "6"
     ubuntu_distro: "20.04"
   -
@@ -286,8 +282,6 @@ ignition:
       - target: base
         platforms: "linux/amd64"
       - target: dev
-        platforms: "linux/amd64"
-      - target: nvidia
         platforms: "linux/amd64"
     gazebo_version: "5"
     ubuntu_distro: "20.04"
@@ -300,8 +294,6 @@ ignition:
         platforms: "linux/amd64"
       - target: dev
         platforms: "linux/amd64"
-      - target: nvidia
-        platforms: "linux/amd64"
     gazebo_version: "4"
     ubuntu_distro: "18.04"
     eol: true
@@ -312,8 +304,6 @@ ignition:
       - target: base
         platforms: "linux/amd64"
       - target: dev
-        platforms: "linux/amd64"
-      - target: nvidia
         platforms: "linux/amd64"
     gazebo_version: "3"
     ubuntu_distro: "18.04"
@@ -326,12 +316,20 @@ gz:
         platforms: "linux/amd64"
       - target: dev
         platforms: "linux/amd64"
-      - target: nvidia
+    gazebo_version: "8"
+    base_image: "ubuntu"
+    image_version: "22.04"
+  -
+    name: harmonic-cuda
+    gz_distro: harmonic
+    targets:
+      - target: base
         platforms: "linux/amd64"
-      - target: nvidia-dev
+      - target: dev
         platforms: "linux/amd64"
     gazebo_version: "8"
-    ubuntu_distro: "22.04"
+    base_image: "nvidia/cuda"
+    image_version: "12.5.0-runtime-ubuntu22.04"
   -
     name: garden
     gz_distro: garden
@@ -340,9 +338,17 @@ gz:
         platforms: "linux/amd64"
       - target: dev
         platforms: "linux/amd64"
-      - target: nvidia
+    gazebo_version: "7"
+    base_image: "ubuntu"
+    image_version: "20.04"
+  -
+    name: garden-cuda
+    gz_distro: garden
+    targets:
+      - target: base
         platforms: "linux/amd64"
-      - target: nvidia-dev
+      - target: dev
         platforms: "linux/amd64"
     gazebo_version: "7"
-    ubuntu_distro: "22.04"
+    base_image: "nvidia/cuda"
+    image_version: "12.5.0-runtime-ubuntu20.04"
