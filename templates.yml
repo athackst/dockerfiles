@@ -68,6 +68,21 @@ ros2:
     ros_distro: rolling
     targets:
       - target: base
+        platforms: "linux/amd64"
+      - target: dev
+        platforms: "linux/amd64"
+      - target: full
+        platforms: "linux/amd64"
+      - target: gazebo
+        platforms: "linux/amd64"
+    python_version: "3.12"
+    base_image: "ubuntu"
+    image_version: "24.04"
+  -
+    name: jazzy
+    ros_distro: jazzy
+    targets:
+      - target: base
         platforms: "linux/amd64,linux/arm64"
       - target: dev
         platforms: "linux/amd64,linux/arm64"
@@ -75,9 +90,9 @@ ros2:
         platforms: "linux/amd64,linux/arm64"
       - target: gazebo
         platforms: "linux/amd64"
-    python_version: "3.10"
+    python_version: "3.12"
     base_image: "ubuntu"
-    image_version: "22.04"
+    image_version: "24.04"
   -
     name: iron
     ros_distro: iron

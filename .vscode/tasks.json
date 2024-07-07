@@ -89,6 +89,7 @@
       "options": [
         "noetic",
         "rolling",
+        "jazzy",
         "iron",
         "iron-cuda",
         "humble",
