@@ -10,18 +10,18 @@ FROM nvidia/cuda:11.8.0-runtime-ubuntu22.04 AS base
 ENV DEBIAN_FRONTEND=noninteractive
 
 # Install language
-RUN apt-get update && apt-get install -y \
+RUN apt-get update && apt-get install -y --no-install-recommends \
   locales \
   && locale-gen en_US.UTF-8 \
   && update-locale LC_ALL=en_US.UTF-8 LANG=en_US.UTF-8 \
   && rm -rf /var/lib/apt/lists/*
-ENV LANG en_US.UTF-8
+ENV LANG=en_US.UTF-8
 
 # Install timezone
 RUN ln -fs /usr/share/zoneinfo/UTC /etc/localtime \
   && export DEBIAN_FRONTEND=noninteractive \
   && apt-get update \
-  && apt-get install -y tzdata \
+  && apt-get install -y --no-install-recommends tzdata \
   && dpkg-reconfigure --frontend noninteractive tzdata \
   && rm -rf /var/lib/apt/lists/*
 
@@ -48,7 +48,7 @@ RUN sudo add-apt-repository universe \
   && rm -rf /var/lib/apt/lists/*
 
 ################
-# Expose the nvidia driver to allow opengl 
+# Expose the nvidia driver to allow opengl
 # Dependencies for glvnd and X11.
 ################
 RUN apt-get update \
@@ -61,9 +61,9 @@ RUN apt-get update \
   libx11-6
 
 # Env vars for the nvidia-container-runtime.
-ENV NVIDIA_VISIBLE_DEVICES all
-ENV NVIDIA_DRIVER_CAPABILITIES graphics,utility,compute
-ENV QT_X11_NO_MITSHM 1
+ENV NVIDIA_VISIBLE_DEVICES=all
+ENV NVIDIA_DRIVER_CAPABILITIES=graphics,utility,compute
+ENV QT_X11_NO_MITSHM=1
 
 ENV ROS_DISTRO=iron
 ENV AMENT_PREFIX_PATH=/opt/ros/iron
@@ -106,16 +106,16 @@ RUN groupadd --gid $USER_GID $USERNAME \
   && useradd -s /bin/bash --uid $USER_UID --gid $USER_GID -m $USERNAME \
   # Add sudo support for the non-root user
   && apt-get update \
-  && apt-get install -y sudo \
+  && apt-get install -y --no-install-recommends sudo \
   && echo $USERNAME ALL=\(root\) NOPASSWD:ALL > /etc/sudoers.d/$USERNAME\
   && chmod 0440 /etc/sudoers.d/$USERNAME \
   && rm -rf /var/lib/apt/lists/*
 
 # Set up autocompletion for user
-RUN apt-get update && apt-get install -y git-core bash-completion \
+RUN apt-get update && apt-get install -y --no-install-recommends git-core bash-completion \
   && echo "if [ -f /opt/ros/${ROS_DISTRO}/setup.bash ]; then source /opt/ros/${ROS_DISTRO}/setup.bash; fi" >> /home/$USERNAME/.bashrc \
   && echo "if [ -f /usr/share/colcon_argcomplete/hook/colcon-argcomplete.bash ]; then source /usr/share/colcon_argcomplete/hook/colcon-argcomplete.bash; fi" >> /home/$USERNAME/.bashrc \
-  && rm -rf /var/lib/apt/lists/* 
+  && rm -rf /var/lib/apt/lists/*
 
 ENV DEBIAN_FRONTEND=
 ENV AMENT_CPPCHECK_ALLOW_SLOW_VERSIONS=1

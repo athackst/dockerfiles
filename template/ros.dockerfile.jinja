@@ -14,7 +14,7 @@ ENV DEBIAN_FRONTEND=noninteractive
 {% include 'snippits/timezone.jinja' %}
 
 # Install ROS
-RUN apt-get update && apt-get install -y \
+RUN apt-get update && apt-get install -y --no-install-recommends \
     curl \
     dirmngr \
     gnupg2 \
@@ -22,7 +22,7 @@ RUN apt-get update && apt-get install -y \
     sudo \
   && sh -c 'echo "deb http://packages.ros.org/ros/ubuntu $(lsb_release -sc) main" > /etc/apt/sources.list.d/ros-latest.list' \
   && curl -s https://raw.githubusercontent.com/ros/rosdistro/master/ros.asc | apt-key add - \
-  && apt-get update && apt-get install -y \
+  && apt-get update && apt-get install -y --no-install-recommends \
     ros-{{ ros_distro }}-ros-base \
   && rm -rf /var/lib/apt/lists/*
 
@@ -49,7 +49,7 @@ FROM base AS dev
 
 ENV DEBIAN_FRONTEND=noninteractive
 # Install dev tools
-RUN apt-get update && apt-get install -y \
+RUN apt-get update && apt-get install -y --no-install-recommends \
     python{{ python_env }}-rosdep \
     python{{ python_env }}-rosinstall \
     python{{ python_env }}-rosinstall-generator \
@@ -75,7 +75,7 @@ FROM dev AS full
 
 ENV DEBIAN_FRONTEND=noninteractive
 # Install the full release
-RUN apt-get update && apt-get install -y \
+RUN apt-get update && apt-get install -y --no-install-recommends \
   ros-{{ ros_distro }}-desktop \
   && rm -rf /var/lib/apt/lists/*
 ENV DEBIAN_FRONTEND=
@@ -87,7 +87,7 @@ FROM full AS gazebo
 
 ENV DEBIAN_FRONTEND=noninteractive
 # Install gazebo
-RUN apt-get update && apt-get install -y \
+RUN apt-get update && apt-get install -y --no-install-recommends \
    ros-{{ ros_distro }}-gazebo-ros-pkgs ros-{{ ros_distro }}-gazebo-ros-control \
   && rm -rf /var/lib/apt/lists/*
 ENV DEBIAN_FRONTEND=
