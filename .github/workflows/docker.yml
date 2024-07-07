@@ -198,6 +198,13 @@ jobs:
             target: dev
             platforms: "linux/amd64"
     steps:
+      - name: Filter build
+        uses: dorny/paths-filter@v2
+        id: filter
+        with:
+          filters: |
+            docker:
+              - ${{ matrix.label }}/${{ matrix.tag }}.Dockerfile
       - name: Set current date
         id: date
         run: |
@@ -216,6 +223,7 @@ jobs:
           password: ${{ secrets.DOCKERHUB_PASSWORD }}
       - name: Build and push
         uses: docker/build-push-action@v5
+        if: ${{ steps.filter.outputs.docker == 'true' || github.event_name == 'schedule' || github.event_name == 'workflow_dispatch' }}
         with:
           push: ${{ github.ref == 'refs/heads/main' }}
           file: ${{ matrix.label }}/${{ matrix.tag}}.Dockerfile
