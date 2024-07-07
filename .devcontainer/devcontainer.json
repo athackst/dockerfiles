@@ -28,7 +28,8 @@
 				"njpwerner.autodocstring",
 				"eamodio.gitlens",
 				"ms-python.black-formatter",
-				"ms-python.flake8"
+				"ms-python.flake8",
+				"github.vscode-github-actions"
 			]
 		}
 	},
