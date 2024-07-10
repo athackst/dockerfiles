@@ -216,7 +216,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Filter build
-        uses: dorny/paths-filter@v2
+        uses: dorny/paths-filter@v3
         id: filter
         with:
           filters: |
