@@ -72,7 +72,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 
 RUN rosdep init || echo "rosdep already initialized"
 
-{% include 'snippits/ros_user.jinja' %}
+{% include 'snippits/ros2_user.jinja' %}
 
 ENV DEBIAN_FRONTEND=
 ENV AMENT_CPPCHECK_ALLOW_SLOW_VERSIONS=1
