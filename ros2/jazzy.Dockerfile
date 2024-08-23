@@ -1,7 +1,7 @@
 ##############################################
 # Created from template ros2.dockerfile.jinja
 # Edited by: Mahdi Rezapour
-# May 2024
+# August 2024
 ##############################################
 
 ###########################################
@@ -40,15 +40,6 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     wget \
     && rm -rf /var/lib/apt/lists/*
 
-# Install ROS2
-RUN sudo add-apt-repository universe \
-  && curl -sSL https://raw.githubusercontent.com/ros/rosdistro/master/ros.key -o /usr/share/keyrings/ros-archive-keyring.gpg \
-  && echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/ros-archive-keyring.gpg] http://packages.ros.org/ros2/ubuntu $(. /etc/os-release && echo $UBUNTU_CODENAME) main" | sudo tee /etc/apt/sources.list.d/ros2.list > /dev/null \
-  && apt-get update && apt-get install -y --no-install-recommends \
-    ros-jazzy-ros-base \
-    python3-argcomplete \
-  && rm -rf /var/lib/apt/lists/*
-
 ENV ROS_DISTRO=jazzy
 ENV AMENT_PREFIX_PATH=/opt/ros/jazzy
 ENV COLCON_PREFIX_PATH=/opt/ros/jazzy
@@ -58,6 +49,15 @@ ENV PYTHONPATH=/opt/ros/jazzy/local/lib/python3.10/dist-packages:/opt/ros/jazzy/
 ENV ROS_PYTHON_VERSION=3
 ENV ROS_VERSION=2
 ENV DEBIAN_FRONTEND=
+
+# Install ROS2
+RUN sudo add-apt-repository universe \
+  && curl -sSL https://raw.githubusercontent.com/ros/rosdistro/master/ros.key -o /usr/share/keyrings/ros-archive-keyring.gpg \
+  && echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/ros-archive-keyring.gpg] http://packages.ros.org/ros2/ubuntu $(. /etc/os-release && echo $UBUNTU_CODENAME) main" | sudo tee /etc/apt/sources.list.d/ros2.list > /dev/null \
+  && apt-get update && apt-get install -y --no-install-recommends \
+    ros-${ROS_DISTRO}-ros-base \
+    python3-argcomplete \
+  && rm -rf /var/lib/apt/lists/*
 
 ###########################################
 #  Develop image
@@ -72,7 +72,6 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
   gdb \
   git \
   openssh-client \
-  python3-argcomplete \
   python3-pip \
   ros-dev-tools \
   ros-jazzy-ament-* \
@@ -107,26 +106,28 @@ ENV AMENT_CPPCHECK_ALLOW_SLOW_VERSIONS=1
 ###########################################
 #  Full image
 ###########################################
-# FROM dev AS full
+FROM dev AS full
 
-# ENV DEBIAN_FRONTEND=noninteractive
-# # Install the full release
-# RUN apt-get update && apt-get install -y --no-install-recommends \
-#   ros-jazzy-desktop \
-#   && rm -rf /var/lib/apt/lists/*
-# ENV DEBIAN_FRONTEND=
-# ENV LD_LIBRARY_PATH=/opt/ros/jazzy/opt/rviz_ogre_vendor/lib:/opt/ros/jazzy/lib/x86_64-linux-gnu:/opt/ros/jazzy/lib
+ENV DEBIAN_FRONTEND=noninteractive
+# Install the full release
+RUN apt-get update && apt-get install -y --no-install-recommends \
+  ros-${ROS_DISTRO}-desktop \
+  && rm -rf /var/lib/apt/lists/*
 
-# ###########################################
-# #  Full+Gazebo image
-# ###########################################
-# FROM full AS gazebo
+ENV DEBIAN_FRONTEND=
+ENV LD_LIBRARY_PATH=/opt/ros/${ROS_DISTRO}/opt/rviz_ogre_vendor/lib:/opt/ros/${ROS_DISTRO}/lib/x86_64-linux-gnu:/opt/ros/jazzy/lib
 
-# ENV DEBIAN_FRONTEND=noninteractive
-# # Install gazebo
-# RUN wget https://packages.osrfoundation.org/gazebo.gpg -O /usr/share/keyrings/pkgs-osrf-archive-keyring.gpg \
-#   && echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/pkgs-osrf-archive-keyring.gpg] http://packages.osrfoundation.org/gazebo/ubuntu-stable $(lsb_release -cs) main" | sudo tee /etc/apt/sources.list.d/gazebo-stable.list > /dev/null \
-#   && apt-get update && apt-get install -q -y --no-install-recommends \
-#     ros-jazzy-ros-gz \
-#   && rm -rf /var/lib/apt/lists/*
-# ENV DEBIAN_FRONTEND=
+###########################################
+#  Full+Gazebo image
+###########################################
+FROM full AS gazebo
+
+ENV DEBIAN_FRONTEND=noninteractive
+# Install gazebo
+RUN wget https://packages.osrfoundation.org/gazebo.gpg -O /usr/share/keyrings/pkgs-osrf-archive-keyring.gpg \
+  && echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/pkgs-osrf-archive-keyring.gpg] http://packages.osrfoundation.org/gazebo/ubuntu-stable $(lsb_release -cs) main" | sudo tee /etc/apt/sources.list.d/gazebo-stable.list > /dev/null \
+  && apt-get update && apt-get install -q -y --no-install-recommends \
+    ros-${ROS_DISTRO}-ros-gz \
+  && rm -rf /var/lib/apt/lists/*
+ENV DEBIAN_FRONTEND=
+
