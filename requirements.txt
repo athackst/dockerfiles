@@ -3,7 +3,7 @@ certifi==2024.7.4
 charset-normalizer==3.3.2
 click==8.1.7
 flake8==7.1.1
-idna==3.7
+idna==3.8
 Jinja2==3.1.4
 markdown-it-py==3.0.0
 MarkupSafe==2.1.5
