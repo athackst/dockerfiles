@@ -44,7 +44,6 @@ RUN sudo add-apt-repository universe \
   && echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/ros-archive-keyring.gpg] http://packages.ros.org/ros2/ubuntu $(. /etc/os-release && echo $UBUNTU_CODENAME) main" | sudo tee /etc/apt/sources.list.d/ros2.list > /dev/null \
   && apt-get update && apt-get install -y --no-install-recommends \
     ros-rolling-ros-base \
-    python3-argcomplete \
   && rm -rf /var/lib/apt/lists/*
 
 ENV ROS_DISTRO=rolling
@@ -71,6 +70,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
   git \
   openssh-client \
   python3-argcomplete \
+  python3-colcon-common-extensions \
   python3-pip \
   ros-dev-tools \
   ros-rolling-ament-* \
@@ -102,6 +102,7 @@ RUN apt-get update && apt-get install -y sudo \
 RUN apt-get update && apt-get install -y git-core bash-completion \
   && echo "if [ -f /opt/ros/${ROS_DISTRO}/setup.bash ]; then source /opt/ros/${ROS_DISTRO}/setup.bash; fi" >> /home/$USERNAME/.bashrc \
   && echo "if [ -f /usr/share/colcon_argcomplete/hook/colcon-argcomplete.bash ]; then source /usr/share/colcon_argcomplete/hook/colcon-argcomplete.bash; fi" >> /home/$USERNAME/.bashrc \
+  && echo "if [ -f /usr/share/colcon_cd/function/colcon_cd-argcomplete.bash ]; then source /usr/share/colcon_cd/function/colcon_cd-argcomplete.bash; fi" >> /home/$USERNAME/.bashrc \
   && rm -rf /var/lib/apt/lists/*
 
 ENV DEBIAN_FRONTEND=
