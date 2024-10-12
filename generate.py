@@ -3,6 +3,7 @@
 import ruamel.yaml
 import json
 import logging
+from datetime import datetime
 from jinja2 import Environment, FileSystemLoader
 
 
@@ -21,6 +22,29 @@ class Templates:
         with open("templates.yml", "r") as file:
             self._settings = yaml.load(file)
 
+        # Set EOL status based on 'eol' or 'eol_date' at initialization.
+        self._process_eol_status()
+
+    def _process_eol_status(self):
+        """Update settings with EOL status based on the date or 'eol' field."""
+        today = datetime.today().date()
+
+        for repository in self._settings:
+            for dockerfile in self._settings[repository]:
+                # If 'eol' is already explicitly set, keep it.
+                if "eol" in dockerfile:
+                    continue
+
+                # Otherwise, calculate EOL status based on 'eol_date'.
+                if "eol_date" in dockerfile:
+                    eol_date = datetime.strptime(
+                        dockerfile["eol_date"], "%Y-%m-%d").date()
+                    # True if the date has passed.
+                    dockerfile["eol"] = today > eol_date
+                else:
+                    # Default to False if no date is given.
+                    dockerfile["eol"] = False
+
     def raw(self) -> dict:
         """Get raw template settings.
 
@@ -29,7 +53,7 @@ class Templates:
         """
         return self._settings
 
-    def dockerfile_settings(self, eol: bool = False) -> dict:
+    def dockerfile_settings(self, include_eol: bool = False) -> dict:
         """Get dockerfile generation settings.
 
         Args:
@@ -41,7 +65,7 @@ class Templates:
         dockerfiles = []
         for repository in self._settings:
             for settings in self._settings[repository]:
-                if not eol and "eol" in settings:
+                if not include_eol and settings["eol"]:
                     continue
                 name = settings["name"]
                 settings["template_file"] = f"{repository}.dockerfile.jinja"
@@ -49,7 +73,7 @@ class Templates:
                 dockerfiles.append(settings)
         return dockerfiles
 
-    def images(self, eol: bool = False) -> dict:
+    def images(self, include_eol: bool = False) -> dict:
         """Get dict of images and targets to build.
 
         Args:
@@ -61,7 +85,7 @@ class Templates:
         image_list = {}
         for repository in self._settings:
             for dockerfile in self._settings[repository]:
-                if not eol and "eol" in dockerfile:
+                if not include_eol and dockerfile["eol"]:
                     continue
                 targets = list()
                 for target in dockerfile["targets"]:
@@ -72,7 +96,7 @@ class Templates:
                 }
         return image_list
 
-    def workflow_names(self, eol: bool = False) -> list:
+    def workflow_names(self, include_eol: bool = False) -> list:
         """List workflow docker images.
 
         Args:
@@ -87,7 +111,7 @@ class Templates:
         for repo in data:
             for entry in data[repo]:
                 tag = entry["name"]
-                if not eol and "eol" in entry.keys():
+                if not include_eol and entry["eol"]:
                     continue
 
                 for target in entry["targets"]:
@@ -96,11 +120,11 @@ class Templates:
                         "tag": tag,
                         "target": target["target"],
                         "platforms": target["platforms"],
-                        }
+                    }
                     output.append(item)
         return output
 
-    def task_names(self, eol: bool = False) -> list:
+    def task_names(self, include_eol: bool = False) -> list:
         """List workflow docker images.
 
         Args:
@@ -112,7 +136,7 @@ class Templates:
         image_list = []
         for repository in self._settings:
             for dockerfile in self._settings[repository]:
-                if not eol and "eol" in dockerfile.keys():
+                if not include_eol and dockerfile["eol"]:
                     continue
                 image_list.append(dockerfile["name"])
         return image_list
@@ -131,36 +155,34 @@ templates = Templates()
 
 def generate_dockerfiles(log):
     """Generate the dockerfiles for this repo."""
-    file_loader = FileSystemLoader("template")
-    env = Environment(loader=file_loader)
+    env = Environment(loader=FileSystemLoader("template"))
 
     for dockerfile in templates.dockerfile_settings():
-        # The jinja template
         template = env.get_template(dockerfile["template_file"])
         output = template.render(dockerfile)
         out_file = dockerfile["out_file"]
+
         log.info(f"Generating {out_file}")
-        dockerfile_out = open(out_file, "w")
-        dockerfile_out.write(output)
-        dockerfile_out.close()
+        with open(out_file, "w") as f:
+            f.write(output)
 
 
 def generate_readmes(log):
     """Generate the readme files."""
-    file_loader = FileSystemLoader("template")
-    env = Environment(loader=file_loader)
-    repositories = templates.repo_names()
-    for repository in repositories:
+    env = Environment(loader=FileSystemLoader("template"))
+
+    for repository in templates.repo_names():
         dockerfiles = templates.raw()[repository]
-        log.info("Generating readme for {}".format(repository))
+        log.info(f"Generating readme for {repository}")
+        
         readme_template = env.get_template("readme.md.jinja")
         readme_output = readme_template.render(
             {"repo_name": repository, "dockerfiles": dockerfiles}
         )
+
         readme_file = f"{repository}/README.md"
-        readme_out = open(readme_file, "w")
-        readme_out.write(readme_output)
-        readme_out.close()
+        with open(readme_file, "w") as f:
+            f.write(readme_output)
 
 
 def generate_docker_workflow(log):

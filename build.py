@@ -102,7 +102,7 @@ class Docker(object):
 
 def build(image, target, push, clean):
     """Build the docker images."""
-    builds = templates.images(eol=True)
+    builds = templates.images(include_eol=True)
     if image != "all":
         builds = {image: templates.images()[image]}
 

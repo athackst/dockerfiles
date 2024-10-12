@@ -14,6 +14,7 @@ ros:
     python_env: "3"
     python_version: "3"
     ubuntu_distro: "20.04"
+    eol_date: "2025-05-30"
   -
     name: melodic
     ros_distro: melodic
@@ -29,7 +30,7 @@ ros:
     python_env: ""
     python_version: "2.7"
     ubuntu_distro: "18.04"
-    eol: true
+    eol_date: "2023-06-27"
   -
     name: lunar
     ros_distro: lunar
@@ -45,7 +46,7 @@ ros:
     python_env: ""
     python_version: "2.7"
     ubuntu_distro: "18.04"
-    eol: true
+    eol_date: "2019-05-30"
   -
     name: kinetic
     ros_distro: kinetic
@@ -61,7 +62,7 @@ ros:
     python_env: ""
     python_version: "2.7"
     ubuntu_distro: "16.04"
-    eol: true
+    eol_date: "2021-04-30"
 ros2:
   -
     name: rolling
@@ -93,6 +94,7 @@ ros2:
     python_version: "3.12"
     base_image: "ubuntu"
     image_version: "24.04"
+    eol_date: "2029-05-30"
   -
     name: iron
     ros_distro: iron
@@ -108,6 +110,7 @@ ros2:
     python_version: "3.10"
     base_image: "ubuntu"
     image_version: "22.04"
+    eol_date: "2024-11-30"
   -
     name: iron-cuda
     ros_distro: iron
@@ -123,6 +126,7 @@ ros2:
     python_version: "3.10"
     base_image: "nvidia/cuda"
     image_version: "11.8.0-runtime-ubuntu22.04"
+    eol_date: "2024-11-30"
   -
     name: humble
     ros_distro: humble
@@ -138,6 +142,7 @@ ros2:
     python_version: "3.10"
     base_image: "ubuntu"
     image_version: "22.04"
+    eol_date: "2027-05-30"
   -
     name: humble-cuda
     ros_distro: humble
@@ -153,6 +158,7 @@ ros2:
     python_version: "3.10"
     base_image: "nvidia/cuda"
     image_version: "11.8.0-runtime-ubuntu22.04"
+    eol_date: "2027-05-30"
   -
     name: galactic
     ros_distro: galactic
@@ -259,6 +265,7 @@ gazebo:
       - target: dev
         platforms: "linux/amd64"
     ubuntu_distro: "20.04"
+    eol_date: "2025-01-29"
   -
     name: gazebo10
     gazebo_release: "10"
@@ -268,7 +275,7 @@ gazebo:
       - target: dev
         platforms: "linux/amd64"
     ubuntu_distro: "18.04"
-    eol: true
+    eol_date: "2021-01-24"
   -
     name: gazebo9
     gazebo_release: "9"
@@ -278,7 +285,7 @@ gazebo:
       - target: dev
         platforms: "linux/amd64"
     ubuntu_distro: "18.04"
-    eol: true
+    eol_date: "2023-01-25"
 ignition:
   -
     name: fortress
@@ -290,6 +297,7 @@ ignition:
         platforms: "linux/amd64"
     gazebo_version: "6"
     ubuntu_distro: "20.04"
+    eol_date: "2026-09-30"
   -
     name: edifice
     ign_distro: edifice
@@ -300,7 +308,7 @@ ignition:
         platforms: "linux/amd64"
     gazebo_version: "5"
     ubuntu_distro: "20.04"
-    eol: true
+    eol_date: "2022-03-30"
   -
     name: dome
     ign_distro: dome
@@ -311,7 +319,7 @@ ignition:
         platforms: "linux/amd64"
     gazebo_version: "4"
     ubuntu_distro: "18.04"
-    eol: true
+    eol_date: "2021-12-30"
   -
     name: citadel
     ign_distro: citadel
@@ -322,6 +330,7 @@ ignition:
         platforms: "linux/amd64"
     gazebo_version: "3"
     ubuntu_distro: "18.04"
+    eol_date: "2024-12-30"
 gz:
   -
     name: harmonic
@@ -334,6 +343,7 @@ gz:
     gazebo_version: "8"
     base_image: "ubuntu"
     image_version: "22.04"
+    eol_date: "2028-09-30"
   -
     name: harmonic-cuda
     gz_distro: harmonic
@@ -345,6 +355,7 @@ gz:
     gazebo_version: "8"
     base_image: "nvidia/cuda"
     image_version: "12.5.0-runtime-ubuntu22.04"
+    eol_date: "2028-09-30"
   -
     name: garden
     gz_distro: garden
@@ -356,6 +367,7 @@ gz:
     gazebo_version: "7"
     base_image: "ubuntu"
     image_version: "20.04"
+    eol_date: "2024-11-30"
   -
     name: garden-cuda
     gz_distro: garden
@@ -367,3 +379,4 @@ gz:
     gazebo_version: "7"
     base_image: "nvidia/cuda"
     image_version: "12.5.0-runtime-ubuntu20.04"
+    eol_date: "2024-11-30"
