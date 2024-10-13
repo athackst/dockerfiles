@@ -83,11 +83,11 @@ ros2:
     ros_distro: jazzy
     targets:
       - target: base
-        platforms: "linux/amd64,linux/arm64"
+        platforms: "linux/amd64,linux/arm64/v8"
       - target: dev
-        platforms: "linux/amd64,linux/arm64"
+        platforms: "linux/amd64,linux/arm64/v8"
       - target: full
-        platforms: "linux/amd64,linux/arm64"
+        platforms: "linux/amd64,linux/arm64/v8"
       - target: gazebo
         platforms: "linux/amd64"
     python_version: "3.12"
