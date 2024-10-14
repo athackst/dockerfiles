@@ -64,7 +64,7 @@ jobs:
           - label: ros2
             tag: rolling
             target: base
-            platforms: "linux/amd64"
+            platforms: "linux/amd64,linux/arm64/v8"
           - label: ros2
             tag: rolling
             target: dev
@@ -84,11 +84,11 @@ jobs:
           - label: ros2
             tag: jazzy
             target: dev
-            platforms: "linux/amd64,linux/arm64/v8"
+            platforms: "linux/amd64"
           - label: ros2
             tag: jazzy
             target: full
-            platforms: "linux/amd64,linux/arm64/v8"
+            platforms: "linux/amd64"
           - label: ros2
             tag: jazzy
             target: gazebo
@@ -249,6 +249,7 @@ jobs:
         if: ${{ steps.filter.outputs.docker == 'true' || github.event_name == 'schedule' || github.event_name == 'workflow_dispatch' }}
         with:
           push: ${{ github.ref == 'refs/heads/main' }}
+          pull: true #since caching, will need to pull to get latest first
           file: ${{ matrix.label }}/${{ matrix.tag }}.Dockerfile
           target: ${{ matrix.target }}
           platforms: ${{ matrix.platforms }}

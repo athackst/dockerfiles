@@ -13,9 +13,6 @@ ENV DEBIAN_FRONTEND=noninteractive
 
 {% include 'snippits/timezone.jinja' %}
 
-RUN apt-get update && apt-get -y upgrade \
-    && rm -rf /var/lib/apt/lists/*
-
 # Install common programs
 RUN apt-get update && apt-get install -y --no-install-recommends \
     curl \
@@ -32,23 +29,12 @@ RUN sudo add-apt-repository universe \
   && echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/ros-archive-keyring.gpg] http://packages.ros.org/ros2/ubuntu $(. /etc/os-release && echo $UBUNTU_CODENAME) main" | sudo tee /etc/apt/sources.list.d/ros2.list > /dev/null \
   && apt-get update && apt-get install -y --no-install-recommends \
     ros-{{ ros_distro }}-ros-base \
-    python3-argcomplete \
+  && echo "source /opt/ros/{{ ros_distro }}/setup.bash" >> /etc/bash.bashrc \
   && rm -rf /var/lib/apt/lists/*
 
 {%- if 'nvidia' in base_image %}
-
 {% include 'snippits/nvidia.jinja' %}
 {%- endif %}
-
-ENV ROS_DISTRO={{ ros_distro }}
-ENV AMENT_PREFIX_PATH=/opt/ros/{{ ros_distro }}
-ENV COLCON_PREFIX_PATH=/opt/ros/{{ ros_distro }}
-ENV LD_LIBRARY_PATH=/opt/ros/{{ ros_distro }}/lib
-ENV PATH=/opt/ros/{{ ros_distro }}/bin:$PATH
-ENV PYTHONPATH=/opt/ros/{{ ros_distro }}/local/lib/python{{ python_version }}/dist-packages:/opt/ros/{{ ros_distro }}/lib/python{{ python_version }}/site-packages
-ENV ROS_PYTHON_VERSION=3
-ENV ROS_VERSION=2
-ENV DEBIAN_FRONTEND=
 
 ###########################################
 #  Develop image
@@ -68,6 +54,8 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
   ros-dev-tools \
   ros-{{ ros_distro }}-ament-* \
   vim \
+  && echo "if [ -f /usr/share/colcon_argcomplete/hook/colcon-argcomplete.bash ]; then source /usr/share/colcon_argcomplete/hook/colcon-argcomplete.bash; fi" >> /etc/bash.bashrc \
+  && echo "if [ -f /usr/share/colcon_cd/function/colcon_cd-argcomplete.bash ]; then source /usr/share/colcon_cd/function/colcon_cd-argcomplete.bash; fi" >> /etc/bash.bashrc \
   && rm -rf /var/lib/apt/lists/*
 
 RUN rosdep init || echo "rosdep already initialized"

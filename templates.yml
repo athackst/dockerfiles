@@ -68,7 +68,7 @@ ros2:
     ros_distro: rolling
     targets:
       - target: base
-        platforms: "linux/amd64"
+        platforms: "linux/amd64,linux/arm64/v8"
       - target: dev
         platforms: "linux/amd64"
       - target: full
@@ -85,9 +85,9 @@ ros2:
       - target: base
         platforms: "linux/amd64,linux/arm64/v8"
       - target: dev
-        platforms: "linux/amd64,linux/arm64/v8"
+        platforms: "linux/amd64"
       - target: full
-        platforms: "linux/amd64,linux/arm64/v8"
+        platforms: "linux/amd64"
       - target: gazebo
         platforms: "linux/amd64"
     python_version: "3.12"
