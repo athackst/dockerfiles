@@ -66,10 +66,7 @@
       "group": {
         "kind": "build",
         "isDefault": true
-      },
-      "dependsOn": [
-        "generate"
-      ]
+      }
     },
     {
       "label": "upgrade",
