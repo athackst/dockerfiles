@@ -50,13 +50,13 @@ RUN sudo add-apt-repository universe \
 ENV ROS_DISTRO=rolling
 ENV AMENT_PREFIX_PATH=/opt/ros/rolling
 ENV COLCON_PREFIX_PATH=/opt/ros/rolling
-ENV LD_LIBRARY_PATH=/opt/ros/rolling/lib
+ENV LD_LIBRARY_PATH=/opt/ros/rolling/lib/x86_64-linux-gnu:/opt/ros/rolling/lib
 ENV PATH=/opt/ros/rolling/bin:$PATH
 ENV PYTHONPATH=/opt/ros/rolling/local/lib/python3.12/dist-packages:/opt/ros/rolling/lib/python3.12/site-packages
 ENV ROS_PYTHON_VERSION=3
 ENV ROS_VERSION=2
+ENV ROS_AUTOMATIC_DISCOVERY_RANGE=SUBNET
 ENV DEBIAN_FRONTEND=
-
 ###########################################
 #  Develop image
 ###########################################
