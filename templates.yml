@@ -79,6 +79,21 @@ ros2:
     base_image: "ubuntu"
     image_version: "24.04"
   -
+    name: rolling-cuda
+    ros_distro: rolling
+    targets:
+      - target: base
+        platforms: "linux/amd64"
+      - target: dev
+        platforms: "linux/amd64"
+      - target: full
+        platforms: "linux/amd64"
+      - target: gazebo
+        platforms: "linux/amd64"
+    python_version: "3.12"
+    base_image: "nvidia/cuda"
+    image_version: "12.6.2-cudnn-runtime-ubuntu24.04"
+  -
     name: jazzy
     ros_distro: jazzy
     targets:
