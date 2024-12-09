@@ -50,13 +50,13 @@ RUN sudo add-apt-repository universe \
 ENV ROS_DISTRO=iron
 ENV AMENT_PREFIX_PATH=/opt/ros/iron
 ENV COLCON_PREFIX_PATH=/opt/ros/iron
-ENV LD_LIBRARY_PATH=/opt/ros/iron/lib
+ENV LD_LIBRARY_PATH=/opt/ros/iron/lib/x86_64-linux-gnu:/opt/ros/iron/lib
 ENV PATH=/opt/ros/iron/bin:$PATH
 ENV PYTHONPATH=/opt/ros/iron/local/lib/python3.10/dist-packages:/opt/ros/iron/lib/python3.10/site-packages
 ENV ROS_PYTHON_VERSION=3
 ENV ROS_VERSION=2
+ENV ROS_AUTOMATIC_DISCOVERY_RANGE=SUBNET
 ENV DEBIAN_FRONTEND=
-
 ###########################################
 #  Develop image
 ###########################################

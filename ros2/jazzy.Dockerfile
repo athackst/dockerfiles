@@ -50,13 +50,13 @@ RUN sudo add-apt-repository universe \
 ENV ROS_DISTRO=jazzy
 ENV AMENT_PREFIX_PATH=/opt/ros/jazzy
 ENV COLCON_PREFIX_PATH=/opt/ros/jazzy
-ENV LD_LIBRARY_PATH=/opt/ros/jazzy/lib
+ENV LD_LIBRARY_PATH=/opt/ros/jazzy/lib/x86_64-linux-gnu:/opt/ros/jazzy/lib
 ENV PATH=/opt/ros/jazzy/bin:$PATH
 ENV PYTHONPATH=/opt/ros/jazzy/local/lib/python3.12/dist-packages:/opt/ros/jazzy/lib/python3.12/site-packages
 ENV ROS_PYTHON_VERSION=3
 ENV ROS_VERSION=2
+ENV ROS_AUTOMATIC_DISCOVERY_RANGE=SUBNET
 ENV DEBIAN_FRONTEND=
-
 ###########################################
 #  Develop image
 ###########################################
