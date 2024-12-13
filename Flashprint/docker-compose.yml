@@ -1,0 +1,23 @@
+services:
+  flashprint:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    environment:
+      - DISPLAY=${DISPLAY}
+      - XAUTHORITY=${XAUTHORITY}
+      - XDG_RUNTIME_DIR=/tmp/runtime-root
+      - LIBGL_ALWAYS_SOFTWARE=1  # Force software rendering
+    volumes:
+      - /tmp/.X11-unix:/tmp/.X11-unix
+      - /usr/lib/x86_64-linux-gnu:/usr/lib/x86_64-linux-gnu  # Host graphics libraries
+      - /usr/share/glvnd:/usr/share/glvnd                    # OpenGL/Vulkan libraries
+      - ${HOME}/.Xauthority:/root/.Xauthority:rw
+      - /dev/dri:/dev/dri  # Share host GPU resources
+      - ${HOME}/3DPrints:/workspaces/3DPrints:rw
+    devices:
+      - /dev/dri:/dev/dri # Allow access to the host's GPU device
+    network_mode: host  # Use host networking
+    stdin_open: true
+    tty: true
+    command: flashprint

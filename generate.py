@@ -3,7 +3,7 @@
 import ruamel.yaml
 import json
 import logging
-from jinja2 import Environment, FileSystemLoader
+from jinja2 import Environment, FileSystemLoader, exceptions
 
 
 log = logging.getLogger(__name__)
@@ -46,6 +46,8 @@ class Templates:
                 name = settings["name"]
                 settings["template_file"] = f"{repository}.dockerfile.jinja"
                 settings["out_file"] = f"{repository}/{name}.Dockerfile"
+                settings["compose_template_file"] = f"{repository}.docker-compose.jinja"
+                settings["compose_out_file"] = f"{repository}/{name}.docker-compose.yml"
                 dockerfiles.append(settings)
         return dockerfiles
 
@@ -180,6 +182,7 @@ def generate_docker_workflow(log):
 
 def generate_readme_workflow(log):
     """Generate docker readme file workflow."""
+    log.info("Generating readme workflow.")
     workflow_file = ".github/workflows/docker_readme.yml"
     docker_workflow = None
     with open(workflow_file, "r") as file:
@@ -206,6 +209,27 @@ def generate_tasks(log):
         json_parser.dump(tasks, file, indent=2)
 
 
+def generate_docker_compose(log):
+    """Generate docker compose files."""
+    log.info("Generating docker-compose files.")
+    file_loader = FileSystemLoader("template")
+    env = Environment(loader=file_loader)
+    for dockerfile in templates.dockerfile_settings():
+        # The jinja template
+        template_file = dockerfile["compose_template_file"]
+        try:
+            template = env.get_template(template_file)
+        except exceptions.TemplateNotFound:
+            log.debug(f"No docker-compose template found for {dockerfile}")
+            continue
+        output = template.render(dockerfile)
+        out_file = dockerfile["compose_out_file"]
+        log.info(f"Generating {out_file}")
+        dockerfile_out = open(out_file, "w")
+        dockerfile_out.write(output)
+        dockerfile_out.close()
+
+
 if __name__ == "__main__":
     # Set up logger.
     log.setLevel(logging.INFO)
@@ -220,4 +244,5 @@ if __name__ == "__main__":
     generate_docker_workflow(log)
     generate_readme_workflow(log)
     generate_tasks(log)
+    generate_docker_compose(log)
     log.info("Finished generating dockerfiles.")

@@ -14,15 +14,23 @@ ENV DEBIAN_FRONTEND=noninteractive
 
 {% include 'snippits/timezone.jinja' %}
 
-# install packages
-RUN apt-get update && apt-get install -q -y \
+# Install necessary dependencies
+RUN apt-get update && apt-get install --yes --no-install-recommends \
     curl \
     gnupg \
+    libegl1-mesa \
+    libgl1-mesa-dri \
+    libgl1-mesa-glx \
     lsb-release \
+    mesa-utils \
+    python3 \
     python3-argcomplete \
+    python3-pip \
     sudo \
-    wget \
-  && wget https://packages.osrfoundation.org/gazebo.gpg -O /usr/share/keyrings/pkgs-osrf-archive-keyring.gpg \
+    wget
+
+# install gazebo
+RUN wget https://packages.osrfoundation.org/gazebo.gpg -O /usr/share/keyrings/pkgs-osrf-archive-keyring.gpg \
   && echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/pkgs-osrf-archive-keyring.gpg] http://packages.osrfoundation.org/gazebo/ubuntu-stable $(lsb_release -cs) main" | tee /etc/apt/sources.list.d/gazebo-stable.list > /dev/null \
   {%- if prerelease %}&& echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/pkgs-osrf-archive-keyring.gpg] http://packages.osrfoundation.org/gazebo/ubuntu-prerelease $(lsb_release -cs) main" | sudo tee /etc/apt/sources.list.d/gazebo-prerelease.list > /dev/null \{% endif %}
   && apt-get update && apt-get install -y -q \
@@ -30,11 +38,8 @@ RUN apt-get update && apt-get install -q -y \
   && rm -rf /var/lib/apt/lists/*
 
 {%- if 'nvidia' in base_image %}
-
 {% include 'snippits/nvidia.jinja' %}
 {%- endif %}
-
-{% include 'snippits/ros_user.jinja' %}
 
 ###########################################
 # Develop image
@@ -56,6 +61,9 @@ RUN apt-get update && apt-get install -y \
   git \
   vim \
   && rm -rf /var/lib/apt/lists/*
+
+{% include 'snippits/ros_user.jinja' %}
+USER ros
 
 WORKDIR /workspaces/gazebo/src
 # Get sources

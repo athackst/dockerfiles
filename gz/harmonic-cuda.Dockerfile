@@ -26,20 +26,27 @@ RUN ln -fs /usr/share/zoneinfo/UTC /etc/localtime \
   && dpkg-reconfigure --frontend noninteractive tzdata \
   && rm -rf /var/lib/apt/lists/*
 
-# install packages
-RUN apt-get update && apt-get install -q -y \
+# Install necessary dependencies
+RUN apt-get update && apt-get install --yes --no-install-recommends \
     curl \
     gnupg \
+    libegl1-mesa \
+    libgl1-mesa-dri \
+    libgl1-mesa-glx \
     lsb-release \
+    mesa-utils \
+    python3 \
     python3-argcomplete \
+    python3-pip \
     sudo \
-    wget \
-  && wget https://packages.osrfoundation.org/gazebo.gpg -O /usr/share/keyrings/pkgs-osrf-archive-keyring.gpg \
+    wget
+
+# install gazebo
+RUN wget https://packages.osrfoundation.org/gazebo.gpg -O /usr/share/keyrings/pkgs-osrf-archive-keyring.gpg \
   && echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/pkgs-osrf-archive-keyring.gpg] http://packages.osrfoundation.org/gazebo/ubuntu-stable $(lsb_release -cs) main" | tee /etc/apt/sources.list.d/gazebo-stable.list > /dev/null \
   && apt-get update && apt-get install -y -q \
     gz-harmonic \
   && rm -rf /var/lib/apt/lists/*
-
 ################
 # Expose the nvidia driver to allow opengl 
 # Dependencies for glvnd and X11.
@@ -57,26 +64,6 @@ RUN apt-get update \
 ENV NVIDIA_VISIBLE_DEVICES=all
 ENV NVIDIA_DRIVER_CAPABILITIES=graphics,utility,compute
 ENV QT_X11_NO_MITSHM=1
-
-ARG USERNAME=ros
-ARG USER_UID=1000
-ARG USER_GID=$USER_UID
-
-# Create a non-root user
-RUN groupadd --gid $USER_GID $USERNAME \
-  && useradd -s /bin/bash --uid $USER_UID --gid $USER_GID -m $USERNAME \
-  # Add sudo support for the non-root user
-  && apt-get update \
-  && apt-get install -y sudo \
-  && echo $USERNAME ALL=\(root\) NOPASSWD:ALL > /etc/sudoers.d/$USERNAME\
-  && chmod 0440 /etc/sudoers.d/$USERNAME \
-  && rm -rf /var/lib/apt/lists/*
-
-# Set up autocompletion for user
-RUN apt-get update && apt-get install -y git-core bash-completion \
-  && echo "if [ -f /opt/ros/${ROS_DISTRO}/setup.bash ]; then source /opt/ros/${ROS_DISTRO}/setup.bash; fi" >> /home/$USERNAME/.bashrc \
-  && echo "if [ -f /usr/share/colcon_argcomplete/hook/colcon-argcomplete.bash ]; then source /usr/share/colcon_argcomplete/hook/colcon-argcomplete.bash; fi" >> /home/$USERNAME/.bashrc \
-  && rm -rf /var/lib/apt/lists/* 
 
 ###########################################
 # Develop image
@@ -98,6 +85,27 @@ RUN apt-get update && apt-get install -y \
   git \
   vim \
   && rm -rf /var/lib/apt/lists/*
+
+ARG USERNAME=ros
+ARG USER_UID=1000
+ARG USER_GID=$USER_UID
+
+# Create a non-root user
+RUN groupadd --gid $USER_GID $USERNAME \
+  && useradd -s /bin/bash --uid $USER_UID --gid $USER_GID -m $USERNAME \
+  # Add sudo support for the non-root user
+  && apt-get update \
+  && apt-get install -y sudo \
+  && echo $USERNAME ALL=\(root\) NOPASSWD:ALL > /etc/sudoers.d/$USERNAME\
+  && chmod 0440 /etc/sudoers.d/$USERNAME \
+  && rm -rf /var/lib/apt/lists/*
+
+# Set up autocompletion for user
+RUN apt-get update && apt-get install -y git-core bash-completion \
+  && echo "if [ -f /opt/ros/${ROS_DISTRO}/setup.bash ]; then source /opt/ros/${ROS_DISTRO}/setup.bash; fi" >> /home/$USERNAME/.bashrc \
+  && echo "if [ -f /usr/share/colcon_argcomplete/hook/colcon-argcomplete.bash ]; then source /usr/share/colcon_argcomplete/hook/colcon-argcomplete.bash; fi" >> /home/$USERNAME/.bashrc \
+  && rm -rf /var/lib/apt/lists/* 
+USER ros
 
 WORKDIR /workspaces/gazebo/src
 # Get sources

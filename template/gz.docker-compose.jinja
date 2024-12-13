@@ -1,0 +1,25 @@
+services:
+  {{ gz_distro }}:
+    build:
+      context: .
+      dockerfile: {{ gz_distro}}.Dockerfile
+      target: base
+    environment:
+      - DISPLAY=${DISPLAY}
+      - XAUTHORITY=${XAUTHORITY}
+{%- if 'nvidia' in base_image %}
+      - QT_X11_NO_MITSHM=1
+{%- else %}
+      - LIBGL_ALWAYS_SOFTWARE=1  # Force software rendering
+      - MESA_GL_VERSION_OVERRIDE=3.3
+{%- endif %}
+    volumes:
+      - /tmp/.X11-unix:/tmp/.X11-unix
+{%- if 'nvidia' in base_image %}
+    device:
+      - /dev/dri
+{%- endif %}
+    network_mode: host  # Use host networking
+    stdin_open: true
+    tty: true
+    command: gz sim
