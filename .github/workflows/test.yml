@@ -30,6 +30,9 @@ jobs:
           pydocstyle .
   env-check:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: read
     steps:
       - uses: actions/checkout@v4
       - name: Set up QEMU
@@ -53,8 +56,6 @@ jobs:
             type=docker,name=app:local
           cache-from: |
             type=registry,ref=ghcr.io/${{ github.repository_owner }}/ros2:rolling-buildcache
-          cache-to: |
-            type=registry,ref=ghcr.io/${{ github.repository_owner }}/ros2:rolling-buildcache,mode=max
       - name: Run environment comparison
         run: |
           .github/scripts/env-compare.py app:local rolling
