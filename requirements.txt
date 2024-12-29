@@ -1,10 +1,10 @@
 annotated-types==0.7.0
-certifi==2024.8.30
-charset-normalizer==3.4.0
-click==8.1.7
+certifi==2024.12.14
+charset-normalizer==3.4.1
+click==8.1.8
 flake8==7.1.1
 idna==3.10
-Jinja2==3.1.4
+Jinja2==3.1.5
 markdown-it-py==3.0.0
 MarkupSafe==3.0.2
 mccabe==0.7.0
@@ -24,5 +24,5 @@ shellingham==1.5.4
 tqdm==4.67.1
 typer==0.15.1
 typing_extensions==4.12.2
-urllib3==2.2.3
+urllib3==2.3.0
 websocket-client==1.8.0
