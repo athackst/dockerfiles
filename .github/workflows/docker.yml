@@ -77,6 +77,22 @@ jobs:
             target: gazebo
             platforms: "linux/amd64"
           - label: ros2
+            tag: rolling-cuda
+            target: base
+            platforms: "linux/amd64"
+          - label: ros2
+            tag: rolling-cuda
+            target: dev
+            platforms: "linux/amd64"
+          - label: ros2
+            tag: rolling-cuda
+            target: full
+            platforms: "linux/amd64"
+          - label: ros2
+            tag: rolling-cuda
+            target: gazebo
+            platforms: "linux/amd64"
+          - label: ros2
             tag: jazzy
             target: base
             platforms: "linux/amd64,linux/arm64/v8"

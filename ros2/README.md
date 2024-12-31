@@ -21,6 +21,13 @@ rolling
 * [rolling-full](https://github.com/athackst/dockerfiles/blob/main/ros2/rolling.Dockerfile)
 * [rolling-gazebo](https://github.com/athackst/dockerfiles/blob/main/ros2/rolling.Dockerfile)
 
+rolling-cuda
+  
+* [rolling-cuda-base](https://github.com/athackst/dockerfiles/blob/main/ros2/rolling-cuda.Dockerfile)
+* [rolling-cuda-dev](https://github.com/athackst/dockerfiles/blob/main/ros2/rolling-cuda.Dockerfile)
+* [rolling-cuda-full](https://github.com/athackst/dockerfiles/blob/main/ros2/rolling-cuda.Dockerfile)
+* [rolling-cuda-gazebo](https://github.com/athackst/dockerfiles/blob/main/ros2/rolling-cuda.Dockerfile)
+
 jazzy
   
 * [jazzy-base](https://github.com/athackst/dockerfiles/blob/main/ros2/jazzy.Dockerfile)
