@@ -1,44 +1,21 @@
 name: Dockerfiles
-# Test and push dockerfiles when they change.
-# Test for pull request, push dockerfiles when merged into main.
+# Test and push dockerfiles when merged into main and on schedule.
 on:
-  schedule:
-    # * is a special character in YAML so you have to quote this string
-    - cron: "0 0 1 * *"
   push:
     branches:
       - main
-    paths:
-      - '**.Dockerfile'
-      - .github/workflows/docker.yml
-  pull_request_target:
+  schedule:
+    # * is a special character in YAML so you have to quote this string
+    - cron: "0 0 1 * *"
   workflow_dispatch:
 
 # Cancel in-progress funs of the same workflow
-
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
 jobs:
-  generate:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - name: Set up Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: 3.x
-          cache: pip
-      - name: Verify dockerfiles
-        run: |
-          python -m pip install --upgrade pip
-          if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
-          ./generate.py
-          git diff --exit-code
-
   docker:
-    needs: generate
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
@@ -230,13 +207,6 @@ jobs:
             platforms: "linux/amd64"
     steps:
       - uses: actions/checkout@v4
-      - name: Filter build
-        uses: dorny/paths-filter@v3
-        id: filter
-        with:
-          filters: |
-            docker:
-              - ${{ matrix.label }}/${{ matrix.tag }}.Dockerfile
       - name: Set current date
         id: date
         run: |
@@ -261,9 +231,7 @@ jobs:
           password: ${{ secrets.GITHUB_TOKEN }}
       - name: Build and push
         uses: docker/build-push-action@v6
-        if: ${{ steps.filter.outputs.docker == 'true' || github.event_name == 'schedule' || github.event_name == 'workflow_dispatch' }}
         with:
-          push: ${{ github.ref == 'refs/heads/main' }}
           file: ${{ matrix.label }}/${{ matrix.tag }}.Dockerfile
           target: ${{ matrix.target }}
           platforms: ${{ matrix.platforms }}
@@ -277,12 +245,3 @@ jobs:
           cache-to: |
             type=registry,ref=ghcr.io/${{ github.repository_owner }}/${{ matrix.label }}:${{ matrix.tag }}-buildcache,mode=max
             type=gha,mode=max
-
-  complete:
-    needs:
-      - generate
-      - docker
-    runs-on: ubuntu-latest
-    steps:
-      - name: Check
-        run: echo "Completed successfully!"
