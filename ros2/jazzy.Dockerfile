@@ -1,5 +1,5 @@
 ##############################################
-# Created from template ros2.dockerfile.jinja test
+# Created from template ros2.dockerfile.jinja
 ##############################################
 
 ###########################################
