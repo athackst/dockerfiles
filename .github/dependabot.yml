@@ -9,6 +9,10 @@ updates:
     directory: "/"
     schedule:
       interval: daily
+    groups:
+      python-deps:
+        patterns:
+          - "*"
     open-pull-requests-limit: 10
   - package-ecosystem: docker
     directory: "/"
