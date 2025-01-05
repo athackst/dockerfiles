@@ -35,6 +35,13 @@ jazzy
 * [jazzy-full](https://github.com/athackst/dockerfiles/blob/main/ros2/jazzy.Dockerfile)
 * [jazzy-gazebo](https://github.com/athackst/dockerfiles/blob/main/ros2/jazzy.Dockerfile)
 
+jazzy-cuda
+  
+* [jazzy-cuda-base](https://github.com/athackst/dockerfiles/blob/main/ros2/jazzy-cuda.Dockerfile)
+* [jazzy-cuda-dev](https://github.com/athackst/dockerfiles/blob/main/ros2/jazzy-cuda.Dockerfile)
+* [jazzy-cuda-full](https://github.com/athackst/dockerfiles/blob/main/ros2/jazzy-cuda.Dockerfile)
+* [jazzy-cuda-gazebo](https://github.com/athackst/dockerfiles/blob/main/ros2/jazzy-cuda.Dockerfile)
+
 iron
   
 * [iron-base](https://github.com/athackst/dockerfiles/blob/main/ros2/iron.Dockerfile)
