@@ -91,6 +91,7 @@
         "rolling",
         "rolling-cuda",
         "jazzy",
+        "jazzy-cuda",
         "iron",
         "iron-cuda",
         "humble",
