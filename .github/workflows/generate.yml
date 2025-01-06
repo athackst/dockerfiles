@@ -1,6 +1,7 @@
 name: Run generate
 
 on:
+  pull_request: # Temp change to test
   pull_request_target:
   workflow_dispatch:
 
