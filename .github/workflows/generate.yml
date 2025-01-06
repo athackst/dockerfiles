@@ -1,6 +1,7 @@
 name: Run generate
 
 on:
+  pull_request: # Temp for testing
   pull_request_target:
     types:
       - opened
