@@ -1,11 +1,7 @@
 name: Test
 
 on:
-  workflow_run:
-    workflows:
-      - Run generate
-    types:
-      - completed
+  pull_request:
   workflow_dispatch:
 
 jobs:
