@@ -14,11 +14,11 @@ pycodestyle==2.12.1
 pydantic==2.10.4
 pydantic_core==2.27.2
 pyflakes==3.2.0
-Pygments==2.19.0
+Pygments==2.19.1
 pyparsing==3.2.1
 requests==2.32.3
 rich==13.9.4
-ruamel.yaml==0.18.9
+ruamel.yaml==0.18.10
 ruamel.yaml.clib==0.2.12
 shellingham==1.5.4
 tqdm==4.67.1
