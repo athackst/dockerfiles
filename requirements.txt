@@ -1,5 +1,5 @@
 annotated-types==0.7.0
-certifi==2024.12.14
+certifi==2025.1.31
 charset-normalizer==3.4.1
 click==8.1.8
 flake8==7.1.1
@@ -12,7 +12,7 @@ mdurl==0.1.2
 packaging==24.2
 pycodestyle==2.12.1
 pydantic==2.10.6
-pydantic_core==2.27.2
+pydantic_core==2.29.0
 pyflakes==3.2.0
 Pygments==2.19.1
 pyparsing==3.2.1
