@@ -10,9 +10,9 @@ updates:
     schedule:
       interval: daily
     groups:
-      python-deps:
+      pydantic-deps:
         patterns:
-          - "*"
+          - "pydantic"
     open-pull-requests-limit: 10
   - package-ecosystem: docker
     directory: "/"
