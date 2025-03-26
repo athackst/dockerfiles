@@ -88,8 +88,8 @@ RUN apt-get update && apt-get install -y \
 
 WORKDIR /workspaces/gazebo/src
 # Get sources
-RUN wget https://raw.githubusercontent.com/gazebo-tooling/gazebodistro/master/collection-garden.yaml \
-  && vcs import < collection-garden.yaml \
+RUN wget https://raw.githubusercontent.com/gazebo-tooling/gazebodistro/refs/heads/master/collection-ionic.yaml \
+  && vcs import < collection-ionic.yaml \
   # Get dependencies
   && sudo wget https://packages.osrfoundation.org/gazebo.gpg -O /usr/share/keyrings/pkgs-osrf-archive-keyring.gpg \
   && echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/pkgs-osrf-archive-keyring.gpg] http://packages.osrfoundation.org/gazebo/ubuntu-stable $(lsb_release -cs) main" | sudo tee /etc/apt/sources.list.d/gazebo-stable.list > /dev/null \
