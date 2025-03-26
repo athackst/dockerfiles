@@ -1,8 +1,6 @@
 {
 	"name": "Docker in Docker",
-	"dockerFile": "Dockerfile",
-	"context": "../",
-	// "image": "mcr.microsoft.com/devcontainers/base:bullseye",
+	"image": "mcr.microsoft.com/devcontainers/base:bullseye",
 	"features": {
 		"ghcr.io/devcontainers/features/common-utils:1": {
 			"installZsh": "true",
@@ -33,17 +31,12 @@
 			]
 		}
 	},
-	// Mount local aliases if any
-	"mounts": [
-		"source=/${env:HOME}/.bash_aliases,target=/home/vscode/.bash_aliases,type=bind,consistency=cached",
-		"source=/${env:HOME}/.aliases,target=/home/vscode/.aliases,type=bind,consistency=cached"
-	],
 
 	// Use 'forwardPorts' to make a list of ports inside the container available locally.
 	// "forwardPorts": [],
 
 	// Use 'postCreateCommand' to run commands after the container is created.
-	// "postCreateCommand": "docker --version",
+	"postCreateCommand": "pip3 install -r requirements.txt",
 
 	// Configure tool-specific properties.
 	// "customizations": {},
