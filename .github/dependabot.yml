@@ -12,7 +12,7 @@ updates:
     groups:
       pydantic-deps:
         patterns:
-          - "pydantic"
+          - "pydantic*"
     open-pull-requests-limit: 10
   - package-ecosystem: docker
     directory: "/"
