@@ -6,13 +6,23 @@ See [the docs](https://athackst.github.io/dockerfiles) or read about  [how I dev
 ## Usage
 
 ```bash
-docker pull althack/gz:harmonic-base
+docker pull althack/gz:ionic-base
 ```
 
 ## Organization
 
 The main docker image tags are:
 
+
+ionic
+  
+* [ionic-base](https://github.com/athackst/dockerfiles/blob/main/gz/ionic.Dockerfile)
+* [ionic-dev](https://github.com/athackst/dockerfiles/blob/main/gz/ionic.Dockerfile)
+
+ionic-cuda
+  
+* [ionic-cuda-base](https://github.com/athackst/dockerfiles/blob/main/gz/ionic-cuda.Dockerfile)
+* [ionic-cuda-dev](https://github.com/athackst/dockerfiles/blob/main/gz/ionic-cuda.Dockerfile)
 
 harmonic
   

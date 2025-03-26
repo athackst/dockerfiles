@@ -354,6 +354,28 @@ ignition:
     ubuntu_distro: "18.04"
 gz:
   -
+    name: ionic
+    gz_distro: ionic
+    targets:
+      - target: base
+        platforms: "linux/amd64"
+      - target: dev
+        platforms: "linux/amd64"
+    gazebo_version: "8"
+    base_image: "ubuntu"
+    image_version: "24.04"
+  -
+    name: ionic-cuda
+    gz_distro: ionic
+    targets:
+      - target: base
+        platforms: "linux/amd64"
+      - target: dev
+        platforms: "linux/amd64"
+    gazebo_version: "8"
+    base_image: "nvidia/cuda"
+    image_version: "12.8.1-runtime-ubuntu24.04"
+  -
     name: harmonic
     gz_distro: harmonic
     targets:
