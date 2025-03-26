@@ -99,6 +99,8 @@
         "gazebo11",
         "fortress",
         "citadel",
+        "ionic",
+        "ionic-cuda",
         "harmonic",
         "harmonic-cuda",
         "garden",
