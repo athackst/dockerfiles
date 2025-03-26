@@ -2,7 +2,7 @@
 	"name": "Docker in Docker",
 	"image": "mcr.microsoft.com/devcontainers/base:bullseye",
 	"features": {
-		"ghcr.io/devcontainers/features/common-utils:1": {
+		"ghcr.io/devcontainers/features/common-utils:2": {
 			"installZsh": "true",
 			"upgradePackages": "false",
 			"uid": "1000",
