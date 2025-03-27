@@ -49,6 +49,31 @@ class Templates:
                 dockerfiles.append(settings)
         return dockerfiles
 
+    def dockercompose_settings(self, eol: bool = False) -> dict:
+        """Get docker compose generation settings.
+
+        Args:
+            eol (bool, optional): Include eol images. Defaults to False.
+
+        Returns:
+            dict: Repository generation settings
+        """
+        docker_compose_files = []
+        # Currently only gz has compose files
+        repository = "gz"
+        for distro in self._settings[repository]:
+            if "eol" in distro and not eol:
+                continue
+            # TODO: Update to allow nvidia/cuda
+            if "nvidia" in distro["base_image"]:
+                continue
+            name = distro["name"]
+            distro["compose_file"] = f"{repository}.docker-compose.yml.jinja"
+            distro["compose_out_file"] = \
+                f"docker-compose/{repository}/{name}-docker-compose.yml"
+            docker_compose_files.append(distro)
+        return docker_compose_files
+
     def images(self, eol: bool = False) -> dict:
         """Get dict of images and targets to build.
 
@@ -96,7 +121,7 @@ class Templates:
                         "tag": tag,
                         "target": target["target"],
                         "platforms": target["platforms"],
-                        }
+                    }
                     output.append(item)
         return output
 
@@ -163,6 +188,21 @@ def generate_readmes(log):
         readme_out.close()
 
 
+def generate_docker_compose(log):
+    """Generate the docker compose files."""
+    file_loader = FileSystemLoader("template")
+    env = Environment(loader=file_loader)
+
+    for compose_settings in templates.dockercompose_settings():
+        template = env.get_template(compose_settings["compose_file"])
+        output = template.render(compose_settings)
+        out_file = compose_settings["compose_out_file"]
+        log.info(f"Generating {out_file}")
+        compose_out = open(out_file, "w")
+        compose_out.write(output)
+        compose_out.close()
+
+
 def generate_docker_workflow(log):
     """Generate workflow with non-eol images."""
     log.info("Generating workflow file.")
@@ -217,6 +257,7 @@ if __name__ == "__main__":
 
     generate_dockerfiles(log)
     generate_readmes(log)
+    generate_docker_compose(log)
     generate_docker_workflow(log)
     generate_readme_workflow(log)
     generate_tasks(log)
