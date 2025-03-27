@@ -165,14 +165,6 @@ jobs:
             tag: humble-cuda
             target: gazebo
             platforms: "linux/amd64"
-          - label: gazebo
-            tag: gazebo11
-            target: base
-            platforms: "linux/amd64"
-          - label: gazebo
-            tag: gazebo11
-            target: dev
-            platforms: "linux/amd64"
           - label: ignition
             tag: fortress
             target: base
@@ -219,22 +211,6 @@ jobs:
             platforms: "linux/amd64"
           - label: gz
             tag: harmonic-cuda
-            target: dev
-            platforms: "linux/amd64"
-          - label: gz
-            tag: garden
-            target: base
-            platforms: "linux/amd64"
-          - label: gz
-            tag: garden
-            target: dev
-            platforms: "linux/amd64"
-          - label: gz
-            tag: garden-cuda
-            target: base
-            platforms: "linux/amd64"
-          - label: gz
-            tag: garden-cuda
             target: dev
             platforms: "linux/amd64"
     steps:

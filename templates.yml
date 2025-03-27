@@ -289,6 +289,7 @@ gazebo:
       - target: dev
         platforms: "linux/amd64"
     ubuntu_distro: "20.04"
+    eol: true
   -
     name: gazebo10
     gazebo_release: "10"
@@ -361,7 +362,6 @@ gz:
         platforms: "linux/amd64"
       - target: dev
         platforms: "linux/amd64"
-    gazebo_version: "8"
     base_image: "ubuntu"
     image_version: "24.04"
   -
@@ -372,7 +372,6 @@ gz:
         platforms: "linux/amd64"
       - target: dev
         platforms: "linux/amd64"
-    gazebo_version: "8"
     base_image: "nvidia/cuda"
     image_version: "12.8.1-runtime-ubuntu24.04"
   -
@@ -383,7 +382,6 @@ gz:
         platforms: "linux/amd64"
       - target: dev
         platforms: "linux/amd64"
-    gazebo_version: "8"
     base_image: "ubuntu"
     image_version: "22.04"
   -
@@ -394,7 +392,6 @@ gz:
         platforms: "linux/amd64"
       - target: dev
         platforms: "linux/amd64"
-    gazebo_version: "8"
     base_image: "nvidia/cuda"
     image_version: "12.5.0-runtime-ubuntu22.04"
   -
@@ -405,9 +402,9 @@ gz:
         platforms: "linux/amd64"
       - target: dev
         platforms: "linux/amd64"
-    gazebo_version: "7"
     base_image: "ubuntu"
     image_version: "20.04"
+    eol: true
   -
     name: garden-cuda
     gz_distro: garden
@@ -416,6 +413,6 @@ gz:
         platforms: "linux/amd64"
       - target: dev
         platforms: "linux/amd64"
-    gazebo_version: "7"
     base_image: "nvidia/cuda"
     image_version: "12.5.0-runtime-ubuntu20.04"
+    eol: true
