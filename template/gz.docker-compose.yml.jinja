@@ -1,0 +1,17 @@
+ # Note: Run `xhost +local:docker` on the host before starting this container
+
+services:
+  {{ gz_distro }}:
+    image: althack/gz:{{ gz_distro }}-base
+    environment:
+      - DISPLAY=${DISPLAY}
+      - XAUTHORITY=${XAUTHORITY}
+      - LIBGL_ALWAYS_SOFTWARE=1  # Force software rendering
+      - MESA_GL_VERSION_OVERRIDE=3.3
+    volumes:
+      - /tmp/.X11-unix:/tmp/.X11-unix
+    network_mode: host  # Use host networking
+    stdin_open: true
+    tty: true
+    command: gz sim
+   
