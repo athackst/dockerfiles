@@ -96,15 +96,12 @@
         "iron-cuda",
         "humble",
         "humble-cuda",
-        "gazebo11",
         "fortress",
         "citadel",
         "ionic",
         "ionic-cuda",
         "harmonic",
         "harmonic-cuda",
-        "garden",
-        "garden-cuda",
         "all"
       ],
       "default": "foxy"

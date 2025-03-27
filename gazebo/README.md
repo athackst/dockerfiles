@@ -14,7 +14,7 @@ docker pull althack/gazebo:gazebo11-base
 The main docker image tags are:
 
 
-gazebo11
+gazebo11 (eol)
   
 * [gazebo11-base](https://github.com/athackst/dockerfiles/blob/main/gazebo/gazebo11.Dockerfile)
 * [gazebo11-dev](https://github.com/athackst/dockerfiles/blob/main/gazebo/gazebo11.Dockerfile)

@@ -34,12 +34,12 @@ harmonic-cuda
 * [harmonic-cuda-base](https://github.com/athackst/dockerfiles/blob/main/gz/harmonic-cuda.Dockerfile)
 * [harmonic-cuda-dev](https://github.com/athackst/dockerfiles/blob/main/gz/harmonic-cuda.Dockerfile)
 
-garden
+garden (eol)
   
 * [garden-base](https://github.com/athackst/dockerfiles/blob/main/gz/garden.Dockerfile)
 * [garden-dev](https://github.com/athackst/dockerfiles/blob/main/gz/garden.Dockerfile)
 
-garden-cuda
+garden-cuda (eol)
   
 * [garden-cuda-base](https://github.com/athackst/dockerfiles/blob/main/gz/garden-cuda.Dockerfile)
 * [garden-cuda-dev](https://github.com/athackst/dockerfiles/blob/main/gz/garden-cuda.Dockerfile)
