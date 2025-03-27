@@ -134,9 +134,9 @@ def build(image, target, push, clean):
             if push or should_push():
                 dockerpy.push(repository=repository, tag=latest_tag)
                 dockerpy.push(repository=repository, tag=dated_tag)
-            if clean or should_clean():
-                dockerpy.rmi(repository=repository, tag=dated_tag)
-                dockerpy.prune()
+    if clean or should_clean():
+        dockerpy.rmi(repository=repository, tag=dated_tag)
+        dockerpy.prune()
 
 
 @click.command()
