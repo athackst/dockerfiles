@@ -11,7 +11,7 @@ FROM nvidia/cuda:12.5.0-runtime-ubuntu22.04 AS base
 ENV DEBIAN_FRONTEND=noninteractive
 
 # Install language
-RUN apt-get update && apt-get install -y \
+RUN apt-get update && apt-get install -y --no-install-recommends \
   locales \
   && locale-gen en_US.UTF-8 \
   && update-locale LC_ALL=en_US.UTF-8 LANG=en_US.UTF-8 \
@@ -22,7 +22,7 @@ ENV LANG=en_US.UTF-8
 RUN ln -fs /usr/share/zoneinfo/UTC /etc/localtime \
   && export DEBIAN_FRONTEND=noninteractive \
   && apt-get update \
-  && apt-get install -y tzdata \
+  && apt-get install -y --no-install-recommends tzdata \
   && dpkg-reconfigure --frontend noninteractive tzdata \
   && rm -rf /var/lib/apt/lists/*
 
@@ -41,7 +41,7 @@ RUN apt-get update && apt-get install -q -y \
   && rm -rf /var/lib/apt/lists/*
 
 ################
-# Expose the nvidia driver to allow opengl 
+# Expose the nvidia driver to allow opengl
 # Dependencies for glvnd and X11.
 ################
 RUN apt-get update \
@@ -78,7 +78,7 @@ RUN apt-get update && apt-get install -y sudo \
   && rm -rf /var/lib/apt/lists/*
 
 # Set up autocompletion for user
-RUN apt-get update && apt-get install -y git-core bash-completion \
+RUN apt-get update && apt-get install -y --no-install-recommends git-core bash-completion \
   && echo "if [ -f /opt/ros/${ROS_DISTRO}/setup.bash ]; then source /opt/ros/${ROS_DISTRO}/setup.bash; fi" >> /home/$USERNAME/.bashrc \
   && echo "if [ -f /usr/share/colcon_argcomplete/hook/colcon-argcomplete.bash ]; then source /usr/share/colcon_argcomplete/hook/colcon-argcomplete.bash; fi" >> /home/$USERNAME/.bashrc \
   && rm -rf /var/lib/apt/lists/*
