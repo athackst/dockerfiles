@@ -12,7 +12,7 @@ mdurl==0.1.2
 packaging==24.2
 pycodestyle==2.12.1
 pydantic==2.11.1
-pydantic_core==2.33.0
+pydantic_core==2.33.1
 pyflakes==3.2.0
 Pygments==2.19.1
 pyparsing==3.2.3
