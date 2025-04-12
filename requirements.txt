@@ -2,7 +2,7 @@ annotated-types==0.7.0
 certifi==2025.1.31
 charset-normalizer==3.4.1
 click==8.1.8
-flake8==7.1.2
+flake8==7.2.0
 idna==3.10
 Jinja2==3.1.6
 markdown-it-py==3.0.0
@@ -10,10 +10,10 @@ MarkupSafe==3.0.2
 mccabe==0.7.0
 mdurl==0.1.2
 packaging==24.2
-pycodestyle==2.12.1
+pycodestyle==2.13.0
 pydantic==2.11.3
 pydantic_core==2.33.1
-pyflakes==3.2.0
+pyflakes==3.3.2
 Pygments==2.19.1
 pyparsing==3.2.3
 requests==2.32.3
