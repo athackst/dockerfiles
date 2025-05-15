@@ -22,7 +22,7 @@ ruamel.yaml==0.18.10
 ruamel.yaml.clib==0.2.12
 shellingham==1.5.4
 tqdm==4.67.1
-typer==0.15.3
+typer==0.15.4
 typing_extensions==4.13.2
 urllib3==2.4.0
 websocket-client==1.8.0
