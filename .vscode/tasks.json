@@ -90,6 +90,7 @@
         "noetic",
         "rolling",
         "rolling-cuda",
+        "kilted",
         "jazzy",
         "jazzy-cuda",
         "iron",
