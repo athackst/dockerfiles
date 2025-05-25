@@ -28,6 +28,13 @@ rolling-cuda
 * [rolling-cuda-full](https://github.com/athackst/dockerfiles/blob/main/ros2/rolling-cuda.Dockerfile)
 * [rolling-cuda-gazebo](https://github.com/athackst/dockerfiles/blob/main/ros2/rolling-cuda.Dockerfile)
 
+kilted
+  
+* [kilted-base](https://github.com/athackst/dockerfiles/blob/main/ros2/kilted.Dockerfile)
+* [kilted-dev](https://github.com/athackst/dockerfiles/blob/main/ros2/kilted.Dockerfile)
+* [kilted-full](https://github.com/athackst/dockerfiles/blob/main/ros2/kilted.Dockerfile)
+* [kilted-gazebo](https://github.com/athackst/dockerfiles/blob/main/ros2/kilted.Dockerfile)
+
 jazzy
   
 * [jazzy-base](https://github.com/athackst/dockerfiles/blob/main/ros2/jazzy.Dockerfile)

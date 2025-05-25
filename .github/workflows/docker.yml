@@ -70,6 +70,22 @@ jobs:
             target: gazebo
             platforms: "linux/amd64"
           - label: ros2
+            tag: kilted
+            target: base
+            platforms: "linux/amd64,linux/arm64/v8"
+          - label: ros2
+            tag: kilted
+            target: dev
+            platforms: "linux/amd64"
+          - label: ros2
+            tag: kilted
+            target: full
+            platforms: "linux/amd64"
+          - label: ros2
+            tag: kilted
+            target: gazebo
+            platforms: "linux/amd64"
+          - label: ros2
             tag: jazzy
             target: base
             platforms: "linux/amd64,linux/arm64/v8"
