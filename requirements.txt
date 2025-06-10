@@ -16,9 +16,9 @@ pydantic_core==2.33.1
 pyflakes==3.3.2
 Pygments==2.19.1
 pyparsing==3.2.3
-requests==2.32.3
+requests==2.32.4
 rich==14.0.0
-ruamel.yaml==0.18.13
+ruamel.yaml==0.18.14
 ruamel.yaml.clib==0.2.12
 shellingham==1.5.4
 tqdm==4.67.1
