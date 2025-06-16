@@ -32,7 +32,6 @@ RUN sudo add-apt-repository universe \
   && echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/ros-archive-keyring.gpg] http://packages.ros.org/ros2/ubuntu $(. /etc/os-release && echo $UBUNTU_CODENAME) main" | sudo tee /etc/apt/sources.list.d/ros2.list > /dev/null \
   && apt-get update && apt-get install -y --no-install-recommends \
     ros-{{ ros_distro }}-ros-base \
-    python3-argcomplete \
   && rm -rf /var/lib/apt/lists/*
 
 {%- if 'nvidia' in base_image %}
@@ -68,6 +67,8 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
   ros-dev-tools \
   ros-{{ ros_distro }}-ament-* \
   vim \
+  && echo "if [ -f /usr/share/colcon_argcomplete/hook/colcon-argcomplete.bash ]; then source /usr/share/colcon_argcomplete/hook/colcon-argcomplete.bash; fi" >> /etc/bash.bashrc \
+  && echo "if [ -f /usr/share/colcon_cd/function/colcon_cd-argcomplete.bash ]; then source /usr/share/colcon_cd/function/colcon_cd-argcomplete.bash; fi" >> /etc/bash.bashrc \
   && rm -rf /var/lib/apt/lists/*
 
 RUN rosdep init || echo "rosdep already initialized"
