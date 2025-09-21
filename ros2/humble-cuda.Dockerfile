@@ -5,7 +5,7 @@
 ###########################################
 # Base image
 ###########################################
-FROM nvidia/cuda:11.8.0-runtime-ubuntu22.04 AS base
+FROM nvidia/cuda:13.0.1-cudnn-runtime-ubuntu22.04 AS base
 
 ENV DEBIAN_FRONTEND=noninteractive
 
@@ -64,6 +64,7 @@ RUN apt-get update \
 ENV NVIDIA_VISIBLE_DEVICES=all
 ENV NVIDIA_DRIVER_CAPABILITIES=graphics,utility,compute
 ENV QT_X11_NO_MITSHM=1
+ENV DEBIAN_FRONTEND=
 
 ENV ROS_DISTRO=humble
 ENV AMENT_PREFIX_PATH=/opt/ros/humble
@@ -74,7 +75,10 @@ ENV PYTHONPATH=/opt/ros/humble/local/lib/python3.10/dist-packages:/opt/ros/humbl
 ENV ROS_PYTHON_VERSION=3
 ENV ROS_VERSION=2
 ENV ROS_AUTOMATIC_DISCOVERY_RANGE=SUBNET
-ENV DEBIAN_FRONTEND=
+ENV ROS_LOCALHOST_ONLY=0
+
+CMD ["bash"]
+
 ###########################################
 #  Develop image
 ###########################################
@@ -136,7 +140,9 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
   ros-humble-desktop \
   && rm -rf /var/lib/apt/lists/*
 ENV DEBIAN_FRONTEND=
-ENV LD_LIBRARY_PATH=/opt/ros/humble/lib
+
+ENV LD_LIBRARY_PATH=/opt/ros/humble/opt/gz_math_vendor/lib:/opt/ros/humble/opt/gz_utils_vendor/lib:/opt/ros/humble/opt/gz_cmake_vendor/lib:/opt/ros/humble/opt/rviz_ogre_vendor/lib:/opt/ros/humble/lib/x86_64-linux-gnu:/opt/ros/humble/lib
+ENV CMAKE_PREFIX_PATH=/opt/ros/humble/opt/gz_math_vendor:/opt/ros/humble/opt/gz_utils_vendor:/opt/ros/humble/opt/gz_cmake_vendor
 
 ###########################################
 #  Full+Gazebo image
@@ -151,3 +157,9 @@ RUN wget https://packages.osrfoundation.org/gazebo.gpg -O /usr/share/keyrings/pk
     ros-humble-ros-gz \
   && rm -rf /var/lib/apt/lists/*
 ENV DEBIAN_FRONTEND=
+
+ENV LD_LIBRARY_PATH=/opt/ros/humble/opt/gz_sim_vendor/lib:/opt/ros/humble/opt/gz_sensors_vendor/lib:/opt/ros/humble/opt/gz_physics_vendor/lib:/opt/ros/humble/opt/sdformat_vendor/lib:/opt/ros/humble/opt/gz_gui_vendor/lib:/opt/ros/humble/opt/gz_transport_vendor/lib:/opt/ros/humble/opt/gz_rendering_vendor/lib:/opt/ros/humble/opt/gz_plugin_vendor/lib:/opt/ros/humble/opt/gz_fuel_tools_vendor/lib:/opt/ros/humble/opt/gz_msgs_vendor/lib:/opt/ros/humble/opt/gz_common_vendor/lib:/opt/ros/humble/opt/gz_math_vendor/lib:/opt/ros/humble/opt/gz_utils_vendor/lib:/opt/ros/humble/opt/gz_tools_vendor/lib:/opt/ros/humble/opt/gz_ogre_next_vendor/lib:/opt/ros/humble/opt/gz_dartsim_vendor/lib:/opt/ros/humble/opt/gz_cmake_vendor/lib:/opt/ros/humble/opt/rviz_ogre_vendor/lib:/opt/ros/humble/lib/x86_64-linux-gnu:/opt/ros/humble/lib
+ENV GZ_SIM_RESOURCE_PATH=/opt/ros/humble/share
+ENV GZ_CONFIG_PATH=/opt/ros/humble/opt/gz_sim_vendor/share/gz:/opt/ros/humble/opt/sdformat_vendor/share/gz:/opt/ros/humble/opt/gz_gui_vendor/share/gz:/opt/ros/humble/opt/gz_transport_vendor/share/gz:/opt/ros/humble/opt/gz_rendering_vendor/share/gz:/opt/ros/humble/opt/gz_plugin_vendor/share/gz:/opt/ros/humble/opt/gz_fuel_tools_vendor/share/gz:/opt/ros/humble/opt/gz_msgs_vendor/share/gz:/opt/ros/humble/opt/gz_common_vendor/share/gz
+ENV PATH=/opt/ros/humble/opt/gz_msgs_vendor/bin:/opt/ros/humble/opt/gz_tools_vendor/bin:/opt/ros/humble/opt/gz_ogre_next_vendor/bin:/opt/ros/humble/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+ENV CMAKE_PREFIX_PATH=/opt/ros/humble/opt/gz_math_vendor:/opt/ros/humble/opt/gz_utils_vendor:/opt/ros/humble/opt/gz_ogre_next_vendor:/opt/ros/humble/opt/gz_dartsim_vendor:/opt/ros/humble/opt/gz_cmake_vendor:/opt/ros/humble/opt/gz_sim_vendor:/opt/ros/humble/opt/gz_sensors_vendor:/opt/ros/humble/opt/gz_physics_vendor:/opt/ros/humble/opt/sdformat_vendor:/opt/ros/humble/opt/gz_gui_vendor:/opt/ros/humble/opt/gz_transport_vendor:/opt/ros/humble/opt/gz_rendering_vendor:/opt/ros/humble/opt/gz_plugin_vendor:/opt/ros/humble/opt/gz_fuel_tools_vendor:/opt/ros/humble/opt/gz_msgs_vendor:/opt/ros/humble/opt/gz_common_vendor:/opt/ros/humble/opt/gz_tools_vendor

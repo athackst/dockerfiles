@@ -14,6 +14,7 @@ ros:
     python_env: "3"
     python_version: "3"
     ubuntu_distro: "20.04"
+    eol: true
   -
     name: melodic
     ros_distro: melodic
@@ -92,7 +93,7 @@ ros2:
         platforms: "linux/amd64"
     python_version: "3.12"
     base_image: "nvidia/cuda"
-    image_version: "12.6.2-cudnn-runtime-ubuntu24.04"
+    image_version: "13.0.1-cudnn-runtime-ubuntu24.04"
   -
     name: kilted
     ros_distro: kilted
@@ -137,7 +138,7 @@ ros2:
         platforms: "linux/amd64"
     python_version: "3.12"
     base_image: "nvidia/cuda"
-    image_version: "12.6.2-cudnn-runtime-ubuntu24.04"
+    image_version: "13.0.1-cudnn-runtime-ubuntu24.04"
   -
     name: iron
     ros_distro: iron
@@ -153,6 +154,7 @@ ros2:
     python_version: "3.10"
     base_image: "ubuntu"
     image_version: "22.04"
+    eol: true
   -
     name: iron-cuda
     ros_distro: iron
@@ -167,7 +169,8 @@ ros2:
         platforms: "linux/amd64"
     python_version: "3.10"
     base_image: "nvidia/cuda"
-    image_version: "11.8.0-runtime-ubuntu22.04"
+    image_version: "13.0.1-cudnn-runtime-ubuntu24.04"
+    eol: true
   -
     name: humble
     ros_distro: humble
@@ -197,7 +200,7 @@ ros2:
         platforms: "linux/amd64"
     python_version: "3.10"
     base_image: "nvidia/cuda"
-    image_version: "11.8.0-runtime-ubuntu22.04"
+    image_version: "13.0.1-cudnn-runtime-ubuntu22.04"
   -
     name: galactic
     ros_distro: galactic
@@ -368,6 +371,7 @@ ignition:
         platforms: "linux/amd64"
     gazebo_version: "3"
     ubuntu_distro: "18.04"
+    eol: true
 gz:
   -
     name: ionic
