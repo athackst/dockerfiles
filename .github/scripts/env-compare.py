@@ -10,7 +10,8 @@ IGNORE_PATTERNS = [
     r'^HOSTNAME=',
     r'^PWD=',
     r'^SHLVL=',
-    r'^_='
+    r'^_=',
+    r'^TERM=',
 ]
 
 
@@ -25,6 +26,10 @@ def get_source_env_from_image(image, version):
         check=True
     )
     src_stdout = result.stdout
+    if not src_stdout:
+        print("Error!! No stdout")
+        print(f"{result}")
+        exit(1)
     return src_stdout.splitlines()
 
 
@@ -38,6 +43,10 @@ def get_env_from_image(image):
         check=True
     )
     env_stdout = result.stdout
+    if not env_stdout:
+        print("Error!! No stdout")
+        print(f"{result}")
+        exit(1)
     return env_stdout.splitlines()
 
 
