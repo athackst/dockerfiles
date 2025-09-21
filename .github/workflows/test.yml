@@ -76,6 +76,9 @@ jobs:
       matrix:
         dockerfile: ${{ fromJSON(needs.changes.outputs.dockerfiles) }}
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: read
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4    
