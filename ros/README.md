@@ -14,7 +14,7 @@ docker pull althack/ros:noetic-base
 The main docker image tags are:
 
 
-noetic
+noetic (eol)
   
 * [noetic-base](https://github.com/athackst/dockerfiles/blob/main/ros/noetic.Dockerfile)
 * [noetic-dev](https://github.com/athackst/dockerfiles/blob/main/ros/noetic.Dockerfile)
