@@ -18,25 +18,27 @@ def get_source_env_from_image(image, version):
     """Extract environment variables from a Docker image after sourcing."""
     result = subprocess.run(
         ["docker", "run", "--rm", image,
-         "bash", "-c", f"source /opt/ros/{version}/setup.bash && env"],
+         "bash", "-c", f"source /opt/ros/{version}/setup.bash; env"],
         stdout=subprocess.PIPE,
         stderr=subprocess.PIPE,
         text=True,
         check=True
     )
-    return result.stdout.splitlines()
+    src_stdout = result.stdout
+    return src_stdout.splitlines()
 
 
 def get_env_from_image(image):
     """Extract environment variables from a Docker image."""
     result = subprocess.run(
-        ["docker", "run", "--rm", image, "env"],
+        ["docker", "run", "--rm", image, "bash", "-c", "env"],
         stdout=subprocess.PIPE,
         stderr=subprocess.PIPE,
         text=True,
         check=True
     )
-    return result.stdout.splitlines()
+    env_stdout = result.stdout
+    return env_stdout.splitlines()
 
 
 def filter_env(env_lines):
@@ -50,8 +52,7 @@ def filter_env(env_lines):
 
 def compare_envs(env1, env2):
     """Compare two sets of environment variables and print differences."""
-    diff = list(unified_diff(env1, env2, fromfile='Base Image',
-                tofile='New Image', lineterm=''))
+    diff = list(unified_diff(env1, env2, lineterm=''))
     if diff:
         print("Environment differences detected:")
         for line in diff:
@@ -69,14 +70,14 @@ if __name__ == "__main__":
     image, version = sys.argv[1], sys.argv[2]
 
     print(f"Sourcing {version} and extracting environment from {image}...")
-    base_env = get_source_env_from_image(image, version)
+    sourced_env = get_source_env_from_image(image, version)
 
     print(f"Extracting environment from {image}...")
-    new_env = get_env_from_image(image)
+    docker_env = get_env_from_image(image)
 
     print("Filtering known differences...")
-    base_env_filtered = filter_env(base_env)
-    new_env_filtered = filter_env(new_env)
+    sourced_env_filtered = filter_env(sourced_env)
+    docker_env_filtered = filter_env(docker_env)
 
     print("Comparing environments...")
-    compare_envs(base_env_filtered, new_env_filtered)
+    compare_envs(sourced_env_filtered, docker_env_filtered)
