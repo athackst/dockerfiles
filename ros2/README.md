@@ -49,14 +49,14 @@ jazzy-cuda
 * [jazzy-cuda-full](https://github.com/athackst/dockerfiles/blob/main/ros2/jazzy-cuda.Dockerfile)
 * [jazzy-cuda-gazebo](https://github.com/athackst/dockerfiles/blob/main/ros2/jazzy-cuda.Dockerfile)
 
-iron
+iron (eol)
   
 * [iron-base](https://github.com/athackst/dockerfiles/blob/main/ros2/iron.Dockerfile)
 * [iron-dev](https://github.com/athackst/dockerfiles/blob/main/ros2/iron.Dockerfile)
 * [iron-full](https://github.com/athackst/dockerfiles/blob/main/ros2/iron.Dockerfile)
 * [iron-gazebo](https://github.com/athackst/dockerfiles/blob/main/ros2/iron.Dockerfile)
 
-iron-cuda
+iron-cuda (eol)
   
 * [iron-cuda-base](https://github.com/athackst/dockerfiles/blob/main/ros2/iron-cuda.Dockerfile)
 * [iron-cuda-dev](https://github.com/athackst/dockerfiles/blob/main/ros2/iron-cuda.Dockerfile)

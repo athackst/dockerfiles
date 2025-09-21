@@ -50,7 +50,7 @@ RUN sudo add-apt-repository universe \
 ENV ROS_DISTRO=kilted
 ENV AMENT_PREFIX_PATH=/opt/ros/kilted
 ENV COLCON_PREFIX_PATH=/opt/ros/kilted
-ENV LD_LIBRARY_PATH=/opt/ros/kilted/lib/x86_64-linux-gnu:/opt/ros/kilted/lib
+ENV LD_LIBRARY_PATH=/opt/ros/kilted/opt/zenoh_cpp_vendor/lib:/opt/ros/kilted/lib/x86_64-linux-gnu:/opt/ros/kilted/lib
 ENV PATH=/opt/ros/kilted/bin:$PATH
 ENV PYTHONPATH=/opt/ros/kilted/local/lib/python3.12/dist-packages:/opt/ros/kilted/lib/python3.12/site-packages
 ENV ROS_PYTHON_VERSION=3
