@@ -46,6 +46,15 @@
       ]
     },
     {
+      "label": "env check",
+      "type": "shell",
+      "command": "./.github/scripts/env-compare.py althack/ros2:${input:build_name}-base ${input:build_name} ",
+      "dependsOn": [
+        "build target"
+      ],
+      "problemMatcher": []
+    },
+    {
       "label": "test",
       "dependsOn": [
         "flake8",
@@ -61,7 +70,17 @@
     {
       "label": "build",
       "type": "shell",
-      "command": "./build.py ${input:build_name}",
+      "command": "./build.py --no-push ${input:build_name}",
+      "problemMatcher": [],
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      }
+    },
+    {
+      "label": "build target",
+      "type": "shell",
+      "command": "./build.py --no-push --target ${input:build_target} ${input:build_name}",
       "problemMatcher": [],
       "group": {
         "kind": "build",
@@ -87,25 +106,33 @@
       "type": "pickString",
       "description": "name of the image to build",
       "options": [
-        "noetic",
         "rolling",
         "rolling-cuda",
         "kilted",
         "jazzy",
         "jazzy-cuda",
-        "iron",
-        "iron-cuda",
         "humble",
         "humble-cuda",
         "fortress",
-        "citadel",
         "ionic",
         "ionic-cuda",
         "harmonic",
         "harmonic-cuda",
         "all"
       ],
-      "default": "foxy"
+      "default": "kilted"
+    },
+    {
+      "id": "build_target",
+      "type": "pickString",
+      "description": "name of the target to build",
+      "options": [
+        "base",
+        "dev",
+        "full",
+        "gazebo"
+      ],
+      "default": "dev"
     }
   ]
 }

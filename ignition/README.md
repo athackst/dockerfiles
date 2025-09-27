@@ -29,7 +29,7 @@ dome (eol)
 * [dome-base](https://github.com/athackst/dockerfiles/blob/main/ignition/dome.Dockerfile)
 * [dome-dev](https://github.com/athackst/dockerfiles/blob/main/ignition/dome.Dockerfile)
 
-citadel
+citadel (eol)
   
 * [citadel-base](https://github.com/athackst/dockerfiles/blob/main/ignition/citadel.Dockerfile)
 * [citadel-dev](https://github.com/athackst/dockerfiles/blob/main/ignition/citadel.Dockerfile)
