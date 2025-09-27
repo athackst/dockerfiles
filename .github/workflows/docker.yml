@@ -174,7 +174,7 @@ jobs:
             target: dev
             platforms: "linux/amd64"
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - name: Filter build
         uses: dorny/paths-filter@v3
         id: filter
