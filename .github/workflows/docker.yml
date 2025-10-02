@@ -182,41 +182,11 @@ jobs:
           filters: |
             docker:
               - ${{ matrix.label }}/${{ matrix.tag }}.Dockerfile
-      - name: Set current date
-        id: date
-        run: |
-          echo "date=$(date +%Y-%m-%d)" >> "$GITHUB_OUTPUT"
-      - name: Use current date
-        run: |
-          echo "Current date is ${{ steps.date.outputs.date }}"
-      - name: Set up QEMU
-        uses: docker/setup-qemu-action@v3
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3
-      - name: Login to Docker Hub
-        uses: docker/login-action@v3
-        with:
-          username: ${{ vars.DOCKERHUB_USERNAME }}
-          password: ${{ secrets.DOCKERHUB_PASSWORD }}
-      - name: Log in to GHCR
-        uses: docker/login-action@v3
-        with:
-          registry: ghcr.io
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
       - name: Build and push
-        uses: docker/build-push-action@v6
         if: ${{ steps.filter.outputs.docker == 'true' || github.event_name == 'schedule' || github.event_name == 'workflow_dispatch' }}
+        uses: ./.github/actions/docker-build-push
         with:
-          push: ${{ github.ref == 'refs/heads/main' }}
-          file: ${{ matrix.label }}/${{ matrix.tag }}.Dockerfile
+          label: ${{ matrix.label }}
+          tag: ${{ matrix.tag }}
           target: ${{ matrix.target }}
           platforms: ${{ matrix.platforms }}
-          tags: |
-            ${{ vars.DOCKERHUB_USERNAME }}/${{ matrix.label }}:${{ matrix.tag }}-${{ matrix.target }}
-            ${{ vars.DOCKERHUB_USERNAME }}/${{ matrix.label }}:${{ matrix.tag }}-${{ matrix.target }}-${{ steps.date.outputs.date }}
-            ghcr.io/${{ github.repository_owner }}/${{ matrix.label }}:${{ matrix.tag }}-${{ matrix.target }}
-          cache-from: |
-            type=registry,ref=ghcr.io/${{ github.repository_owner }}/${{ matrix.label }}:${{ matrix.tag }}-buildcache
-          cache-to: |
-            type=registry,ref=ghcr.io/${{ github.repository_owner }}/${{ matrix.label }}:${{ matrix.tag }}-buildcache,mode=max
