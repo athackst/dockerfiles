@@ -7,6 +7,8 @@
 ###########################################
 FROM ubuntu:24.04 AS base
 
+# This is a test -- TODO: Remove
+
 ENV DEBIAN_FRONTEND=noninteractive
 
 # Install language

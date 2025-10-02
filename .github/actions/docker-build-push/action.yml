@@ -13,6 +13,28 @@ inputs:
   platforms:
     description: "Comma-separated platforms list (e.g. linux/amd64,linux/arm64)"
     required: true
+  docker-username: 
+    description: "dockerhub username"
+    default: ${{ github.actor }}
+    required: false
+  docker-password:
+    description: "dockerhub password"
+    required: false
+  ghcr-username:
+    description: "ghcr username"
+    default: ${{ github.actor }}
+    required: false
+  ghcr-password:
+    description: "ghcr password"
+    required: false
+  push:
+    description: "Whether to push to docker"
+    required: false
+    default: "false"
+  load:
+    description: "Whether or not to load docker locally"
+    required: false
+    default: "false"
 outputs:
   image:
      description: "Built image"
@@ -37,32 +59,34 @@ runs:
       uses: docker/setup-buildx-action@v3
 
     - name: Login to Docker Hub
+      if: ${{ inputs.docker-password }}
       uses: docker/login-action@v3
       with:
-        username: ${{ vars.DOCKERHUB_USERNAME }}
-        password: ${{ secrets.DOCKERHUB_PASSWORD }}
+        username: ${{ inputs.docker-username }}
+        password: ${{ inputs.docker-password }}
 
     - name: Log in to GHCR
+      if: ${{ inputs.ghcr-password }}
       uses: docker/login-action@v3
       with:
         registry: ghcr.io
-        username: ${{ github.actor }}
-        password: ${{ secrets.GITHUB_TOKEN }}
+        username: ${{ inputs.ghcr-username }}
+        password: ${{ inputs.ghcr-password }}
 
     - name: Build and push
       id: docker-build
       uses: docker/build-push-action@v6
       with:
-        push: ${{ github.ref == 'refs/heads/main' }}
+        push: ${{ inputs.push }}
         file: ${{ inputs.label }}/${{ inputs.tag }}.Dockerfile
         context: ${{ inputs.label }}
         target: ${{ inputs.target }}
         platforms: ${{ inputs.platforms }}
         tags: |
-          ${{ vars.DOCKERHUB_USERNAME }}/${{ inputs.label }}:${{ inputs.tag }}-${{ inputs.target }}
-          ${{ vars.DOCKERHUB_USERNAME }}/${{ inputs.label }}:${{ inputs.tag }}-${{ inputs.target }}-${{ steps.date.outputs.date }}
-          ghcr.io/${{ github.repository_owner }}/${{ inputs.label }}:${{ inputs.tag }}-${{ inputs.target }}
+          ${{ inputs.docker-username }}/${{ inputs.label }}:${{ inputs.tag }}-${{ inputs.target }}
+          ${{ inputs.docker-username }}/${{ inputs.label }}:${{ inputs.tag }}-${{ inputs.target }}-${{ steps.date.outputs.date }}
+          ghcr.io/${{ inputs.ghcr-username }}/${{ inputs.label }}:${{ inputs.tag }}-${{ inputs.target }}
         cache-from: |
-          type=registry,ref=ghcr.io/${{ github.repository_owner }}/${{ inputs.label }}:${{ inputs.tag }}-buildcache
-        cache-to: |
-          type=registry,ref=ghcr.io/${{ github.repository_owner }}/${{ inputs.label }}:${{ inputs.tag }}-buildcache,mode=max
+          type=registry,ref=ghcr.io/${{ inputs.ghcr-username }}/${{ inputs.label }}:${{ inputs.tag }}-buildcache
+        cache-to: ${{ inputs.push == 'true' && format('type=registry,ref=ghcr.io/{0}/{1}:{2}-buildcache,mode=max', inputs.ghcr-username, inputs.label, inputs.tag) || '' }}
+        load: ${{ inputs.load }}

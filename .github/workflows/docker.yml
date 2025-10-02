@@ -190,3 +190,8 @@ jobs:
           tag: ${{ matrix.tag }}
           target: ${{ matrix.target }}
           platforms: ${{ matrix.platforms }}
+          docker-username: ${{ vars.DOCKERHUB_USERNAME }}
+          docker-password: ${{ secrets.DOCKERHUB_PASSWORD }}
+          ghcr-username: ${{ github.actor }}
+          ghcr-password: ${{ secrets.GITHUB_TOKEN }}
+          push: ${{ github.ref == 'refs/heads/main' }}
