@@ -99,22 +99,16 @@ jobs:
           # Set outputs for subsequent steps
           echo "label=$label" >> $GITHUB_OUTPUT
           echo "tag=$tag" >> $GITHUB_OUTPUT
-      - name: Set up QEMU
-        uses: docker/setup-qemu-action@v3
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3
-      - name: Test dockerfile build
+
+      - name: Build docker
+        id: docker
         if: ${{ matrix.dockerfile != 'none' }}
-        uses: docker/build-push-action@v6
+        uses: ./.github/actions/docker-build-push
         with:
-          push: false
-          context: ${{ steps.extract.outputs.label }}
-          file: ${{ matrix.dockerfile }}
+          label: ${{ steps.extract.outputs.label }}
+          tag: ${{ steps.extract.outputs.tag }}
           target: ${{ matrix.target }}
-          tags: |
-             ghcr.io/${{ github.repository_owner }}/${{ steps.extract.outputs.label }}:${{ steps.extract.outputs.tag }}-${{ matrix.target }},app:${{ steps.extract.outputs.tag }}-${{ matrix.target }}
-          cache-from: |
-            type=registry,ref=ghcr.io/${{ github.repository_owner }}/${{ steps.extract.outputs.label }}:${{ steps.extract.outputs.tag }}-buildcache
+          platforms: "linux/amd64"
 
   complete:
     needs:

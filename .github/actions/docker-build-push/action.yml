@@ -13,6 +13,11 @@ inputs:
   platforms:
     description: "Comma-separated platforms list (e.g. linux/amd64,linux/arm64)"
     required: true
+outputs:
+  image:
+     description: "Built image"
+     value: ${{ steps.docker-build.outputs.imageid }}
+
 runs:
   using: "composite"
   steps:
@@ -45,6 +50,7 @@ runs:
         password: ${{ secrets.GITHUB_TOKEN }}
 
     - name: Build and push
+      id: docker-build
       uses: docker/build-push-action@v6
       with:
         push: ${{ github.ref == 'refs/heads/main' }}
