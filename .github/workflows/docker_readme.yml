@@ -26,7 +26,7 @@ jobs:
       - name: git checkout
         uses: actions/checkout@v5
       - name: Update repo description
-        uses: peter-evans/dockerhub-description@v4
+        uses: peter-evans/dockerhub-description@v5
         with:
           username: althack
           password: ${{ secrets.DOCKERHUB_PASSWORD }}
