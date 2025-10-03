@@ -108,6 +108,7 @@ jobs:
         uses: docker/build-push-action@v6
         with:
           push: false
+          context: ${{ steps.extract.outputs.label }}
           file: ${{ matrix.dockerfile }}
           target: ${{ matrix.target }}
           tags: |
