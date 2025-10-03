@@ -6,13 +6,23 @@ See [the docs](https://athackst.github.io/dockerfiles) or read about  [how I dev
 ## Usage
 
 ```bash
-docker pull althack/gz:ionic-base
+docker pull althack/gz:jetty-base
 ```
 
 ## Organization
 
 The main docker image tags are:
 
+
+jetty
+  
+* [jetty-base](https://github.com/athackst/dockerfiles/blob/main/gz/jetty.Dockerfile)
+* [jetty-dev](https://github.com/athackst/dockerfiles/blob/main/gz/jetty.Dockerfile)
+
+jetty-cuda
+  
+* [jetty-cuda-base](https://github.com/athackst/dockerfiles/blob/main/gz/jetty-cuda.Dockerfile)
+* [jetty-cuda-dev](https://github.com/athackst/dockerfiles/blob/main/gz/jetty-cuda.Dockerfile)
 
 ionic
   

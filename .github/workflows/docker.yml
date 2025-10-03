@@ -142,6 +142,22 @@ jobs:
             target: dev
             platforms: "linux/amd64"
           - label: gz
+            tag: jetty
+            target: base
+            platforms: "linux/amd64"
+          - label: gz
+            tag: jetty
+            target: dev
+            platforms: "linux/amd64"
+          - label: gz
+            tag: jetty-cuda
+            target: base
+            platforms: "linux/amd64"
+          - label: gz
+            tag: jetty-cuda
+            target: dev
+            platforms: "linux/amd64"
+          - label: gz
             tag: ionic
             target: base
             platforms: "linux/amd64"
