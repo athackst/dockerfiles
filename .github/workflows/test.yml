@@ -109,8 +109,6 @@ jobs:
           tag: ${{ steps.extract.outputs.tag }}
           target: ${{ matrix.target }}
           platforms: "linux/amd64"
-          load: "true"
-
   complete:
     needs:
       - lint
