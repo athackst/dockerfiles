@@ -69,7 +69,7 @@ ros2:
     ros_distro: rolling
     targets:
       - target: base
-        platforms: "linux/amd64,linux/arm64/v8"
+        platforms: "linux/amd64,linux/arm64"
       - target: dev
         platforms: "linux/amd64"
       - target: full
@@ -99,7 +99,7 @@ ros2:
     ros_distro: kilted
     targets:
       - target: base
-        platforms: "linux/amd64,linux/arm64/v8"
+        platforms: "linux/amd64,linux/arm64"
       - target: dev
         platforms: "linux/amd64"
       - target: full
@@ -114,7 +114,7 @@ ros2:
     ros_distro: jazzy
     targets:
       - target: base
-        platforms: "linux/amd64,linux/arm64/v8"
+        platforms: "linux/amd64,linux/arm64"
       - target: dev
         platforms: "linux/amd64"
       - target: full
