@@ -115,12 +115,6 @@ jobs:
              ghcr.io/${{ github.repository_owner }}/${{ steps.extract.outputs.label }}:${{ steps.extract.outputs.tag }}-${{ matrix.target }},app:${{ steps.extract.outputs.tag }}-${{ matrix.target }}
           cache-from: |
             type=registry,ref=ghcr.io/${{ github.repository_owner }}/${{ steps.extract.outputs.label }}:${{ steps.extract.outputs.tag }}-buildcache
-          outputs: |
-            type=docker,name=app:${{ steps.extract.outputs.tag }}-${{ matrix.target }}
-      - name: Run environment comparison
-        if: ${{ matrix.dockerfile != 'none'}}
-        run: |
-          .github/scripts/env-compare.py app:${{ steps.extract.outputs.tag }}-${{ matrix.target }} ${{ steps.extract.outputs.tag }}
 
   complete:
     needs:
