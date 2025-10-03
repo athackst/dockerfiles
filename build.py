@@ -127,15 +127,17 @@ def build(image, target, push, clean):
                 target=target,
                 labels=labels,
             )
-            dockerpy.tag(
-                repository=repository, prev_tag=latest_tag, new_tag=dated_tag
-            )
 
             if push or should_push():
                 dockerpy.push(repository=repository, tag=latest_tag)
+                dockerpy.tag(
+                    repository=repository,
+                    prev_tag=latest_tag,
+                    new_tag=dated_tag
+                )
                 dockerpy.push(repository=repository, tag=dated_tag)
+                dockerpy.rmi(repository=repository, tag=dated_tag)
     if clean or should_clean():
-        dockerpy.rmi(repository=repository, tag=dated_tag)
         dockerpy.prune()
 
 

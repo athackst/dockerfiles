@@ -1,0 +1,156 @@
+name: "Build & Push Docker images"
+description: "Build per-platform images from templates.yml with docker bake and push-by-digest artifacts."
+
+inputs:
+  family:
+    description: "Image family (repo folder name)."
+    required: true
+  distro:
+    description: "Image distro (used in Dockerfile name and tags)."
+    required: true
+  platform:
+    description: "Optional os/arch[/variant]; defaults to the native daemon platform."
+    required: false
+    default: ""
+  docker-username: 
+    description: "dockerhub username"
+    default: ""
+    required: false
+  docker-password:
+    description: "dockerhub password"
+    required: false
+  ghcr-username:
+    description: "ghcr username"
+    default: ""
+    required: false
+  ghcr-password:
+    description: "ghcr password"
+    default: ""
+    required: false
+  push:
+    description: "Push digests to repo"
+    default: "true"
+    required: false
+
+outputs:
+  platform:
+    description: "Canonical build platform (os/arch[/variant])."
+    value: ${{ steps.detect.outputs.platform }}
+  group:
+    description: "Bake group (family-distro-platform)."
+    value: ${{ steps.gen.outputs.group }}
+  release:
+    description: "Release identifier (family-distro)."
+    value: ${{ steps.gen.outputs.release }}
+  stage-targets:
+    description: "JSON array of Bake targets built in this run."
+    value: ${{ steps.gen.outputs.stage_targets }}
+  metadata-path:
+    description: "Path to the stored bake metadata JSON."
+    value: ${{ steps.persist.outputs.metadata_path }}
+
+runs:
+  using: "composite"
+  steps:
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v3
+
+    - name: Login to Docker Hub
+      if: ${{ inputs.docker-password }}
+      uses: docker/login-action@v3
+      with:
+        username: ${{ inputs.docker-username }}
+        password: ${{ inputs.docker-password }}
+
+    - name: Log in to GHCR
+      if: ${{ inputs.ghcr-password }}
+      uses: docker/login-action@v3
+      with:
+        registry: ghcr.io
+        username: ${{ inputs.ghcr-username }}
+        password: ${{ inputs.ghcr-password }}
+
+    - name: Set up Python
+      uses: actions/setup-python@v6
+      with:
+        python-version: "3.x"
+        cache: "pip"
+
+    - name: Install dependencies
+      shell: bash
+      run: pip install -r "${{ github.action_path }}/requirements.txt"
+
+    - name: Detect build platform
+      id: detect
+      shell: bash
+      run: |
+        set -euo pipefail
+        plat="${{ inputs.platform }}"
+        if [[ -z "$plat" ]]; then
+          plat="$(docker version -f '{{.Server.Os}}/{{.Server.Arch}}')"
+          echo "Detected platform: $plat"
+        fi
+        echo "platform=$plat" >> "$GITHUB_OUTPUT"
+        key="${plat//\//-}"
+        echo "platform_key=$key" >> "$GITHUB_OUTPUT"
+
+    - name: Compute bake variables
+      id: gen
+      shell: bash
+      run: |
+        set -euo pipefail
+        cmd=(python .github/actions/docker-bake/get_variables.py
+             --family "${{ inputs.family }}"
+             --distro "${{ inputs.distro }}"
+             --platform "${{ steps.detect.outputs.platform }}"
+             ${{ inputs.ghcr-password && format('--ghcr-username "{0}"', inputs.ghcr-username) || '' }}
+             ${{ inputs.docker-password && format('--docker-username "{0}"', inputs.docker-username) || '' }}
+             --digest
+        )
+        output=$("${cmd[@]}")
+        echo "$output"
+
+    - name: Bake
+      id: bake
+      uses: docker/bake-action@v6
+      with:
+        files: docker-bake.hcl
+        targets: ${{ steps.gen.outputs.group }}
+        push: ${{ inputs.push }}
+        set: |
+          ${{ steps.gen.outputs.release }}-*.platform=${{ steps.detect.outputs.platform }}
+          *.cache-to=type=gha,mode=max,scope=${{ steps.gen.outputs.group }}
+          *.cache-from=type=gha,scope=${{ steps.gen.outputs.group }}
+          ${{ steps.gen.outputs.set_lines }}
+
+    - name: Persist Bake metadata for merge
+      id: persist
+      shell: bash
+      run: |
+        set -euo pipefail
+        meta_dir="${{ github.workspace }}/.tmp"
+        mkdir -p "$meta_dir"
+        meta_file="bake-metadata-${{ inputs.family }}-${{ inputs.distro }}-${{ steps.detect.outputs.platform_key }}.json"
+        metadata='${{ steps.bake.outputs.metadata }}'
+        printf '%s' "$metadata" > "$meta_dir/$meta_file"
+        echo "metadata_path=$meta_dir/$meta_file" >> "$GITHUB_OUTPUT"
+        echo "Saved $meta_file ($(wc -c < "$meta_dir/$meta_file") bytes)"
+
+    - uses: actions/upload-artifact@v4
+      with:
+        name: bake-metadata-${{ steps.gen.outputs.group }}
+        path: ${{ steps.persist.outputs.metadata_path }}
+
+    - name: Summary
+      if: always()
+      shell: bash
+      run: |
+        {
+          echo "### Bake summary"
+          echo "- Family: \`${{ inputs.family }}\`"
+          echo "- Distro:  \`${{ inputs.distro }}\`"
+          echo "- Platform: \`${{ steps.detect.outputs.platform }}\`"
+          echo "- Group:    \`${{ steps.gen.outputs.group }}\`"
+          echo "- Targets:  \`${{ steps.gen.outputs.stage_targets }}\`"
+          echo "- Artifact: \`bake-metadata-${{ steps.gen.outputs.group }}\`"
+        } >> "$GITHUB_STEP_SUMMARY"

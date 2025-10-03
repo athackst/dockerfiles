@@ -246,6 +246,27 @@ def generate_tasks(log):
         json_parser.dump(tasks, file, indent=2)
 
 
+def generate_bake(log, include_eol=False):
+    """Generate docker-bake.hcl from templates.yml."""
+    file_loader = FileSystemLoader("template")
+    env = Environment(loader=file_loader, trim_blocks=True, lstrip_blocks=True)
+
+    template = env.get_template("docker-bake.hcl.jinja")
+
+    # Use the same source your other generators use
+    data = templates.raw()
+
+    output = template.render(
+        settings=data,
+        include_eol=include_eol,  # keep false to omit EOL entries
+    )
+
+    out_file = "docker-bake.hcl"
+    log.info(f"Generating {out_file}")
+    with open(out_file, "w") as f:
+        f.write(output)
+
+
 if __name__ == "__main__":
     # Set up logger.
     log.setLevel(logging.INFO)
@@ -258,7 +279,8 @@ if __name__ == "__main__":
     generate_dockerfiles(log)
     generate_readmes(log)
     generate_docker_compose(log)
-    generate_docker_workflow(log)
-    generate_readme_workflow(log)
+    # generate_docker_workflow(log)
+    # generate_readme_workflow(log)
     generate_tasks(log)
+    generate_bake(log, include_eol=False)
     log.info("Finished generating dockerfiles.")
