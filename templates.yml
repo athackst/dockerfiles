@@ -374,6 +374,26 @@ ignition:
     eol: true
 gz:
   -
+    name: jetty
+    gz_distro: jetty
+    targets:
+      - target: base
+        platforms: "linux/amd64"
+      - target: dev
+        platforms: "linux/amd64"
+    base_image: "ubuntu"
+    image_version: "24.04"
+  -
+    name: jetty-cuda
+    gz_distro: jetty
+    targets:
+      - target: base
+        platforms: "linux/amd64"
+      - target: dev
+        platforms: "linux/amd64"
+    base_image: "nvidia/cuda"
+    image_version: "12.8.1-runtime-ubuntu24.04"
+  -
     name: ionic
     gz_distro: ionic
     targets:

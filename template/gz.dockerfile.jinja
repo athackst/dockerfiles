@@ -14,18 +14,25 @@ ENV DEBIAN_FRONTEND=noninteractive
 
 {% include 'snippits/timezone.jinja' %}
 
+
 # install packages
-RUN apt-get update && apt-get install -q -y \
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    ca-certificates \
     curl \
     gnupg \
     lsb-release \
     python3-argcomplete \
     sudo \
     wget \
-  && wget https://packages.osrfoundation.org/gazebo.gpg -O /usr/share/keyrings/pkgs-osrf-archive-keyring.gpg \
-  && echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/pkgs-osrf-archive-keyring.gpg] http://packages.osrfoundation.org/gazebo/ubuntu-stable $(lsb_release -cs) main" | tee /etc/apt/sources.list.d/gazebo-stable.list > /dev/null \
-  {%- if prerelease %}&& echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/pkgs-osrf-archive-keyring.gpg] http://packages.osrfoundation.org/gazebo/ubuntu-prerelease $(lsb_release -cs) main" | sudo tee /etc/apt/sources.list.d/gazebo-prerelease.list > /dev/null \{% endif %}
-  && apt-get update && apt-get install -y -q \
+  && rm -rf /var/lib/apt/lists/*
+
+# Setup gazebo apt sources
+RUN curl https://packages.osrfoundation.org/gazebo.gpg --output /usr/share/keyrings/pkgs-osrf-archive-keyring.gpg \
+  && echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/pkgs-osrf-archive-keyring.gpg] https://packages.osrfoundation.org/gazebo/ubuntu-stable $(lsb_release -cs) main" | tee /etc/apt/sources.list.d/gazebo-stable.list > /dev/null \
+  && echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/pkgs-osrf-archive-keyring.gpg] https://packages.osrfoundation.org/gazebo/ubuntu-prerelease $(lsb_release -cs) main" | tee /etc/apt/sources.list.d/gazebo-prerelease.list > /dev/null
+
+# Install gazebo
+RUN apt-get update && apt-get install -y --no-install-recommends \
     gz-{{ gz_distro }} \
   && rm -rf /var/lib/apt/lists/*
 
@@ -43,18 +50,34 @@ FROM base AS dev
 
 ENV DEBIAN_FRONTEND=noninteractive
 # Install dev tools
-RUN apt-get update && apt-get install -y \
-  python3-pip \
-  wget \
-  lsb-release \
-  gnupg \
-  curl \
-  && sudo sh -c 'echo "deb http://packages.ros.org/ros2/ubuntu $(lsb_release -sc) main" > /etc/apt/sources.list.d/ros2-latest.list' \
-  && curl -s https://raw.githubusercontent.com/ros/rosdistro/master/ros.asc | sudo apt-key add - \
-  && sudo apt-get update \
-  && sudo apt-get install -y python3-vcstool python3-colcon-common-extensions \
-  git \
-  vim \
+
+# Setup ROS Apt sources
+RUN curl -L -s -o /tmp/ros2-apt-source.deb https://github.com/ros-infrastructure/ros-apt-source/releases/download/1.1.0/ros2-apt-source_1.1.0.$(lsb_release -cs)_all.deb \
+    && apt-get update \
+    && apt-get install /tmp/ros2-apt-source.deb \
+    && rm -f /tmp/ros2-apt-source.deb \
+    && rm -rf /var/lib/apt/lists/*
+
+# Get dev tools
+RUN apt-get update && apt-get install -y --no-install-recommends\
+    build-essential \
+    clang \
+    cmake \
+    git \
+    git \
+    lcov \
+    libasio-dev \
+    libc++-dev \
+    libc++abi-dev \
+    libssl-dev \
+    libtinyxml2-dev \
+    python3-colcon-common-extensions \
+    python3-dev \
+    python3-pip \
+    python3-setuptools \
+    python3-vcstool \
+    python3-wheel \
+    vim \
   && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /workspaces/gazebo/src
@@ -62,10 +85,7 @@ WORKDIR /workspaces/gazebo/src
 RUN wget https://raw.githubusercontent.com/gazebo-tooling/gazebodistro/refs/heads/master/collection-{{ gz_distro }}.yaml \
   && vcs import < collection-{{ gz_distro }}.yaml \
   # Get dependencies
-  && sudo wget https://packages.osrfoundation.org/gazebo.gpg -O /usr/share/keyrings/pkgs-osrf-archive-keyring.gpg \
-  && echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/pkgs-osrf-archive-keyring.gpg] http://packages.osrfoundation.org/gazebo/ubuntu-stable $(lsb_release -cs) main" | sudo tee /etc/apt/sources.list.d/gazebo-stable.list > /dev/null \
-  && sudo apt-get update \
-  && sudo apt -y install \
+  && apt-get update && apt-get install -q -y --no-install-recommends \
       $(sort -u $(find . -iname 'packages-'`lsb_release -cs`'.apt' -o -iname 'packages.apt' | grep -v '/\.git/') | sed '/gz\|sdf/d' | tr '\n' ' ')
 
 ENV DEBIAN_FRONTEND=

@@ -105,6 +105,8 @@
         "humble",
         "humble-cuda",
         "fortress",
+        "jetty",
+        "jetty-cuda",
         "ionic",
         "ionic-cuda",
         "harmonic",

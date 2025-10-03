@@ -5,7 +5,7 @@
 ###########################################
 # Base image
 ###########################################
-FROM ubuntu:22.04 AS base
+FROM ubuntu:24.04 AS base
 
 # Avoid warnings by switching to noninteractive
 ENV DEBIAN_FRONTEND=noninteractive
@@ -45,7 +45,7 @@ RUN curl https://packages.osrfoundation.org/gazebo.gpg --output /usr/share/keyri
 
 # Install gazebo
 RUN apt-get update && apt-get install -y --no-install-recommends \
-    gz-harmonic \
+    gz-jetty \
   && rm -rf /var/lib/apt/lists/*
 
 ARG USERNAME=ros
@@ -112,8 +112,8 @@ RUN apt-get update && apt-get install -y --no-install-recommends\
 
 WORKDIR /workspaces/gazebo/src
 # Get sources
-RUN wget https://raw.githubusercontent.com/gazebo-tooling/gazebodistro/refs/heads/master/collection-harmonic.yaml \
-  && vcs import < collection-harmonic.yaml \
+RUN wget https://raw.githubusercontent.com/gazebo-tooling/gazebodistro/refs/heads/master/collection-jetty.yaml \
+  && vcs import < collection-jetty.yaml \
   # Get dependencies
   && apt-get update && apt-get install -q -y --no-install-recommends \
       $(sort -u $(find . -iname 'packages-'`lsb_release -cs`'.apt' -o -iname 'packages.apt' | grep -v '/\.git/') | sed '/gz\|sdf/d' | tr '\n' ' ')
