@@ -7,8 +7,6 @@
 ###########################################
 FROM {{ base_image }}:{{ image_version }} AS base
 
-# This is a test -- TODO: Remove
-
 ENV DEBIAN_FRONTEND=noninteractive
 
 {% include 'snippits/language.jinja' %}

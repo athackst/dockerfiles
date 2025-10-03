@@ -46,15 +46,6 @@
       ]
     },
     {
-      "label": "env check",
-      "type": "shell",
-      "command": "./.github/scripts/env-compare.py althack/ros2:${input:build_name}-base ${input:build_name} ",
-      "dependsOn": [
-        "build target"
-      ],
-      "problemMatcher": []
-    },
-    {
       "label": "test",
       "dependsOn": [
         "flake8",
