@@ -49,6 +49,7 @@ runs:
       with:
         push: ${{ github.ref == 'refs/heads/main' }}
         file: ${{ inputs.label }}/${{ inputs.tag }}.Dockerfile
+        context: ${{ inputs.label }}
         target: ${{ inputs.target }}
         platforms: ${{ inputs.platforms }}
         tags: |
