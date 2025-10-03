@@ -13,7 +13,7 @@ jobs:
         uses: actions/setup-python@v6
         with:
           python-version: 3.x
-          cache: 'pip'
+          cache: "pip"
       - name: Install pip packages
         run: |
           python -m pip install --upgrade pip
@@ -45,7 +45,7 @@ jobs:
   changes:
     runs-on: ubuntu-latest
     permissions:
-      contents: read  # Required to analyze file changes
+      contents: read # Required to analyze file changes
     outputs:
       dockerfiles: ${{ steps.filter.outputs.dockerfiles }}
     steps:
@@ -81,28 +81,45 @@ jobs:
       packages: read
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v5    
+        uses: actions/checkout@v5
+
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: 3.x
+          cache: pip
+
+      - run: pip install -r requirements.txt
+
       - name: Extract Label and Tag
         id: extract
         run: |
           # Extract the full filename (e.g., label/tag.Dockerfile)
           filename="${{ matrix.dockerfile }}"
-          
+
           # Extract label (e.g., 'label')
           label=$(dirname "$filename")
-          
+
           # Extract tag (e.g., 'tag')
           tag=$(basename "$filename" | cut -d. -f1)
-          
+
           echo "Label: $label, Tag: $tag"
-          
+
           # Set outputs for subsequent steps
           echo "label=$label" >> $GITHUB_OUTPUT
           echo "tag=$tag" >> $GITHUB_OUTPUT
 
+      - name: Check if target exists
+        id: target
+        run: |
+          python .github/scripts/check_target.py \
+            --label "${{ steps.extract.outputs.label }}" \
+            --tag "${{ steps.extract.outputs.tag }}" \
+            --target "${{ matrix.target }}"
+
       - name: Build docker
         id: docker
-        if: ${{ matrix.dockerfile != 'none' }}
+        if: ${{ matrix.dockerfile != 'none' && steps.target.outputs.exists == 'true' }}
         uses: ./.github/actions/docker-build-push
         with:
           label: ${{ steps.extract.outputs.label }}
