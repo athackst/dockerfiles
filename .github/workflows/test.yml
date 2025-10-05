@@ -127,6 +127,55 @@ jobs:
           target: ${{ matrix.target }}
           platforms: "linux/amd64"
 
+
+  bake-build-amd64:
+    name: Build (${{ matrix.family }}:${{ matrix.distro }} @ amd64
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          # Add these via script for all non-eol dockerfiles
+          - { family: "ros2", distro: "rolling" }
+          - { family: "ros2", distro: "jazzy" }
+          - { family: "ros2", distro: "humble" }
+
+    steps:
+      - uses: actions/checkout@v5
+
+      # Use your composite action
+      - name: Build via composite action
+        uses: ./.github/actions/docker-bake
+        with:
+          family:     ${{ matrix.family }}         # e.g. ros2
+          distro:       ${{ matrix.distro }}           # e.g. rolling
+          registry-username:   ${{ github.actor }}               # optional
+          registry-password:   ${{ secrets.GITHUB_TOKEN }}       # optional
+
+  bake-build-arm64:
+    name: Build (${{ matrix.family }}:${{ matrix.distro }} @ arm64)
+    runs-on: ubuntu-24.04-arm
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          # Add these via script for all non-eol dockerfiles
+          - { family: "ros2", distro: "rolling" }
+          - { family: "ros2", distro: "jazzy" }
+          - { family: "ros2", distro: "humble" }
+
+    steps:
+      - uses: actions/checkout@v5
+
+      # Use your composite action
+      - name: Build via composite action
+        uses: ./.github/actions/docker-bake
+        with:
+          family:     ${{ matrix.family }}         # e.g. ros2
+          distro:       ${{ matrix.distro }}           # e.g. rolling
+          registry-username:   ${{ github.actor }}               # optional
+          registry-password:   ${{ secrets.GITHUB_TOKEN }}       # optional
+
   complete:
     needs:
       - lint
