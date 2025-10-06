@@ -1,5 +1,5 @@
 annotated-types==0.7.0
-certifi==2025.8.3
+certifi==2025.10.5
 charset-normalizer==3.4.3
 click==8.1.8
 flake8==7.3.0
