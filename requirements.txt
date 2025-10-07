@@ -1,11 +1,11 @@
 annotated-types==0.7.0
 certifi==2025.10.5
 charset-normalizer==3.4.3
-click==8.1.8
+click==8.3.0
 flake8==7.3.0
 idna==3.10
 Jinja2==3.1.6
-markdown-it-py==3.0.0
+markdown-it-py==4.0.0
 MarkupSafe==3.0.3
 mccabe==0.7.0
 mdurl==0.1.2
