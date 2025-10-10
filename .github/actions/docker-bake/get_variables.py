@@ -201,8 +201,8 @@ def main() -> int:
         destination: str = ""
         if args.registry and args.registry_username:
             destination = (
-                f"{args.registry}/{args.registry_username}/"
-                f"{args.family}-{args.distro}-{stage}"
+                f"{args.registry}/{args.registry_username}/{args.family}"
+                # f"-{args.distro}-{stage}"
             )
         if args.digest:
             set_lines.append(f"{tname}.tags=")
