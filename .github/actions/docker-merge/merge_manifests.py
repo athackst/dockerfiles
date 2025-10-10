@@ -89,12 +89,26 @@ def walk_metadata(
 ) -> None:
     if isinstance(node, dict):
         current_platform = node.get("platform", platform)
-        if "target" in node and isinstance(node["target"], dict):
-            for name, child in node["target"].items():
+        target_block = node.get("target")
+        if isinstance(target_block, dict):
+            for name, child in target_block.items():
                 walk_metadata(child, name, current_platform, acc)
-        if "targets" in node and isinstance(node["targets"], dict):
-            for name, child in node["targets"].items():
+        elif isinstance(target_block, list):
+            for child in target_block:
+                if isinstance(child, dict):
+                    name = child.get("target") or child.get("name") or target
+                    walk_metadata(child, name, current_platform, acc)
+
+        targets_block = node.get("targets")
+        if isinstance(targets_block, dict):
+            for name, child in targets_block.items():
                 walk_metadata(child, name, current_platform, acc)
+        elif isinstance(targets_block, list):
+            for child in targets_block:
+                if isinstance(child, dict):
+                    name = child.get("target") or child.get("name") or target
+                    walk_metadata(child, name, current_platform, acc)
+
         if "outputs" in node and isinstance(node["outputs"], dict):
             outputs = node["outputs"]
             images = outputs.get("images") or outputs.get("image") or []
@@ -149,13 +163,20 @@ def walk_metadata(
 
 def collect_targets(paths: Iterable[Path]) -> Dict[str, List[Dict[str, str]]]:
     result: Dict[str, List[Dict[str, str]]] = {}
+    print(f"Paths: {paths}")
     for path in paths:
+        print(f"Opening {path}")
         with path.open("r", encoding="utf-8") as fh:
             try:
                 payload = json.load(fh)
             except json.JSONDecodeError as exc:
                 raise ValueError(f"Invalid JSON in {path}: {exc}") from exc
-        walk_metadata(payload, target=None, platform=None, acc=result)
+        print(f"Loaded paylod\n {payload}")
+        if isinstance(payload, dict):
+            for name, node in payload.items():
+                walk_metadata(node, target=name, platform=None, acc=result)
+        else:
+            walk_metadata(payload, target=None, platform=None, acc=result)
     # Collapse duplicates per target/digest.
     deduped: Dict[str, List[Dict[str, str]]] = {}
     for target, entries in result.items():
@@ -180,6 +201,7 @@ def ensure_release_targets(
 ) -> Dict[str, List[Dict[str, str]]]:
     release_prefix = f"{family}-{distro}"
     filtered: Dict[str, List[Dict[str, str]]] = {}
+    print(f"Target map: \n {target_map}")
     for target, entries in target_map.items():
         if not target:
             continue
