@@ -9,7 +9,7 @@ import sys
 # Ensure the parent directory (containing merge_manifests.py) is importable
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
-import merge_manifests
+import merge_manifests  # noqa:E402
 
 
 def main() -> None:

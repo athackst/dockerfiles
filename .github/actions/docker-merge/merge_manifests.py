@@ -8,10 +8,13 @@ import json
 import os
 import subprocess
 from pathlib import Path
-from typing import Any, Dict, Iterable, List, Optional, Set
+from typing import Dict, Iterable, List, Set
+
+MetadataEntries = Dict[str, List[Dict[str, str]]]
 
 
 def parse_args() -> argparse.Namespace:
+    """Configure and parse command-line arguments."""
     parser = argparse.ArgumentParser(
         description="Create multi-arch manifests from bake metadata."
     )
@@ -49,6 +52,7 @@ def parse_args() -> argparse.Namespace:
 
 
 def _split_metadata_list(raw: str) -> List[str]:
+    """Return non-empty tokens from a comma/newline delimited string."""
     tokens: List[str] = []
     for line in raw.splitlines():
         line = line.strip()
@@ -64,6 +68,7 @@ def _split_metadata_list(raw: str) -> List[str]:
 
 
 def resolve_metadata_paths(args: argparse.Namespace) -> List[Path]:
+    """Resolve metadata arguments into concrete JSON file paths."""
     paths: List[Path] = []
     tokens = list(args.metadata)
     tokens.extend(_split_metadata_list(args.metadata_list))
@@ -81,123 +86,45 @@ def resolve_metadata_paths(args: argparse.Namespace) -> List[Path]:
     return paths
 
 
-def walk_metadata(
-    node: Any,
-    target: Optional[str],
-    platform: Optional[str],
-    acc: Dict[str, List[Dict[str, str]]],
-) -> None:
-    if isinstance(node, dict):
-        current_platform = node.get("platform", platform)
-        target_block = node.get("target")
-        if isinstance(target_block, dict):
-            for name, child in target_block.items():
-                walk_metadata(child, name, current_platform, acc)
-        elif isinstance(target_block, list):
-            for child in target_block:
-                if isinstance(child, dict):
-                    name = child.get("target") or child.get("name") or target
-                    walk_metadata(child, name, current_platform, acc)
-
-        targets_block = node.get("targets")
-        if isinstance(targets_block, dict):
-            for name, child in targets_block.items():
-                walk_metadata(child, name, current_platform, acc)
-        elif isinstance(targets_block, list):
-            for child in targets_block:
-                if isinstance(child, dict):
-                    name = child.get("target") or child.get("name") or target
-                    walk_metadata(child, name, current_platform, acc)
-
-        if "outputs" in node and isinstance(node["outputs"], dict):
-            outputs = node["outputs"]
-            images = outputs.get("images") or outputs.get("image") or []
-            if isinstance(images, dict):
-                images = [images]
-            if isinstance(images, list):
-                for entry in images:
-                    image_name = None
-                    digest = None
-                    entry_platform = current_platform
-                    if isinstance(entry, dict):
-                        image_name = entry.get("name")
-                        digest = entry.get("digest") or entry.get("imageDigest")
-                        entry_platform = entry.get("platform") or entry_platform
-                        if not image_name and isinstance(
-                            entry.get("names"), list
-                        ):
-                            image_name = entry["names"][0]
-                    elif isinstance(entry, str):
-                        image_name = entry
-                    if image_name and digest:
-                        acc.setdefault(target or "", []).append(
-                            {
-                                "image": image_name,
-                                "digest": digest,
-                                "platform": entry_platform or "",
-                            }
-                        )
-        if "descriptor" in node and isinstance(node["descriptor"], dict):
-            desc = node["descriptor"]
-            reference = desc.get("reference") or desc.get("ref")
-            digest = desc.get("digest")
-            if reference and digest:
-                base = reference.split("@", 1)[0]
-                acc.setdefault(target or "", []).append(
-                    {
-                        "image": base,
-                        "digest": digest,
-                        "platform": desc.get("platform")
-                        or current_platform
-                        or "",
-                    }
-                )
-        image_name = (
-            node.get("image.name")
-            or node.get("containerimage.name")
-            or node.get("name")
-        )
-        digest = node.get("containerimage.digest")
-        if (
-            not digest
-            and isinstance(node.get("containerimage.descriptor"), dict)
-        ):
-            digest = node["containerimage.descriptor"].get("digest")
-        if image_name and digest:
-            acc.setdefault(target or "", []).append(
-                {
-                    "image": image_name,
-                    "digest": digest,
-                    "platform": current_platform or "",
-                }
-            )
-        for key, value in node.items():
-            if key in {"target", "targets", "outputs", "descriptor"}:
-                continue
-            walk_metadata(value, target, current_platform, acc)
-    elif isinstance(node, list):
-        for item in node:
-            walk_metadata(item, target, platform, acc)
-
-
-def collect_targets(paths: Iterable[Path]) -> Dict[str, List[Dict[str, str]]]:
-    result: Dict[str, List[Dict[str, str]]] = {}
-    print(f"Paths: {paths}")
+def collect_targets(paths: Iterable[Path]) -> MetadataEntries:
+    """Aggregate target entries from all metadata files."""
+    result: MetadataEntries = {}
     for path in paths:
-        print(f"Opening {path}")
         with path.open("r", encoding="utf-8") as fh:
             try:
                 payload = json.load(fh)
             except json.JSONDecodeError as exc:
                 raise ValueError(f"Invalid JSON in {path}: {exc}") from exc
-        print(f"Loaded paylod\n {payload}")
-        if isinstance(payload, dict):
-            for name, node in payload.items():
-                walk_metadata(node, target=name, platform=None, acc=result)
-        else:
-            walk_metadata(payload, target=None, platform=None, acc=result)
+        if not isinstance(payload, dict):
+            continue
+        for name, node in payload.items():
+            if not isinstance(node, dict):
+                continue
+            image = (
+                node.get("image.name")
+                or node.get("containerimage.name")
+                or node.get("name")
+            )
+            digest = node.get("containerimage.digest")
+            if not digest:
+                descriptor = node.get("containerimage.descriptor", {})
+                if isinstance(descriptor, dict):
+                    digest = descriptor.get("digest")
+            if not image or not digest:
+                continue
+            provenance = node.get("buildx.build.provenance", {})
+            platform = ""
+            if isinstance(provenance, dict):
+                invocation = provenance.get("invocation", {})
+                if isinstance(invocation, dict):
+                    environment = invocation.get("environment", {})
+                    if isinstance(environment, dict):
+                        platform = environment.get("platform", "") or ""
+            result.setdefault(name, []).append(
+                {"image": image, "digest": digest, "platform": platform}
+            )
     # Collapse duplicates per target/digest.
-    deduped: Dict[str, List[Dict[str, str]]] = {}
+    deduped: MetadataEntries = {}
     for target, entries in result.items():
         combo: Dict[str, Dict[str, str]] = {}
         for entry in entries:
@@ -216,11 +143,11 @@ def collect_targets(paths: Iterable[Path]) -> Dict[str, List[Dict[str, str]]]:
 
 
 def ensure_release_targets(
-    family: str, distro: str, target_map: Dict[str, List[Dict[str, str]]]
-) -> Dict[str, List[Dict[str, str]]]:
+    family: str, distro: str, target_map: MetadataEntries
+) -> MetadataEntries:
+    """Filter the collected targets down to a specific release."""
     release_prefix = f"{family}-{distro}"
-    filtered: Dict[str, List[Dict[str, str]]] = {}
-    print(f"Target map: \n {target_map}")
+    filtered: MetadataEntries = {}
     for target, entries in target_map.items():
         if not target:
             continue
@@ -238,6 +165,7 @@ def ensure_release_targets(
 
 
 def build_refs(entries: List[Dict[str, str]]) -> List[str]:
+    """Convert image/digest pairs into imagetools reference strings."""
     refs: Set[str] = set()
     for entry in entries:
         image = entry.get("image", "")
@@ -255,6 +183,7 @@ def build_refs(entries: List[Dict[str, str]]) -> List[str]:
 def compute_tags(
     family: str, distro: str, stage: str, gh_owner: str, dockerhub_username: str
 ) -> List[str]:
+    """Return manifest tags for all configured registries."""
     suffix = f"{distro}-{stage}"
     tags: List[str] = []
     if gh_owner:
@@ -265,6 +194,7 @@ def compute_tags(
 
 
 def write_output(name: str, value: str) -> None:
+    """Emit a GitHub Actions output key/value pair."""
     output_path = os.environ.get("GITHUB_OUTPUT")
     if not output_path:
         return
@@ -273,6 +203,7 @@ def write_output(name: str, value: str) -> None:
 
 
 def main() -> int:
+    """Entry point for the merge manifest script."""
     args = parse_args()
     metadata_paths = resolve_metadata_paths(args)
     target_map = collect_targets(metadata_paths)
@@ -281,11 +212,11 @@ def main() -> int:
     )
 
     created_tags: Dict[str, List[str]] = {}
+    prefix = f"{args.family}-{args.distro}-"
     for target, entries in sorted(release_targets.items()):
-        stage = target.split(f"{args.family}-{args.distro}-", 1)
-        if len(stage) != 2 or not stage[1]:
+        if not target.startswith(prefix):
             continue
-        stage_name = stage[1]
+        stage_name = target[len(prefix):]
         refs = build_refs(entries)
         if not refs:
             continue
