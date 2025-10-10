@@ -70,8 +70,8 @@ runs:
              --family "${{ inputs.family }}"
              --distro "${{ inputs.distro }}"
              --metadata-list "${{ inputs.metadata }}"
-             --gh-owner "${{ inputs.ghcr-username }}"
-             --dockerhub-username "${{ inputs.docker-username }}"
+             ${{ inputs.ghcr-password && format('--gh-owner "{0}"', inputs.ghcr-username) || '' }}
+             ${{ inputs.docker-password && format('--dockerhub-username "{0}"', inputs.docker-username) || '' }}
         )
         if [[ "${{ inputs.dry-run }}" == "true" ]]; then
           cmd+=(--dry-run)
