@@ -152,6 +152,25 @@ def walk_metadata(
                         or "",
                     }
                 )
+        image_name = (
+            node.get("image.name")
+            or node.get("containerimage.name")
+            or node.get("name")
+        )
+        digest = node.get("containerimage.digest")
+        if (
+            not digest
+            and isinstance(node.get("containerimage.descriptor"), dict)
+        ):
+            digest = node["containerimage.descriptor"].get("digest")
+        if image_name and digest:
+            acc.setdefault(target or "", []).append(
+                {
+                    "image": image_name,
+                    "digest": digest,
+                    "platform": current_platform or "",
+                }
+            )
         for key, value in node.items():
             if key in {"target", "targets", "outputs", "descriptor"}:
                 continue
