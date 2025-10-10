@@ -151,6 +151,7 @@ jobs:
           distro:       ${{ matrix.distro }}           # e.g. rolling
           registry-username:   ${{ github.actor }}               # optional
           registry-password:   ${{ secrets.GITHUB_TOKEN }}       # optional
+          push: "false"
 
   bake-build-arm64:
     name: Build (${{ matrix.family }}:${{ matrix.distro }} @ arm64)
@@ -175,6 +176,7 @@ jobs:
           distro:       ${{ matrix.distro }}           # e.g. rolling
           registry-username:   ${{ github.actor }}               # optional
           registry-password:   ${{ secrets.GITHUB_TOKEN }}       # optional
+          push: "false"
 
   merge-manifests:
     name: Merge manifests (${{ matrix.family }}:${{ matrix.distro }})
@@ -211,6 +213,7 @@ jobs:
             bake-metadata
           ghcr-username: ${{ github.repository_owner }}
           ghcr-password: ${{ secrets.GITHUB_TOKEN }}
+          dry-run: "true"
 
   complete:
     needs:
