@@ -149,8 +149,9 @@ jobs:
         with:
           family:     ${{ matrix.family }}         # e.g. ros2
           distro:       ${{ matrix.distro }}           # e.g. rolling
-          registry-username:   ${{ github.actor }}               # optional
-          registry-password:   ${{ secrets.GITHUB_TOKEN }}       # optional
+          ghcr-username:   ${{ github.actor }}               # optional
+          ghcr-password:   ${{ secrets.GITHUB_TOKEN }}       # optional
+          push: "true"
 
   bake-build-arm64:
     name: Build (${{ matrix.family }}:${{ matrix.distro }} @ arm64)
@@ -173,8 +174,46 @@ jobs:
         with:
           family:     ${{ matrix.family }}         # e.g. ros2
           distro:       ${{ matrix.distro }}           # e.g. rolling
-          registry-username:   ${{ github.actor }}               # optional
-          registry-password:   ${{ secrets.GITHUB_TOKEN }}       # optional
+          ghcr-username:   ${{ github.actor }}               # optional
+          ghcr-password:   ${{ secrets.GITHUB_TOKEN }}       # optional
+          push: "true"
+
+  merge-manifests:
+    name: Merge manifests (${{ matrix.family }}:${{ matrix.distro }})
+    needs:
+      - bake-build-amd64
+      - bake-build-arm64
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - { family: "ros2", distro: "rolling" }
+          - { family: "ros2", distro: "jazzy" }
+          - { family: "ros2", distro: "humble" }
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: Download bake metadata artifacts
+        uses: actions/download-artifact@v4
+        with:
+          pattern: bake-metadata-${{ matrix.family }}-${{ matrix.distro }}-*
+          path: bake-metadata
+          merge-multiple: true
+
+      - name: Merge manifests
+        uses: ./.github/actions/docker-merge
+        with:
+          family:   ${{ matrix.family }}
+          distro:   ${{ matrix.distro }}
+          metadata: |
+            bake-metadata
+          ghcr-username: ${{ github.repository_owner }}
+          ghcr-password: ${{ secrets.GITHUB_TOKEN }}
+          dry-run: "false"
 
   complete:
     needs:

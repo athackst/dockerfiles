@@ -1,0 +1,218 @@
+{
+  "ros2-humble-base": {
+    "buildx.build.provenance": {
+      "builder": {
+        "id": "https://github.com/athackst/dockerfiles/actions/runs/18394143031/attempts/1"
+      },
+      "buildType": "https://mobyproject.org/buildkit@v1",
+      "materials": [
+        {
+          "uri": "pkg:docker/ubuntu@22.04?platform=linux%2Famd64",
+          "digest": {
+            "sha256": "09506232a8004baa32c47d68f1e5c307d648fdd59f5e7eaa42aaf87914100db3"
+          }
+        },
+        {
+          "uri": "https://github.com/athackst/dockerfiles.git#refs/pull/645/merge",
+          "digest": {
+            "sha1": "61b357a2e55af05e7249f93ad5e3f0147c8a8952"
+          }
+        }
+      ],
+      "invocation": {
+        "configSource": {
+          "entryPoint": "humble.Dockerfile"
+        },
+        "parameters": {
+          "frontend": "dockerfile.v0",
+          "args": {
+            "target": "base"
+          },
+          "secrets": [
+            {
+              "id": "GIT_AUTH_HEADER",
+              "optional": true
+            },
+            {
+              "id": "GIT_AUTH_TOKEN",
+              "optional": true
+            }
+          ]
+        },
+        "environment": {
+          "platform": "linux/amd64"
+        }
+      }
+    },
+    "buildx.build.ref": "builder-eccf1254-4237-4ce3-bcec-d65aa609a7e9/builder-eccf1254-4237-4ce3-bcec-d65aa609a7e90/o3yrxj761urvidklh6ydvoswj",
+    "containerimage.descriptor": {
+      "mediaType": "application/vnd.oci.image.index.v1+json",
+      "digest": "sha256:33f69049e6669819db6f3cce0befbb4b6b6aa7ef742c862d840af50983ea0e48",
+      "size": 856
+    },
+    "containerimage.digest": "sha256:33f69049e6669819db6f3cce0befbb4b6b6aa7ef742c862d840af50983ea0e48",
+    "image.name": "ghcr.io/athackst/ros2-humble-base"
+  },
+  "ros2-humble-dev": {
+    "buildx.build.provenance": {
+      "builder": {
+        "id": "https://github.com/athackst/dockerfiles/actions/runs/18394143031/attempts/1"
+      },
+      "buildType": "https://mobyproject.org/buildkit@v1",
+      "materials": [
+        {
+          "uri": "pkg:docker/ubuntu@22.04?platform=linux%2Famd64",
+          "digest": {
+            "sha256": "09506232a8004baa32c47d68f1e5c307d648fdd59f5e7eaa42aaf87914100db3"
+          }
+        },
+        {
+          "uri": "https://github.com/athackst/dockerfiles.git#refs/pull/645/merge",
+          "digest": {
+            "sha1": "61b357a2e55af05e7249f93ad5e3f0147c8a8952"
+          }
+        }
+      ],
+      "invocation": {
+        "configSource": {
+          "entryPoint": "humble.Dockerfile"
+        },
+        "parameters": {
+          "frontend": "dockerfile.v0",
+          "args": {
+            "target": "dev"
+          },
+          "secrets": [
+            {
+              "id": "GIT_AUTH_HEADER",
+              "optional": true
+            },
+            {
+              "id": "GIT_AUTH_TOKEN",
+              "optional": true
+            }
+          ]
+        },
+        "environment": {
+          "platform": "linux/amd64"
+        }
+      }
+    },
+    "buildx.build.ref": "builder-eccf1254-4237-4ce3-bcec-d65aa609a7e9/builder-eccf1254-4237-4ce3-bcec-d65aa609a7e90/9hstazxeh0jjrblfsz2cn42wu",
+    "containerimage.descriptor": {
+      "mediaType": "application/vnd.oci.image.index.v1+json",
+      "digest": "sha256:dc1729b99da4ee9c75b52f55fdb9b93f20e62cb6027d2f7779cfc2bd083eabde",
+      "size": 856
+    },
+    "containerimage.digest": "sha256:dc1729b99da4ee9c75b52f55fdb9b93f20e62cb6027d2f7779cfc2bd083eabde",
+    "image.name": "ghcr.io/athackst/ros2-humble-dev"
+  },
+  "ros2-humble-full": {
+    "buildx.build.provenance": {
+      "builder": {
+        "id": "https://github.com/athackst/dockerfiles/actions/runs/18394143031/attempts/1"
+      },
+      "buildType": "https://mobyproject.org/buildkit@v1",
+      "materials": [
+        {
+          "uri": "pkg:docker/ubuntu@22.04?platform=linux%2Famd64",
+          "digest": {
+            "sha256": "09506232a8004baa32c47d68f1e5c307d648fdd59f5e7eaa42aaf87914100db3"
+          }
+        },
+        {
+          "uri": "https://github.com/athackst/dockerfiles.git#refs/pull/645/merge",
+          "digest": {
+            "sha1": "61b357a2e55af05e7249f93ad5e3f0147c8a8952"
+          }
+        }
+      ],
+      "invocation": {
+        "configSource": {
+          "entryPoint": "humble.Dockerfile"
+        },
+        "parameters": {
+          "frontend": "dockerfile.v0",
+          "args": {
+            "target": "full"
+          },
+          "secrets": [
+            {
+              "id": "GIT_AUTH_HEADER",
+              "optional": true
+            },
+            {
+              "id": "GIT_AUTH_TOKEN",
+              "optional": true
+            }
+          ]
+        },
+        "environment": {
+          "platform": "linux/amd64"
+        }
+      }
+    },
+    "buildx.build.ref": "builder-eccf1254-4237-4ce3-bcec-d65aa609a7e9/builder-eccf1254-4237-4ce3-bcec-d65aa609a7e90/93zbbvk7gqpy31tf1rew52wun",
+    "containerimage.descriptor": {
+      "mediaType": "application/vnd.oci.image.index.v1+json",
+      "digest": "sha256:b8a61c97eb1ff21182a91918c306393902f7ddec6738baef195e68154a5e2202",
+      "size": 856
+    },
+    "containerimage.digest": "sha256:b8a61c97eb1ff21182a91918c306393902f7ddec6738baef195e68154a5e2202",
+    "image.name": "ghcr.io/athackst/ros2-humble-full"
+  },
+  "ros2-humble-gazebo": {
+    "buildx.build.provenance": {
+      "builder": {
+        "id": "https://github.com/athackst/dockerfiles/actions/runs/18394143031/attempts/1"
+      },
+      "buildType": "https://mobyproject.org/buildkit@v1",
+      "materials": [
+        {
+          "uri": "pkg:docker/ubuntu@22.04?platform=linux%2Famd64",
+          "digest": {
+            "sha256": "09506232a8004baa32c47d68f1e5c307d648fdd59f5e7eaa42aaf87914100db3"
+          }
+        },
+        {
+          "uri": "https://github.com/athackst/dockerfiles.git#refs/pull/645/merge",
+          "digest": {
+            "sha1": "61b357a2e55af05e7249f93ad5e3f0147c8a8952"
+          }
+        }
+      ],
+      "invocation": {
+        "configSource": {
+          "entryPoint": "humble.Dockerfile"
+        },
+        "parameters": {
+          "frontend": "dockerfile.v0",
+          "args": {
+            "target": "gazebo"
+          },
+          "secrets": [
+            {
+              "id": "GIT_AUTH_HEADER",
+              "optional": true
+            },
+            {
+              "id": "GIT_AUTH_TOKEN",
+              "optional": true
+            }
+          ]
+        },
+        "environment": {
+          "platform": "linux/amd64"
+        }
+      }
+    },
+    "buildx.build.ref": "builder-eccf1254-4237-4ce3-bcec-d65aa609a7e9/builder-eccf1254-4237-4ce3-bcec-d65aa609a7e90/ima0nbeqkxrvfy6xal37fc652",
+    "containerimage.descriptor": {
+      "mediaType": "application/vnd.oci.image.index.v1+json",
+      "digest": "sha256:14b8785dc635fedc56de435adfc6b772eb793e3a3da3a340b71ba9dc952efe3c",
+      "size": 856
+    },
+    "containerimage.digest": "sha256:14b8785dc635fedc56de435adfc6b772eb793e3a3da3a340b71ba9dc952efe3c",
+    "image.name": "ghcr.io/athackst/ros2-humble-gazebo"
+  }
+}
