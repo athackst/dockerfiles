@@ -145,7 +145,7 @@ def main() -> int:
         "--registry",
         required=False,
         default="",
-        help="Registry hostname (e.g., ghcr.io). If empty, outputs are omitted.",  # noqa:E501
+        help="Registry hostname (e.g., ghcr.io). If empty, outputs are omitted.",
     )
     parser.add_argument(
         "--registry-username",
@@ -161,7 +161,7 @@ def main() -> int:
     args = parser.parse_args()
 
     platform = canonical_platform(args.platform)  # e.g., "linux/arm/v7"
-    pkey = norm_platform(args.platform)        # e.g., "linux-arm-v7"
+    pkey = norm_platform(args.platform)  # e.g., "linux-arm-v7"
 
     # Group by parent platform (os/arch) so one group covers all variants.
     os_, arch, _ = parse_platform(args.platform)
@@ -200,18 +200,20 @@ def main() -> int:
 
         destination: str = ""
         if args.registry and args.registry_username:
-            destination = (f"{args.registry}/{args.registry_username}/"
-                           f"{args.family}-{args.distro}-{stage}")
+            destination = (
+                f"{args.registry}/{args.registry_username}/"
+                f"{args.family}-{args.distro}-{stage}"
+            )
         if args.digest:
             set_lines.append(f"{tname}.tags=")
         if args.digest and destination:
             set_lines.append(
-                f"{tname}.output=type=registry,name={destination},push-by-digest=true"  # noqa: E501
+                f"{tname}.output=type=registry,name={destination},push-by-digest=true"
             )
 
     if not stages:
         core.set_failed(
-            f"No build targets in templates.yml for {release} on platform {platform}"  # noqa: E501
+            f"No build targets in templates.yml for {release} on platform {platform}"
         )
         return 1
 
@@ -227,7 +229,8 @@ def main() -> int:
 
     core.info(
         f"Release: {release} | Group: {release_group} | Platform: {platform} "
-        f"| Stages: {','.join(stages)}")
+        f"| Stages: {','.join(stages)}"
+    )
     return 0
 
 

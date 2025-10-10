@@ -15,28 +15,36 @@ def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(
         description="Create multi-arch manifests from bake metadata."
     )
-    parser.add_argument("--family",
-                        required=True,
-                        help="Program/family (e.g., ros2).")
-    parser.add_argument("--distro",
-                        required=True,
-                        help="Distro/release (e.g., rolling).")
-    parser.add_argument("--metadata",
-                        action="append",
-                        default=[],
-                        help="Path to a bake metadata JSON file (repeatable).")
-    parser.add_argument("--metadata-list",
-                        default="",
-                        help="Newline/comma separated list of metadata paths.")
-    parser.add_argument("--gh-owner",
-                        default="",
-                        help="GHCR owner/org for final tags.")
-    parser.add_argument("--dockerhub-username",
-                        default="",
-                        help="Docker Hub user/org for final tags.")
-    parser.add_argument("--dry-run",
-                        action="store_true",
-                        help="Print the imagetools commands without executing.")
+    parser.add_argument(
+        "--family", required=True, help="Program/family (e.g., ros2)."
+    )
+    parser.add_argument(
+        "--distro", required=True, help="Distro/release (e.g., rolling)."
+    )
+    parser.add_argument(
+        "--metadata",
+        action="append",
+        default=[],
+        help="Path to a bake metadata JSON file (repeatable).",
+    )
+    parser.add_argument(
+        "--metadata-list",
+        default="",
+        help="Newline/comma separated list of metadata paths.",
+    )
+    parser.add_argument(
+        "--gh-owner", default="", help="GHCR owner/org for final tags."
+    )
+    parser.add_argument(
+        "--dockerhub-username",
+        default="",
+        help="Docker Hub user/org for final tags.",
+    )
+    parser.add_argument(
+        "--dry-run",
+        action="store_true",
+        help="Print the imagetools commands without executing.",
+    )
     return parser.parse_args()
 
 
@@ -73,10 +81,12 @@ def resolve_metadata_paths(args: argparse.Namespace) -> List[Path]:
     return paths
 
 
-def walk_metadata(node: Any,
-                  target: Optional[str],
-                  platform: Optional[str],
-                  acc: Dict[str, List[Dict[str, str]]]) -> None:
+def walk_metadata(
+    node: Any,
+    target: Optional[str],
+    platform: Optional[str],
+    acc: Dict[str, List[Dict[str, str]]],
+) -> None:
     if isinstance(node, dict):
         current_platform = node.get("platform", platform)
         if "target" in node and isinstance(node["target"], dict):
@@ -99,7 +109,9 @@ def walk_metadata(node: Any,
                         image_name = entry.get("name")
                         digest = entry.get("digest") or entry.get("imageDigest")
                         entry_platform = entry.get("platform") or entry_platform
-                        if not image_name and isinstance(entry.get("names"), list):
+                        if not image_name and isinstance(
+                            entry.get("names"), list
+                        ):
                             image_name = entry["names"][0]
                     elif isinstance(entry, str):
                         image_name = entry
@@ -121,7 +133,9 @@ def walk_metadata(node: Any,
                     {
                         "image": base,
                         "digest": digest,
-                        "platform": desc.get("platform") or current_platform or "",
+                        "platform": desc.get("platform")
+                        or current_platform
+                        or "",
                     }
                 )
         for key, value in node.items():
@@ -161,10 +175,9 @@ def collect_targets(paths: Iterable[Path]) -> Dict[str, List[Dict[str, str]]]:
     return deduped
 
 
-def ensure_release_targets(family: str,
-                           distro: str,
-                           target_map: Dict[str, List[Dict[str, str]]]
-                           ) -> Dict[str, List[Dict[str, str]]]:
+def ensure_release_targets(
+    family: str, distro: str, target_map: Dict[str, List[Dict[str, str]]]
+) -> Dict[str, List[Dict[str, str]]]:
     release_prefix = f"{family}-{distro}"
     filtered: Dict[str, List[Dict[str, str]]] = {}
     for target, entries in target_map.items():
@@ -198,11 +211,9 @@ def build_refs(entries: List[Dict[str, str]]) -> List[str]:
     return sorted(refs)
 
 
-def compute_tags(family: str,
-                 distro: str,
-                 stage: str,
-                 gh_owner: str,
-                 dockerhub_username: str) -> List[str]:
+def compute_tags(
+    family: str, distro: str, stage: str, gh_owner: str, dockerhub_username: str
+) -> List[str]:
     suffix = f"{distro}-{stage}"
     tags: List[str] = []
     if gh_owner:
@@ -224,7 +235,9 @@ def main() -> int:
     args = parse_args()
     metadata_paths = resolve_metadata_paths(args)
     target_map = collect_targets(metadata_paths)
-    release_targets = ensure_release_targets(args.family, args.distro, target_map)
+    release_targets = ensure_release_targets(
+        args.family, args.distro, target_map
+    )
 
     created_tags: Dict[str, List[str]] = {}
     for target, entries in sorted(release_targets.items()):
@@ -235,11 +248,13 @@ def main() -> int:
         refs = build_refs(entries)
         if not refs:
             continue
-        tags = compute_tags(args.family,
-                            args.distro,
-                            stage_name,
-                            args.gh_owner,
-                            args.dockerhub_username)
+        tags = compute_tags(
+            args.family,
+            args.distro,
+            stage_name,
+            args.gh_owner,
+            args.dockerhub_username,
+        )
         if not tags:
             raise ValueError("No destination tags specified for merge action.")
         cmd = ["docker", "buildx", "imagetools", "create"]
