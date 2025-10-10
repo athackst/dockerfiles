@@ -149,8 +149,8 @@ jobs:
         with:
           family:     ${{ matrix.family }}         # e.g. ros2
           distro:       ${{ matrix.distro }}           # e.g. rolling
-          registry-username:   ${{ github.actor }}               # optional
-          registry-password:   ${{ secrets.GITHUB_TOKEN }}       # optional
+          ghcr-username:   ${{ github.actor }}               # optional
+          ghcr-password:   ${{ secrets.GITHUB_TOKEN }}       # optional
           push: "true"
 
   bake-build-arm64:
@@ -174,8 +174,8 @@ jobs:
         with:
           family:     ${{ matrix.family }}         # e.g. ros2
           distro:       ${{ matrix.distro }}           # e.g. rolling
-          registry-username:   ${{ github.actor }}               # optional
-          registry-password:   ${{ secrets.GITHUB_TOKEN }}       # optional
+          ghcr-username:   ${{ github.actor }}               # optional
+          ghcr-password:   ${{ secrets.GITHUB_TOKEN }}       # optional
           push: "true"
 
   merge-manifests:

@@ -11,8 +11,8 @@ Example:
     --family ros2 \
     --distro rolling \
     --platform linux/amd64 \
-    --registry \
-    --registry-username <user> \
+    --ghcr-username <user> \
+    --docker-username <user> \
     --digest
 
 GitHub Actions outputs (via actions_toolkit.core.set_output):
@@ -142,16 +142,12 @@ def main() -> int:
         help="Docker platform os/arch[/variant] (e.g., linux/amd64).",
     )
     parser.add_argument(
-        "--registry",
-        required=False,
-        default="",
-        help="Registry hostname (e.g., ghcr.io). If empty, outputs are omitted.",
+        "--ghcr-username", default="", help="GHCR owner/org for final tags."
     )
     parser.add_argument(
-        "--registry-username",
-        required=False,
+        "--docker-username",
         default="",
-        help="Registry namespace/org. If empty, outputs are omitted.",
+        help="Docker Hub user/org for final tags.",
     )
     parser.add_argument(
         "--digest",
@@ -198,18 +194,20 @@ def main() -> int:
         tname = f"{release}-{stage}"
         stage_targets.append(tname)
 
-        destination: str = ""
-        if args.registry and args.registry_username:
-            destination = (
-                f"{args.registry}/{args.registry_username}/{args.family}"
-                # f"-{args.distro}-{stage}"
+        destinations: list[str] = []
+        if args.ghcr_username:
+            destinations.append(f"ghcr.io/{args.ghcr_username}/{args.family}")
+        if args.docker_username:
+            destinations.append(
+                f"docker.io/{args.docker_username}/{args.family}"
             )
+
         if args.digest:
             set_lines.append(f"{tname}.tags=")
-        if args.digest and destination:
-            set_lines.append(
-                f"{tname}.output=type=registry,name={destination},push-by-digest=true"
-            )
+            for destination in destinations:
+                set_lines.append(
+                    f"{tname}.output=type=registry,name={destination},push-by-digest=true"  # noqa:
+                )
 
     if not stages:
         core.set_failed(
