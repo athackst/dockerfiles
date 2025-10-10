@@ -25,14 +25,8 @@ def parse_args() -> argparse.Namespace:
         "--distro", required=True, help="Distro/release (e.g., rolling)."
     )
     parser.add_argument(
-        "--metadata",
-        action="append",
-        default=[],
-        help="Path to a bake metadata JSON file (repeatable).",
-    )
-    parser.add_argument(
         "--metadata-list",
-        default="",
+        required=True,
         help="Newline/comma separated list of metadata paths.",
     )
     parser.add_argument(
@@ -67,11 +61,10 @@ def _split_metadata_list(raw: str) -> List[str]:
     return tokens
 
 
-def resolve_metadata_paths(args: argparse.Namespace) -> List[Path]:
-    """Resolve metadata arguments into concrete JSON file paths."""
+def resolve_metadata_paths(spec: str) -> List[Path]:
+    """Resolve metadata spec into concrete JSON file paths."""
     paths: List[Path] = []
-    tokens = list(args.metadata)
-    tokens.extend(_split_metadata_list(args.metadata_list))
+    tokens = _split_metadata_list(spec or "")
     for token in tokens:
         path = Path(token).expanduser()
         if path.is_dir():
@@ -205,7 +198,7 @@ def write_output(name: str, value: str) -> None:
 def main() -> int:
     """Entry point for the merge manifest script."""
     args = parse_args()
-    metadata_paths = resolve_metadata_paths(args)
+    metadata_paths = resolve_metadata_paths(args.metadata_list)
     target_map = collect_targets(metadata_paths)
     release_targets = ensure_release_targets(
         args.family, args.distro, target_map
