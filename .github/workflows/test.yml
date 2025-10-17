@@ -63,6 +63,8 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
       matrix: ${{ steps.matrix.outputs.stages }}
+      amd64: ${{ steps.amd64.outputs.distros }}
+      arm64: ${{ steps.arm64.outputs.distros }}
       has_changes: ${{ steps.filter.outputs.affected == 'true' }}
     steps:
       - name: Checkout Repository
@@ -89,6 +91,76 @@ jobs:
         with:
           changed: ${{ steps.filter.outputs.docker_files }}
           all: ${{ steps.filter.outputs.action }}
+
+      - name: amd64 targets
+        run: |
+          {
+            echo "## AMD64"
+          } >> "$GITHUB_STEP_SUMMARY"
+      - name: Generate list of amd64 targets (filtered)
+        id: amd64
+        uses: ./.github/actions/docker-targets
+        with:
+          changed: ${{ steps.filter.outputs.docker_files }}
+          all: ${{ steps.filter.outputs.action }}
+
+      - name: arm64 targets
+        run: |
+          {
+            echo "## ARM64"
+          } >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Generate list of arm64 targets (filtered)
+        id: arm64
+        uses: ./.github/actions/docker-targets
+        with:
+          platform: "linux/arm64"
+          changed: ${{ steps.filter.outputs.docker_files }}
+          all: ${{ steps.filter.outputs.action }}
+
+  bake-build-amd64:
+    name: Build (${{ matrix.family }}:${{ matrix.distro }} @ amd64
+    needs: targets
+    if: ${{ needs.targets.outputs.has_changes }}
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include: ${{ fromJSON(needs.targets.outputs.amd64) }}
+
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: Build via composite action
+        uses: ./.github/actions/docker-bake
+        with:
+          family: ${{ matrix.family }} # e.g. ros2
+          distro: ${{ matrix.distro }} # e.g. rolling
+          ghcr-username: ${{ github.actor }} # optional
+          ghcr-password: ${{ secrets.GITHUB_TOKEN }} # optional
+          push: "false"
+
+  bake-build-arm64:
+    name: Build (${{ matrix.family }}:${{ matrix.distro }} @ arm64)
+    needs: targets
+    if: ${{ needs.targets.outputs.has_changes }}
+    runs-on: ubuntu-24.04-arm
+    strategy:
+      fail-fast: false
+      matrix:
+        include: ${{ fromJSON(needs.targets.outputs.arm64) }}
+
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: Build via composite action
+        uses: ./.github/actions/docker-bake
+        with:
+          family: ${{ matrix.family }} # e.g. ros2
+          distro: ${{ matrix.distro }} # e.g. rolling
+          ghcr-username: ${{ github.actor }} # optional
+          ghcr-password: ${{ secrets.GITHUB_TOKEN }} # optional
+          push: "false"
 
   docker-build:
     needs: targets
