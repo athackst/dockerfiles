@@ -1,0 +1,66 @@
+name: "Generate Docker matrix"
+description: "Produce a JSON matrix of non-EOL docker templates."
+
+inputs:
+  platform:
+    description: "Optional platform filter (e.g., linux/amd64)."
+    required: false
+    default: ""
+  changed:
+    description: "Comma/newline separated list of changed Dockerfile paths (optional)."
+    required: false
+    default: ""
+  all:
+    description: "Set to 'true' if you want to get all non-EOL targets"
+    required: false
+    default: "false"
+
+outputs:
+  distros:
+    description: "JSON array of {family,distro} dictionaries."
+    value: ${{ steps.generate.outputs.distros }}
+  families:
+    description: "JSON array of unique families."
+    value: ${{ steps.generate.outputs.families }}
+  stages:
+    description: "JSON array of {family,distro,stage,platforms} dictionaries."
+    value: ${{ steps.generate.outputs.stages }}
+
+runs:
+  using: "composite"
+  steps:
+    - name: Set up Python
+      uses: actions/setup-python@v6
+      with:
+        python-version: "3.x"
+
+    - name: Install dependencies
+      shell: bash
+      run: pip install -r "${{ github.action_path }}/requirements.txt"
+
+    - name: Generate matrix
+      id: generate
+      shell: bash
+      run: |
+        set -euo pipefail
+        python .github/actions/docker-targets/get_targets.py \
+          --templates templates.yml \
+          --platform "${{ inputs.platform }}" \
+          --changed "${{ inputs.changed }}" \
+          --all "${{ inputs.all }}"
+
+    - name: Summary
+      if: always()
+      shell: bash
+      run: |
+        {
+          echo "### Target summary "
+          echo "#### Inputs"
+          echo "- Platform: \`${{ inputs.platform }}\`"
+          echo "- Changed:  \`${{ inputs.changed }}\`"
+          echo "- All: \`${{ inputs.all }}\`"
+          echo "#### Outputs"
+          echo "- Distros: \`${{ steps.generate.outputs.distros || 'n/a' }}\`"
+          echo "- Families: \`${{ steps.generate.outputs.families || 'n/a' }}\`"
+          echo "- Stages: \`${{ steps.generate.outputs.stages || 'n/a' }}\`"
+        } >> "$GITHUB_STEP_SUMMARY"
