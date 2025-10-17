@@ -10,18 +10,27 @@ on:
   workflow_dispatch:
 
 jobs:
+  targets:
+    runs-on: ubuntu-latest
+    outputs:
+      repos: ${{ steps.amd64.outputs.families }}
+
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: Generate list of amd64 targets (filtered)
+        id: amd64
+        uses: ./.github/actions/docker-targets
+
   readme:
     runs-on: ubuntu-latest
     name: Push README to Docker Hub
+    needs: targets
     strategy:
       fail-fast: false
       matrix:
-        docker_repo:
-          - ros
-          - ros2
-          - gazebo
-          - ignition
-          - gz
+        repo: ${{ fromJSON(needs.targets.outputs.repos) }}
+
     steps:
       - name: git checkout
         uses: actions/checkout@v5
@@ -30,7 +39,7 @@ jobs:
         with:
           username: althack
           password: ${{ secrets.DOCKERHUB_PASSWORD }}
-          repository: althack/${{ matrix.docker_repo }}
-          readme-filepath: ${{ matrix.docker_repo }}/README.md
+          repository: althack/${{ matrix.repo }}
+          readme-filepath: ${{ matrix.repo }}/README.md
           short-description: |
-            An assortment of development containers for ${{ matrix.docker_repo }}
+            An assortment of development containers for ${{ matrix.repo }}

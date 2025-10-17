@@ -15,199 +15,140 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  docker:
+  targets:
     runs-on: ubuntu-latest
-    strategy:
-      fail-fast: false
-      matrix:
-        include:
-          - label: ros2
-            tag: rolling
-            target: base
-            platforms: "linux/amd64,linux/arm64/v8"
-          - label: ros2
-            tag: rolling
-            target: dev
-            platforms: "linux/amd64"
-          - label: ros2
-            tag: rolling
-            target: full
-            platforms: "linux/amd64"
-          - label: ros2
-            tag: rolling
-            target: gazebo
-            platforms: "linux/amd64"
-          - label: ros2
-            tag: rolling-cuda
-            target: base
-            platforms: "linux/amd64"
-          - label: ros2
-            tag: rolling-cuda
-            target: dev
-            platforms: "linux/amd64"
-          - label: ros2
-            tag: rolling-cuda
-            target: full
-            platforms: "linux/amd64"
-          - label: ros2
-            tag: rolling-cuda
-            target: gazebo
-            platforms: "linux/amd64"
-          - label: ros2
-            tag: kilted
-            target: base
-            platforms: "linux/amd64,linux/arm64/v8"
-          - label: ros2
-            tag: kilted
-            target: dev
-            platforms: "linux/amd64"
-          - label: ros2
-            tag: kilted
-            target: full
-            platforms: "linux/amd64"
-          - label: ros2
-            tag: kilted
-            target: gazebo
-            platforms: "linux/amd64"
-          - label: ros2
-            tag: jazzy
-            target: base
-            platforms: "linux/amd64,linux/arm64/v8"
-          - label: ros2
-            tag: jazzy
-            target: dev
-            platforms: "linux/amd64"
-          - label: ros2
-            tag: jazzy
-            target: full
-            platforms: "linux/amd64"
-          - label: ros2
-            tag: jazzy
-            target: gazebo
-            platforms: "linux/amd64"
-          - label: ros2
-            tag: jazzy-cuda
-            target: base
-            platforms: "linux/amd64"
-          - label: ros2
-            tag: jazzy-cuda
-            target: dev
-            platforms: "linux/amd64"
-          - label: ros2
-            tag: jazzy-cuda
-            target: full
-            platforms: "linux/amd64"
-          - label: ros2
-            tag: jazzy-cuda
-            target: gazebo
-            platforms: "linux/amd64"
-          - label: ros2
-            tag: humble
-            target: base
-            platforms: "linux/amd64,linux/arm64"
-          - label: ros2
-            tag: humble
-            target: dev
-            platforms: "linux/amd64,linux/arm64"
-          - label: ros2
-            tag: humble
-            target: full
-            platforms: "linux/amd64,linux/arm64"
-          - label: ros2
-            tag: humble
-            target: gazebo
-            platforms: "linux/amd64"
-          - label: ros2
-            tag: humble-cuda
-            target: base
-            platforms: "linux/amd64"
-          - label: ros2
-            tag: humble-cuda
-            target: dev
-            platforms: "linux/amd64"
-          - label: ros2
-            tag: humble-cuda
-            target: full
-            platforms: "linux/amd64"
-          - label: ros2
-            tag: humble-cuda
-            target: gazebo
-            platforms: "linux/amd64"
-          - label: ignition
-            tag: fortress
-            target: base
-            platforms: "linux/amd64"
-          - label: ignition
-            tag: fortress
-            target: dev
-            platforms: "linux/amd64"
-          - label: gz
-            tag: jetty
-            target: base
-            platforms: "linux/amd64"
-          - label: gz
-            tag: jetty
-            target: dev
-            platforms: "linux/amd64"
-          - label: gz
-            tag: jetty-cuda
-            target: base
-            platforms: "linux/amd64"
-          - label: gz
-            tag: jetty-cuda
-            target: dev
-            platforms: "linux/amd64"
-          - label: gz
-            tag: ionic
-            target: base
-            platforms: "linux/amd64"
-          - label: gz
-            tag: ionic
-            target: dev
-            platforms: "linux/amd64"
-          - label: gz
-            tag: ionic-cuda
-            target: base
-            platforms: "linux/amd64"
-          - label: gz
-            tag: ionic-cuda
-            target: dev
-            platforms: "linux/amd64"
-          - label: gz
-            tag: harmonic
-            target: base
-            platforms: "linux/amd64"
-          - label: gz
-            tag: harmonic
-            target: dev
-            platforms: "linux/amd64"
-          - label: gz
-            tag: harmonic-cuda
-            target: base
-            platforms: "linux/amd64"
-          - label: gz
-            tag: harmonic-cuda
-            target: dev
-            platforms: "linux/amd64"
+    outputs:
+      amd64: ${{ steps.amd64.outputs.distros }}
+      arm64: ${{ steps.arm64.outputs.distros }}
+      has_changes: ${{ steps.filter.outputs.docker == 'true' }}
+
     steps:
       - uses: actions/checkout@v5
-      - name: Filter build
+
+      - name: Find changed files
         uses: dorny/paths-filter@v3
         id: filter
         with:
           filters: |
             docker:
-              - ${{ matrix.label }}/${{ matrix.tag }}.Dockerfile
-      - name: Build and push
-        if: ${{ steps.filter.outputs.docker == 'true' || github.event_name == 'schedule' || github.event_name == 'workflow_dispatch' }}
-        uses: ./.github/actions/docker-build-push
+              - '*.Dockerfile'
+
+      - name: Generate list of amd64 targets (filtered)
+        id: amd64
+        uses: ./.github/actions/docker-targets
         with:
-          label: ${{ matrix.label }}
-          tag: ${{ matrix.tag }}
-          target: ${{ matrix.target }}
-          platforms: ${{ matrix.platforms }}
+          changed: ${{ steps.filter.outputs.docker_files }}
+          all: ${{ github.event_name == 'schedule' || github.event_name == 'workflow_dispatch' }}
+
+      - name: Generate list of arm64 targets (filtered)
+        id: arm64
+        uses: ./.github/actions/docker-targets
+        with:
+          platform: "linux/arm64"
+          changed: ${{ steps.filter.outputs.docker_files }}
+          all: ${{ github.event_name == 'schedule' || github.event_name == 'workflow_dispatch' }}
+
+  bake-build-amd64:
+    needs: targets
+    name: Build (${{ matrix.family }}:${{ matrix.distro }} @ amd64
+    if: ${{ needs.targets.outputs.has_changes == 'true' || github.event_name == 'schedule' || github.event_name == 'workflow_dispatch' }}
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include: ${{ fromJSON(needs.targets.outputs.amd64) }}
+
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: Build via composite action
+        uses: ./.github/actions/docker-bake
+        with:
+          family: ${{ matrix.family }} # e.g. ros2
+          distro: ${{ matrix.distro }} # e.g. rolling
+          ghcr-username: ${{ github.repository_owner }}
+          ghcr-password: ${{ secrets.GITHUB_TOKEN }}
           docker-username: ${{ vars.DOCKERHUB_USERNAME }}
           docker-password: ${{ secrets.DOCKERHUB_PASSWORD }}
-          ghcr-username: ${{ github.actor }}
-          ghcr-password: ${{ secrets.GITHUB_TOKEN }}
           push: ${{ github.ref == 'refs/heads/main' }}
+
+  bake-build-arm64:
+    needs: targets
+    name: Build (${{ matrix.family }}:${{ matrix.distro }} @ arm64)
+    if: ${{ needs.targets.outputs.has_changes == 'true' || github.event_name == 'schedule' || github.event_name == 'workflow_dispatch' }}
+    runs-on: ubuntu-24.04-arm
+    strategy:
+      fail-fast: false
+      matrix:
+        include: ${{ fromJSON(needs.targets.outputs.arm64) }}
+
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: Build via composite action
+        uses: ./.github/actions/docker-bake
+        with:
+          family: ${{ matrix.family }} # e.g. ros2
+          distro: ${{ matrix.distro }} # e.g. rolling
+          ghcr-username: ${{ github.repository_owner }}
+          ghcr-password: ${{ secrets.GITHUB_TOKEN }}
+          docker-username: ${{ vars.DOCKERHUB_USERNAME }}
+          docker-password: ${{ secrets.DOCKERHUB_PASSWORD }}
+          push: ${{ github.ref == 'refs/heads/main' }}
+
+
+  merge-manifests:
+    name: Merge manifests (${{ matrix.family }}:${{ matrix.distro }})
+    needs:
+      - bake-build-amd64
+      - bake-build-arm64
+      - targets
+    if: ${{ needs.targets.outputs.has_changes == 'true' || github.event_name == 'schedule' || github.event_name == 'workflow_dispatch' }}
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include: ${{ fromJSON(needs.targets.outputs.amd64) }}
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: Set current date
+        id: date
+        shell: bash
+        run: echo "today=$(date +%Y-%m-%d)" >> "$GITHUB_OUTPUT"
+
+      - name: Use current date
+        shell: bash
+        run: echo "Current date is ${{ steps.date.outputs.date }}"
+
+      - name: Download bake metadata artifacts
+        uses: actions/download-artifact@v4
+        with:
+          pattern: bake-metadata-${{ matrix.family }}-${{ matrix.distro }}-*
+          path: bake-metadata
+          merge-multiple: true
+
+      - name: Merge manifests
+        uses: ./.github/actions/docker-merge
+        with:
+          family: ${{ matrix.family }}
+          distro: ${{ matrix.distro }}
+          metadata: |
+            bake-metadata
+          extra-tag: ${{ steps.date.outputs.today }}
+          ghcr-username: ${{ github.repository_owner }}
+          ghcr-password: ${{ secrets.GITHUB_TOKEN }}
+          docker-username: ${{ vars.DOCKERHUB_USERNAME }}
+          docker-password: ${{ secrets.DOCKERHUB_PASSWORD }}
+          dry-run: ${{ github.ref != 'refs/heads/main' }}
+
+  docker:
+    needs:
+      - merge-manifests
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check
+        run: echo "Completed successfully!"
