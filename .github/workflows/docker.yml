@@ -15,196 +15,47 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  docker:
+  targets:
     runs-on: ubuntu-latest
-    strategy:
-      fail-fast: false
-      matrix:
-        include:
-          - label: ros2
-            tag: rolling
-            target: base
-            platforms: "linux/amd64,linux/arm64/v8"
-          - label: ros2
-            tag: rolling
-            target: dev
-            platforms: "linux/amd64"
-          - label: ros2
-            tag: rolling
-            target: full
-            platforms: "linux/amd64"
-          - label: ros2
-            tag: rolling
-            target: gazebo
-            platforms: "linux/amd64"
-          - label: ros2
-            tag: rolling-cuda
-            target: base
-            platforms: "linux/amd64"
-          - label: ros2
-            tag: rolling-cuda
-            target: dev
-            platforms: "linux/amd64"
-          - label: ros2
-            tag: rolling-cuda
-            target: full
-            platforms: "linux/amd64"
-          - label: ros2
-            tag: rolling-cuda
-            target: gazebo
-            platforms: "linux/amd64"
-          - label: ros2
-            tag: kilted
-            target: base
-            platforms: "linux/amd64,linux/arm64/v8"
-          - label: ros2
-            tag: kilted
-            target: dev
-            platforms: "linux/amd64"
-          - label: ros2
-            tag: kilted
-            target: full
-            platforms: "linux/amd64"
-          - label: ros2
-            tag: kilted
-            target: gazebo
-            platforms: "linux/amd64"
-          - label: ros2
-            tag: jazzy
-            target: base
-            platforms: "linux/amd64,linux/arm64/v8"
-          - label: ros2
-            tag: jazzy
-            target: dev
-            platforms: "linux/amd64"
-          - label: ros2
-            tag: jazzy
-            target: full
-            platforms: "linux/amd64"
-          - label: ros2
-            tag: jazzy
-            target: gazebo
-            platforms: "linux/amd64"
-          - label: ros2
-            tag: jazzy-cuda
-            target: base
-            platforms: "linux/amd64"
-          - label: ros2
-            tag: jazzy-cuda
-            target: dev
-            platforms: "linux/amd64"
-          - label: ros2
-            tag: jazzy-cuda
-            target: full
-            platforms: "linux/amd64"
-          - label: ros2
-            tag: jazzy-cuda
-            target: gazebo
-            platforms: "linux/amd64"
-          - label: ros2
-            tag: humble
-            target: base
-            platforms: "linux/amd64,linux/arm64"
-          - label: ros2
-            tag: humble
-            target: dev
-            platforms: "linux/amd64,linux/arm64"
-          - label: ros2
-            tag: humble
-            target: full
-            platforms: "linux/amd64,linux/arm64"
-          - label: ros2
-            tag: humble
-            target: gazebo
-            platforms: "linux/amd64"
-          - label: ros2
-            tag: humble-cuda
-            target: base
-            platforms: "linux/amd64"
-          - label: ros2
-            tag: humble-cuda
-            target: dev
-            platforms: "linux/amd64"
-          - label: ros2
-            tag: humble-cuda
-            target: full
-            platforms: "linux/amd64"
-          - label: ros2
-            tag: humble-cuda
-            target: gazebo
-            platforms: "linux/amd64"
-          - label: ignition
-            tag: fortress
-            target: base
-            platforms: "linux/amd64"
-          - label: ignition
-            tag: fortress
-            target: dev
-            platforms: "linux/amd64"
-          - label: gz
-            tag: jetty
-            target: base
-            platforms: "linux/amd64"
-          - label: gz
-            tag: jetty
-            target: dev
-            platforms: "linux/amd64"
-          - label: gz
-            tag: jetty-cuda
-            target: base
-            platforms: "linux/amd64"
-          - label: gz
-            tag: jetty-cuda
-            target: dev
-            platforms: "linux/amd64"
-          - label: gz
-            tag: ionic
-            target: base
-            platforms: "linux/amd64"
-          - label: gz
-            tag: ionic
-            target: dev
-            platforms: "linux/amd64"
-          - label: gz
-            tag: ionic-cuda
-            target: base
-            platforms: "linux/amd64"
-          - label: gz
-            tag: ionic-cuda
-            target: dev
-            platforms: "linux/amd64"
-          - label: gz
-            tag: harmonic
-            target: base
-            platforms: "linux/amd64"
-          - label: gz
-            tag: harmonic
-            target: dev
-            platforms: "linux/amd64"
-          - label: gz
-            tag: harmonic-cuda
-            target: base
-            platforms: "linux/amd64"
-          - label: gz
-            tag: harmonic-cuda
-            target: dev
-            platforms: "linux/amd64"
+    outputs:
+      matrix: ${{ steps.matrix.outputs.stages }}
+      has_changes: ${{ steps.filter.outputs.docker == 'true' }}
+
     steps:
       - uses: actions/checkout@v5
-      - name: Filter build
+
+      - name: Find changed files
         uses: dorny/paths-filter@v3
         id: filter
         with:
           filters: |
             docker:
-              - ${{ matrix.label }}/${{ matrix.tag }}.Dockerfile
+              - '*.Dockerfile'
+
+      - name: Generate list of targets (filtered)
+        id: matrix
+        uses: ./.github/actions/docker-targets
+        with:
+          changed: ${{ steps.filter.outputs.docker_files }}
+          all: ${{ github.event_name == 'schedule' || github.event_name == 'workflow_dispatch' }}
+
+  docker:
+    runs-on: ubuntu-latest
+    needs: targets
+    if: ${{ needs.targets.outputs.has_changes == 'true' || github.event_name == 'schedule' || github.event_name == 'workflow_dispatch' }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include: ${{ fromJSON(needs.targets.outputs.matrix ) }}
+    steps:
+      - uses: actions/checkout@v5
+
       - name: Build and push
-        if: ${{ steps.filter.outputs.docker == 'true' || github.event_name == 'schedule' || github.event_name == 'workflow_dispatch' }}
         uses: ./.github/actions/docker-build-push
         with:
-          label: ${{ matrix.label }}
-          tag: ${{ matrix.tag }}
-          target: ${{ matrix.target }}
+          label: ${{ matrix.family }}
+          tag: ${{ matrix.distro }}
+          target: ${{ matrix.stage }}
           platforms: ${{ matrix.platforms }}
           docker-username: ${{ vars.DOCKERHUB_USERNAME }}
           docker-password: ${{ secrets.DOCKERHUB_PASSWORD }}

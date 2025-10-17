@@ -42,39 +42,60 @@ jobs:
           ./generate.py
           git diff --exit-code
 
-  changes:
+  action-tests:
     runs-on: ubuntu-latest
-    permissions:
-      contents: read # Required to analyze file changes
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: 3.x
+          cache: pip
+
+      - name: Run unit tests
+        run: |
+          python -m pip install --upgrade pip
+          if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+          python -m unittest discover -s .github/actions -p 'test_*.py'
+
+  targets:
+    runs-on: ubuntu-latest
     outputs:
-      dockerfiles: ${{ steps.filter.outputs.dockerfiles }}
+      matrix: ${{ steps.matrix.outputs.stages }}
+      has_changes: ${{ steps.filter.outputs.affected == 'true' }}
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v5
         with:
           fetch-depth: 0
-      - name: Find Changed Dockerfiles
-        id: filter
-        run: |
-          # Find changed .Dockerfile files between the PR branch and the base branch
-          changed_files=$(git diff --name-only origin/${{ github.base_ref }}...HEAD -- '*.Dockerfile')
-          echo "Changed Dockerfiles: $changed_files"
 
-          # Output the results as JSON
-          if [ -z "$changed_files" ]; then
-            echo '["none"]' > changed_dockerfiles.json
-          else
-            echo "$changed_files" | jq -R -s -c 'split("\n")[:-1]' > changed_dockerfiles.json
-          fi
-          echo "dockerfiles=$(cat changed_dockerfiles.json)" >> $GITHUB_OUTPUT
+      - name: Find changed files
+        uses: dorny/paths-filter@v3
+        id: filter
+        with:
+          filters: |
+            docker:
+              - '*.Dockerfile'
+            action:
+              - '.github/actions/docker-*/*'
+            affected:
+              - '*.Dockerfile'
+              - '.github/actions/docker-*/*'
+
+      - name: Generate list of targets (filtered)
+        id: matrix
+        uses: ./.github/actions/docker-targets
+        with:
+          changed: ${{ steps.filter.outputs.docker_files }}
+          all: ${{ steps.filter.outputs.action }}
 
   docker-build:
-    needs: changes
+    needs: targets
     strategy:
       fail-fast: false
       matrix:
-        dockerfile: ${{ fromJSON(needs.changes.outputs.dockerfiles) }}
-        target: ["base", "dev", "full", "gazebo"]
+        include: ${{ fromJSON(needs.targets.outputs.matrix) }}
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -132,7 +153,22 @@ jobs:
       - lint
       - generate
       - docker-build
+    if: ${{ always() && !cancelled() && needs.docker-build.result != 'cancelled' }}
     runs-on: ubuntu-latest
     steps:
       - name: Check
-        run: echo "Completed successfully!"
+        run: |
+          if [ "${{ needs.lint.result }}" != 'success' ]; then
+            echo "Lint failed"
+            exit 1
+          fi
+          if [ "${{ needs.generate.result }}" != 'success' ]; then
+            echo "Generate failed"
+            exit 1
+          fi
+          if [ "${{ needs.docker-build.result }}" != 'skipped' ] && \
+             [ "${{ needs.docker-build.result }}" != 'success' ]; then
+            echo "Docker failed"
+            exit 1
+          fi
+          echo "Completed successfully"

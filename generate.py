@@ -203,36 +203,6 @@ def generate_docker_compose(log):
         compose_out.close()
 
 
-def generate_docker_workflow(log):
-    """Generate workflow with non-eol images."""
-    log.info("Generating workflow file.")
-    workflow_file = ".github/workflows/docker.yml"
-    docker_workflow = None
-    with open(workflow_file, 'r') as file:
-        docker_workflow = yaml.load(file)
-        docker_workflow["jobs"]["docker"]["strategy"]["matrix"] = {
-            "include": templates.workflow_names()}
-    with open(workflow_file, "w") as file:
-        yaml.indent(mapping=2, sequence=4, offset=2)
-        yaml.width = 4294967296  # A very large number
-        yaml.dump(docker_workflow, file)
-
-
-def generate_readme_workflow(log):
-    """Generate docker readme file workflow."""
-    workflow_file = ".github/workflows/docker_readme.yml"
-    docker_workflow = None
-    with open(workflow_file, "r") as file:
-        docker_workflow = yaml.load(file)
-        docker_workflow["jobs"]["readme"]["strategy"]["matrix"] = {
-            "docker_repo": templates.repo_names()
-        }
-
-    with open(workflow_file, "w") as file:
-        yaml.indent(mapping=2, sequence=4, offset=2)
-        yaml.dump(docker_workflow, file)
-
-
 def generate_tasks(log):
     """Generate tasks with non-eol images."""
     log.info("Generating tasks.")
@@ -279,8 +249,6 @@ if __name__ == "__main__":
     generate_dockerfiles(log)
     generate_readmes(log)
     generate_docker_compose(log)
-    generate_docker_workflow(log)
-    generate_readme_workflow(log)
     generate_tasks(log)
     generate_bake(log, include_eol=False)
     log.info("Finished generating dockerfiles.")
