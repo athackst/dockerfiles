@@ -198,70 +198,12 @@ jobs:
           ghcr-password: ${{ secrets.GITHUB_TOKEN }}
           dry-run: "true"
 
-  docker-build:
-    needs: targets
-    strategy:
-      fail-fast: false
-      matrix:
-        include: ${{ fromJSON(needs.targets.outputs.matrix) }}
-    runs-on: ubuntu-latest
-    permissions:
-      contents: read
-      packages: read
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v5
-
-      - name: Set up Python
-        uses: actions/setup-python@v6
-        with:
-          python-version: 3.x
-          cache: pip
-
-      - run: pip install -r requirements.txt
-
-      - name: Extract Label and Tag
-        id: extract
-        run: |
-          # Extract the full filename (e.g., label/tag.Dockerfile)
-          filename="${{ matrix.dockerfile }}"
-
-          # Extract label (e.g., 'label')
-          label=$(dirname "$filename")
-
-          # Extract tag (e.g., 'tag')
-          tag=$(basename "$filename" | cut -d. -f1)
-
-          echo "Label: $label, Tag: $tag"
-
-          # Set outputs for subsequent steps
-          echo "label=$label" >> $GITHUB_OUTPUT
-          echo "tag=$tag" >> $GITHUB_OUTPUT
-
-      - name: Check if target exists
-        id: target
-        run: |
-          python .github/scripts/check_target.py \
-            --label "${{ steps.extract.outputs.label }}" \
-            --tag "${{ steps.extract.outputs.tag }}" \
-            --target "${{ matrix.target }}"
-
-      - name: Build docker
-        id: docker
-        if: ${{ matrix.dockerfile != 'none' && steps.target.outputs.exists == 'true' }}
-        uses: ./.github/actions/docker-build-push
-        with:
-          label: ${{ steps.extract.outputs.label }}
-          tag: ${{ steps.extract.outputs.tag }}
-          target: ${{ matrix.target }}
-          platforms: "linux/amd64"
-
   complete:
     needs:
       - lint
       - generate
-      - docker-build
-    if: ${{ always() && !cancelled() && needs.docker-build.result != 'cancelled' }}
+      - merge-manifests
+    if: ${{ always() && !cancelled() && needs.merge-manifests.result != 'cancelled' }}
     runs-on: ubuntu-latest
     steps:
       - name: Check
@@ -274,8 +216,8 @@ jobs:
             echo "Generate failed"
             exit 1
           fi
-          if [ "${{ needs.docker-build.result }}" != 'skipped' ] && \
-             [ "${{ needs.docker-build.result }}" != 'success' ]; then
+          if [ "${{ needs.merge-manifests.result }}" != 'skipped' ] && \
+             [ "${{ needs.merge-manifests.result }}" != 'success' ]; then
             echo "Docker failed"
             exit 1
           fi
