@@ -18,7 +18,8 @@ jobs:
   targets:
     runs-on: ubuntu-latest
     outputs:
-      matrix: ${{ steps.matrix.outputs.stages }}
+      amd64: ${{ steps.amd64.outputs.distros }}
+      arm64: ${{ steps.arm64.outputs.distros }}
       has_changes: ${{ steps.filter.outputs.docker == 'true' }}
 
     steps:
@@ -32,33 +33,121 @@ jobs:
             docker:
               - '*.Dockerfile'
 
-      - name: Generate list of targets (filtered)
-        id: matrix
+      - name: Generate list of amd64 targets (filtered)
+        id: amd64
         uses: ./.github/actions/docker-targets
         with:
           changed: ${{ steps.filter.outputs.docker_files }}
           all: ${{ github.event_name == 'schedule' || github.event_name == 'workflow_dispatch' }}
 
-  docker:
-    runs-on: ubuntu-latest
+      - name: Generate list of arm64 targets (filtered)
+        id: arm64
+        uses: ./.github/actions/docker-targets
+        with:
+          platform: "linux/arm64"
+          changed: ${{ steps.filter.outputs.docker_files }}
+          all: ${{ github.event_name == 'schedule' || github.event_name == 'workflow_dispatch' }}
+
+  bake-build-amd64:
     needs: targets
+    name: Build (${{ matrix.family }}:${{ matrix.distro }} @ amd64
     if: ${{ needs.targets.outputs.has_changes == 'true' || github.event_name == 'schedule' || github.event_name == 'workflow_dispatch' }}
+    runs-on: ubuntu-latest
     strategy:
       fail-fast: false
       matrix:
-        include: ${{ fromJSON(needs.targets.outputs.matrix ) }}
+        include: ${{ fromJSON(needs.targets.outputs.amd64) }}
+
     steps:
       - uses: actions/checkout@v5
 
-      - name: Build and push
-        uses: ./.github/actions/docker-build-push
+      - name: Build via composite action
+        uses: ./.github/actions/docker-bake
         with:
-          label: ${{ matrix.family }}
-          tag: ${{ matrix.distro }}
-          target: ${{ matrix.stage }}
-          platforms: ${{ matrix.platforms }}
+          family: ${{ matrix.family }} # e.g. ros2
+          distro: ${{ matrix.distro }} # e.g. rolling
+          ghcr-username: ${{ github.repository_owner }}
+          ghcr-password: ${{ secrets.GITHUB_TOKEN }}
           docker-username: ${{ vars.DOCKERHUB_USERNAME }}
           docker-password: ${{ secrets.DOCKERHUB_PASSWORD }}
-          ghcr-username: ${{ github.actor }}
-          ghcr-password: ${{ secrets.GITHUB_TOKEN }}
           push: ${{ github.ref == 'refs/heads/main' }}
+
+  bake-build-arm64:
+    needs: targets
+    name: Build (${{ matrix.family }}:${{ matrix.distro }} @ arm64)
+    if: ${{ needs.targets.outputs.has_changes == 'true' || github.event_name == 'schedule' || github.event_name == 'workflow_dispatch' }}
+    runs-on: ubuntu-24.04-arm
+    strategy:
+      fail-fast: false
+      matrix:
+        include: ${{ fromJSON(needs.targets.outputs.arm64) }}
+
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: Build via composite action
+        uses: ./.github/actions/docker-bake
+        with:
+          family: ${{ matrix.family }} # e.g. ros2
+          distro: ${{ matrix.distro }} # e.g. rolling
+          ghcr-username: ${{ github.repository_owner }}
+          ghcr-password: ${{ secrets.GITHUB_TOKEN }}
+          docker-username: ${{ vars.DOCKERHUB_USERNAME }}
+          docker-password: ${{ secrets.DOCKERHUB_PASSWORD }}
+          push: ${{ github.ref == 'refs/heads/main' }}
+
+  merge-manifests:
+    name: Merge manifests (${{ matrix.family }}:${{ matrix.distro }})
+    needs:
+      - bake-build-amd64
+      - bake-build-arm64
+      - targets
+    if: ${{ needs.targets.outputs.has_changes == 'true' || github.event_name == 'schedule' || github.event_name == 'workflow_dispatch' }}
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include: ${{ fromJSON(needs.targets.outputs.amd64) }}
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: Set current date
+        id: date
+        shell: bash
+        run: echo "today=$(date +%Y-%m-%d)" >> "$GITHUB_OUTPUT"
+
+      - name: Use current date
+        shell: bash
+        run: echo "Current date is ${{ steps.date.outputs.date }}"
+
+      - name: Download bake metadata artifacts
+        uses: actions/download-artifact@v4
+        with:
+          pattern: bake-metadata-${{ matrix.family }}-${{ matrix.distro }}-*
+          path: bake-metadata
+          merge-multiple: true
+
+      - name: Merge manifests
+        uses: ./.github/actions/docker-merge
+        with:
+          family: ${{ matrix.family }}
+          distro: ${{ matrix.distro }}
+          metadata: |
+            bake-metadata
+          extra-tag: ${{ steps.date.outputs.today }}
+          ghcr-username: ${{ github.repository_owner }}
+          ghcr-password: ${{ secrets.GITHUB_TOKEN }}
+          docker-username: ${{ vars.DOCKERHUB_USERNAME }}
+          docker-password: ${{ secrets.DOCKERHUB_PASSWORD }}
+          dry-run: ${{ github.ref != 'refs/heads/main' }}
+
+  docker:
+    needs:
+      - merge-manifests
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check
+        run: echo "Completed successfully!"

@@ -162,70 +162,48 @@ jobs:
           ghcr-password: ${{ secrets.GITHUB_TOKEN }} # optional
           push: "false"
 
-  docker-build:
-    needs: targets
+  merge-manifests:
+    name: Merge manifests (${{ matrix.family }}:${{ matrix.distro }})
+    needs:
+      - bake-build-amd64
+      - bake-build-arm64
+      - targets
+    if: ${{ fromJSON(needs.targets.outputs.has_changes) }}
+    runs-on: ubuntu-latest
     strategy:
       fail-fast: false
       matrix:
-        include: ${{ fromJSON(needs.targets.outputs.matrix) }}
-    runs-on: ubuntu-latest
+        include: ${{ fromJSON(needs.targets.outputs.amd64) }}
     permissions:
       contents: read
-      packages: read
+      packages: write
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v5
+      - uses: actions/checkout@v5
 
-      - name: Set up Python
-        uses: actions/setup-python@v6
+      - name: Download bake metadata artifacts
+        uses: actions/download-artifact@v4
         with:
-          python-version: 3.x
-          cache: pip
+          pattern: bake-metadata-${{ matrix.family }}-${{ matrix.distro }}-*
+          path: bake-metadata
+          merge-multiple: true
 
-      - run: pip install -r requirements.txt
-
-      - name: Extract Label and Tag
-        id: extract
-        run: |
-          # Extract the full filename (e.g., label/tag.Dockerfile)
-          filename="${{ matrix.dockerfile }}"
-
-          # Extract label (e.g., 'label')
-          label=$(dirname "$filename")
-
-          # Extract tag (e.g., 'tag')
-          tag=$(basename "$filename" | cut -d. -f1)
-
-          echo "Label: $label, Tag: $tag"
-
-          # Set outputs for subsequent steps
-          echo "label=$label" >> $GITHUB_OUTPUT
-          echo "tag=$tag" >> $GITHUB_OUTPUT
-
-      - name: Check if target exists
-        id: target
-        run: |
-          python .github/scripts/check_target.py \
-            --label "${{ steps.extract.outputs.label }}" \
-            --tag "${{ steps.extract.outputs.tag }}" \
-            --target "${{ matrix.target }}"
-
-      - name: Build docker
-        id: docker
-        if: ${{ matrix.dockerfile != 'none' && steps.target.outputs.exists == 'true' }}
-        uses: ./.github/actions/docker-build-push
+      - name: Merge manifests
+        uses: ./.github/actions/docker-merge
         with:
-          label: ${{ steps.extract.outputs.label }}
-          tag: ${{ steps.extract.outputs.tag }}
-          target: ${{ matrix.target }}
-          platforms: "linux/amd64"
+          family: ${{ matrix.family }}
+          distro: ${{ matrix.distro }}
+          metadata: |
+            bake-metadata
+          ghcr-username: ${{ github.repository_owner }}
+          ghcr-password: ${{ secrets.GITHUB_TOKEN }}
+          dry-run: "true"
 
   complete:
     needs:
       - lint
       - generate
-      - docker-build
-    if: ${{ always() && !cancelled() && needs.docker-build.result != 'cancelled' }}
+      - merge-manifests
+    if: ${{ always() && !cancelled() && needs.merge-manifests.result != 'cancelled' }}
     runs-on: ubuntu-latest
     steps:
       - name: Check
@@ -238,8 +216,8 @@ jobs:
             echo "Generate failed"
             exit 1
           fi
-          if [ "${{ needs.docker-build.result }}" != 'skipped' ] && \
-             [ "${{ needs.docker-build.result }}" != 'success' ]; then
+          if [ "${{ needs.merge-manifests.result }}" != 'skipped' ] && \
+             [ "${{ needs.merge-manifests.result }}" != 'success' ]; then
             echo "Docker failed"
             exit 1
           fi
