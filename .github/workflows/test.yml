@@ -162,6 +162,42 @@ jobs:
           ghcr-password: ${{ secrets.GITHUB_TOKEN }} # optional
           push: "false"
 
+  merge-manifests:
+    name: Merge manifests (${{ matrix.family }}:${{ matrix.distro }})
+    needs:
+      - bake-build-amd64
+      - bake-build-arm64
+      - targets
+    if: ${{ fromJSON(needs.targets.outputs.has_changes) }}
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include: ${{ fromJSON(needs.targets.outputs.amd64) }}
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: Download bake metadata artifacts
+        uses: actions/download-artifact@v4
+        with:
+          pattern: bake-metadata-${{ matrix.family }}-${{ matrix.distro }}-*
+          path: bake-metadata
+          merge-multiple: true
+
+      - name: Merge manifests
+        uses: ./.github/actions/docker-merge
+        with:
+          family: ${{ matrix.family }}
+          distro: ${{ matrix.distro }}
+          metadata: |
+            bake-metadata
+          ghcr-username: ${{ github.repository_owner }}
+          ghcr-password: ${{ secrets.GITHUB_TOKEN }}
+          dry-run: "true"
+
   docker-build:
     needs: targets
     strategy:
