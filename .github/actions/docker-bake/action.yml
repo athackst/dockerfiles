@@ -119,8 +119,10 @@ runs:
         push: ${{ inputs.push }}
         set: |
           ${{ steps.gen.outputs.release }}-*.platform=${{ steps.detect.outputs.platform }}
-          *.cache-to=${{ (inputs.ghcr-password && inputs.ghcr-username) && format('type=registry,ref=ghcr.io/{0}/{1}:{2}-{3}-buildcache,mode=max', inputs.ghcr-username, inputs.family, inputs.distro, steps.detect.outputs.platform_key) || format('type=gha,mode=max,scope={0}', steps.gen.outputs.group) }}
-          *.cache-from=${{ (inputs.ghcr-password && inputs.ghcr-username) && format('type=registry,ref=ghcr.io/{0}/{1}:{2}-{3}-buildcache', inputs.ghcr-username, inputs.family, inputs.distro, steps.detect.outputs.platform_key) || format('type=gha,scope={0}', steps.gen.outputs.group) }}
+          *.cache-to=type=gha,mode=max,scope=${{ steps.gen.outputs.group }}
+          *.cache-from=type=gha,scope=${{ steps.gen.outputs.group }}
+          ${{ (inputs.push && inputs.ghcr-password && inputs.ghcr-username) && format('*.cache-to=type=registry,ref=ghcr.io/{0}/{1}:{2}-{3}-buildcache,mode=max', inputs.ghcr-username, inputs.family, inputs.distro, steps.detect.outputs.platform_key) || '' }}
+          ${{ (inputs.ghcr-password && inputs.ghcr-username) && format('*.cache-from=type=registry,ref=ghcr.io/{0}/{1}:{2}-{3}-buildcache', inputs.ghcr-username, inputs.family, inputs.distro, steps.detect.outputs.platform_key) || '' }}
           ${{ steps.gen.outputs.set_lines }}
 
     - name: Persist Bake metadata for merge

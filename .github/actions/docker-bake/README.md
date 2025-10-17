@@ -6,7 +6,7 @@ Builds per-platform images from `templates.yml` using `docker buildx bake`, uplo
 - Detects (or accepts) the target platform and computes bake variables for the requested `family` and `distro`.
 - Authenticates to Docker Hub and/or GHCR when credentials are supplied.
 - Runs `docker/bake-action@v6` to build or push the image targets.
-- Reuses BuildKit cache from GHCR when credentials are provided (falls back to the GitHub Actions cache otherwise).
+- Reuses BuildKit cache from GHCR when credentials are provided (while still priming the GitHub Actions cache as a fallback).
 - Persists the bake metadata as an artifact so the merge job can create multi-arch manifests.
 
 ## Inputs
