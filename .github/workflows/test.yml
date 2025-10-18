@@ -64,7 +64,7 @@ jobs:
     outputs:
       amd64: ${{ steps.amd64.outputs.distros }}
       arm64: ${{ steps.arm64.outputs.distros }}
-      has_changes: ${{ steps.filter.outputs.affected == 'true' }}
+      has_changes: ${{ steps.filter.outputs.affected }}
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v5
@@ -75,13 +75,14 @@ jobs:
         uses: dorny/paths-filter@v3
         id: filter
         with:
+          list-files: csv
           filters: |
             docker:
-              - '*.Dockerfile'
+              - '*/*.Dockerfile'
             action:
               - '.github/actions/docker-*/*'
             affected:
-              - '*.Dockerfile'
+              - '*/*.Dockerfile'
               - '.github/actions/docker-*/*'
 
       - name: amd64 targets
@@ -113,7 +114,7 @@ jobs:
   bake-build-amd64:
     name: Build (${{ matrix.family }}:${{ matrix.distro }} @ amd64
     needs: targets
-    if: ${{ needs.targets.outputs.has_changes }}
+    if: ${{ needs.targets.outputs.has_changes == 'true' }}
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
@@ -135,7 +136,7 @@ jobs:
   bake-build-arm64:
     name: Build (${{ matrix.family }}:${{ matrix.distro }} @ arm64)
     needs: targets
-    if: ${{ needs.targets.outputs.has_changes }}
+    if: ${{ needs.targets.outputs.has_changes == 'true' }}
     runs-on: ubuntu-24.04-arm
     strategy:
       fail-fast: false
@@ -160,7 +161,7 @@ jobs:
       - bake-build-amd64
       - bake-build-arm64
       - targets
-    if: ${{ fromJSON(needs.targets.outputs.has_changes) }}
+    if: ${{ needs.targets.outputs.has_changes == 'true' }}
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
