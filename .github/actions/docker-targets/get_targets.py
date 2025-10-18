@@ -126,10 +126,8 @@ def main() -> int:
     stage_details: list[dict[str, str]] = []
     want_platform = canonical_platform(args.platform) if args.platform else ""
     for item in collect_non_eol(data, args.platform or None):
-        if (
-            not all
-            and changed
-            and (item["family"], item["distro"]) not in changed
+        if (not all and not changed) or (
+            not all and (item["family"], item["distro"]) not in changed
         ):
             continue
         include.append(item)
@@ -144,7 +142,9 @@ def main() -> int:
             if not stage:
                 continue
             platforms = target.get("platforms", "")
-            if want_platform and not platforms_support(platforms, want_platform):
+            if want_platform and not platforms_support(
+                platforms, want_platform
+            ):
                 continue
             stage_details.append(
                 {
