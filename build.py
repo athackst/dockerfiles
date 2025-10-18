@@ -1,170 +1,193 @@
 #!/usr/bin/env python3
-"""Update script for dockerfiles."""
-import os
-import click
+"""Local script for building templates via docker buildx bake."""
+
+from __future__ import annotations
+
 import logging
+import os
+import subprocess
 from datetime import date
-from generate import templates
+from pathlib import Path
+from typing import Iterable
+
+import click
+
 from generate import generate_dockerfiles as gen
+from generate import templates
+
+"""md
+# Build (`build.py`)
+
+`build.py` wraps `docker buildx bake` so you can regenerate Dockerfiles and build (or push) the generated targets from your workstation.
+
+## Usage
+```bash
+# Regenerate Dockerfiles, build all targets locally
+python build.py all
+
+# Build a single image + target stage and push to the registry
+python build.py --push rolling --target base
+```
+
+### Options
+- `--no-generate`: Skip the file generation step.
+- `--push`: Push results to `${DOCKER_REGISTRY:-althack}` (or set `DOCKER_PUSH=true`).
+- `--target <stage>`: Limit to a single Dockerfile stage.
+- `--no-clean`: Skip the final `docker system prune -f` (or set `DOCKER_CLEAN=false`).
+
+The script always reads from the generated `docker-bake.hcl`, updating tags like `registry/repo:image-stage` and `registry/repo:image-stage-YYYY-MM-DD` when pushing.
+
+"""  # noqa:E501
 
 TODAY = date.today()
-USER = "althack"
+DEFAULT_REGISTRY = "althack"
+DOCKER_BAKE_FILE = Path(__file__).resolve().parent / "docker-bake.hcl"
 
 log = logging.getLogger(__name__)
 
 
-def should_push():
-    """Set whether or not to push from environment variables.
-
-    Env:
-        push: $DOCKER_PUSH
-    """
-    return os.getenv("DOCKER_PUSH")
+def _get_bool(value: str | None) -> bool:
+    """Return True when an environment value should be considered enabled."""
+    if value is None:
+        return False
+    return value.lower() not in {"0", "false", "no", "off", ""}
 
 
-def should_clean():
-    """Set whether or not to clean images from environment variables.
-
-    Env:
-        push: $DOCKER_CLEAN
-    """
-    return os.getenv("DOCKER_CLEAN")
+def should_push() -> bool:
+    """Return True when pushes should occur based on env/config."""
+    return _get_bool(os.getenv("DOCKER_PUSH"))
 
 
-class Docker(object):
-    """Managed docker class to hide complexity with logging output."""
+def should_clean() -> bool:
+    """Return True when a post-build prune is requested."""
+    return _get_bool(os.getenv("DOCKER_CLEAN"))
 
-    def __init__(self):
-        """Initialize docker container from environment."""
 
-    def build(self, context, dockerfile, repository, tag, target, labels):
-        """Build the specified container.
+class DockerBake:
+    """Thin wrapper around ``docker buildx bake`` invocations."""
+
+    def __init__(self, registry: str | None = None) -> None:
+        """Initialize the wrapper with a registry override.
 
         Args:
-            context: The path to the context
-            dockerfile: The relative path to the dockerfile from the context
-            repository: The name of the repository to build
-            tag: The tag for the build
-            target: The target to build in a multi-stage docker
-            labels: Extra label to add to the image
+            registry: Optional registry root; falls back to env/constant.
         """
-        build_tag = f"{repository}:{tag}"
-        log.info(f"Building {context}{dockerfile} {target} as {build_tag}")
-        dockerfile = os.path.join(context, dockerfile)
-        ret = os.system(
-            f"docker build "
-            f"--file {dockerfile} "
-            f"--target {target} "
-            f"--tag {build_tag} "
-            f"--pull {context}"
+        self.registry = registry or os.getenv(
+            "DOCKER_REGISTRY", DEFAULT_REGISTRY
         )
-        if ret != 0:
-            raise Exception("Error building docker image")
-        log.info(f"Done building {build_tag}")
+        self.bake_file = str(DOCKER_BAKE_FILE)
 
-    def tag(self, repository, prev_tag, new_tag):
-        """Tag a built image."""
-        image = f"{repository}:{prev_tag}"
-        log.info(f"Taging {image} --> {repository}:{new_tag}")
-        ret = os.system(f"docker tag {image} {repository}:{new_tag}")
-        if ret != 0:
-            raise Exception("Error tagging docker image")
-
-    def push(self, repository, tag):
-        """Push a built repository:tag to a registry.
-
-        Format: repository:tag
+    def bake(
+        self,
+        target: str,
+        *,
+        push: bool,
+        tags: Iterable[str] | None = None,
+    ) -> None:
+        """Execute a bake target with optional push settings.
 
         Args:
-            repository: The name of the repository.
-            tag: The name of the tag.
+            target: Bake target name (e.g. ``ros2-rolling-base``).
+            push: Whether to push instead of loading locally.
+            tags: Additional tags to apply when pushing.
         """
-        log.info(f"Pushing {repository}:{tag}")
-        ret = os.system(f"docker push {repository}:{tag}")
+        cmd: list[str] = [
+            "docker",
+            "buildx",
+            "bake",
+            "--file",
+            self.bake_file,
+            "--debug",
+        ]
+
+        cmd.append("--push" if push else "--load")
+
+        if push and tags:
+            tag_list = ",".join(tags)
+            cmd.extend(["--set", f"{target}.tags={tag_list}"])
+
+        cmd.append(target)
+        log.debug("Running: %s", " ".join(cmd))
+        ret = os.system(" ".join(cmd))
         if ret != 0:
-            raise Exception("Error pushing docker image")
+            raise Exception("Error in docker bake")
 
-        log.info(f"Done pushing {repository}:{tag}")
-
-    def prune(self):
-        """Prune dangling images."""
-        ret = os.system("docker system prune -f")
-        if ret != 0:
-            raise Exception("Error pruning docker images")
-
-    def rmi(self, repository, tag):
-        """Remove image by repository and tag."""
-        image = f"{repository}:{tag}"
-        ret = os.system(f"docker rmi {image}")
-        if ret != 0:
-            raise Exception("Error removing docker image")
+    @staticmethod
+    def prune() -> None:
+        """Prune dangling Docker resources."""
+        subprocess.run(["docker", "system", "prune", "-f"], check=True)
 
 
-def build(image, target, push, clean):
-    """Build the docker images."""
+def build(image: str, target: str, push: bool, clean: bool) -> None:
+    """Build selected templates with docker bake.
+
+    Args:
+        image: Template key or ``all`` for every template.
+        target: Optional specific stage to build.
+        push: Whether to push artifacts to the registry.
+        clean: Whether to prune Docker after completion.
+    """
     builds = templates.images(eol=True)
     if image != "all":
         builds = {image: templates.images()[image]}
 
-    # Build docker images.
-    dockerpy = Docker()
-    path_to_script = os.path.dirname(os.path.abspath(__file__))
-    for name in builds:
-        folder = builds[name]["repository"]
-        repository = f"{USER}/{folder}"
-        targets = builds[name]["targets"] if not target else [target]
-        context = f"{path_to_script}/{folder}/"
-        dockerfile = f"{name}.Dockerfile"
-        labels = {"version": f"{TODAY}"}
-        for target in targets:
-            latest_tag = f"{name}-{target}"
-            dated_tag = f"{latest_tag}-{TODAY}"
-            dockerpy.build(
-                context=context,
-                dockerfile=dockerfile,
-                repository=repository,
-                tag=latest_tag,
-                target=target,
-                labels=labels,
-            )
+    baker = DockerBake()
+    push_requested = push or should_push()
 
-            if push or should_push():
-                dockerpy.push(repository=repository, tag=latest_tag)
-                dockerpy.tag(
-                    repository=repository,
-                    prev_tag=latest_tag,
-                    new_tag=dated_tag
-                )
-                dockerpy.push(repository=repository, tag=dated_tag)
-                dockerpy.rmi(repository=repository, tag=dated_tag)
+    for name, definition in builds.items():
+        repo = definition["repository"]
+        stages = definition["targets"] if not target else [target]
+        print(f"***Found Stages: {stages}")
+        for current_stage in stages:
+            bake_target = f"{repo}-{name}-{current_stage}"
+            base_tag = f"{baker.registry}/{repo}:{name}-{current_stage}"
+            log.info(
+                "Building %s (target=%s push=%s)",
+                base_tag,
+                bake_target,
+                push_requested,
+            )
+            extra_tags = None
+            if push_requested:
+                extra_tags = [base_tag, f"{base_tag}-{TODAY}"]
+            baker.bake(bake_target, push=push_requested, tags=extra_tags)
+
+    if not builds:
+        raise Exception(f"No builds found for {image}")
+
     if clean or should_clean():
-        dockerpy.prune()
+        baker.prune()
 
 
 @click.command()
 @click.option(
-    "--generate/--no-generate", default=True, help="Generate docker files."
+    "--generate/--no-generate",
+    default=True,
+    help="Generate docker files first.",
 )
 @click.option(
     "--push/--no-push",
     default=False,
-    help="Push generated images to DockerHub.",
+    help="Push generated images to the configured registry.",
 )
 @click.option(
     "--clean/--no-clean",
     default=True,
-    help="Clean dated content and old images.",
+    help="Run `docker system prune -f` after the build.",
 )
-@click.option("--target", default="", help="The target to build")
+@click.option(
+    "--target", default="", help="Limit to a specific Dockerfile target."
+)
 @click.argument("image", type=click.Choice(list(templates.images()) + ["all"]))
-def main(generate, push, clean, image, target):
-    """Set up logging and trigger build."""
+def main(
+    generate: bool, push: bool, clean: bool, image: str, target: str
+) -> None:
+    """CLI entry point dispatching generate + build routines."""
     log.setLevel(logging.DEBUG)
-    formatter = logging.Formatter("%(message)s")
-    ch = logging.StreamHandler()
-    ch.setLevel(logging.DEBUG)
-    ch.setFormatter(formatter)
-    log.addHandler(ch)
+    handler = logging.StreamHandler()
+    handler.setFormatter(logging.Formatter("%(message)s"))
+    handler.setLevel(logging.DEBUG)
+    log.addHandler(handler)
 
     if generate:
         gen(log)
