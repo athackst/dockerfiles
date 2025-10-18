@@ -1,0 +1,57 @@
+name: Run generate
+
+on:
+  pull_request: # Temp change to test
+  pull_request_target:
+    types:
+      - opened
+      - synchronize
+      - reopened
+  workflow_dispatch:
+
+permissions:
+  contents: write   # Required for merging the PR
+  pull-requests: write  # Required for managing pull requests
+
+jobs:
+  generate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+            token: ${{ secrets.COMMIT_TOKEN }}
+            fetch-depth: 0
+            ref: ${{ github.event.pull_request.head.ref }}
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: 3.x
+          cache: pip
+      - name: Run generate script
+        run: |
+          python -m pip install --upgrade pip
+          if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+          ./generate.py
+      - name: Commit any changes
+        id: commit
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          if [[ $(git status --porcelain) ]]; then
+            git add .
+            git commit -m "Automated update from generate.py"
+            echo "Changes committed."
+            echo "changes=true" >> $GITHUB_OUTPUT
+          else
+            echo "No changes to commit."
+            echo "changes=false" >> $GITHUB_OUTPUT
+          fi
+      - name: Push changes
+        if: steps.commit.outputs.changes == 'true'
+        run: |
+          git push
+          gh pr comment ${{ github.event.pull_request.number }} \
+            --body "Automated changes were made by running \`generate.py\`. Please review the updates."
+        env:
+          GITHUB_TOKEN: ${{ secrets.COMMIT_TOKEN }}
