@@ -15,10 +15,11 @@ import click
 from generate import generate_dockerfiles as gen
 from generate import templates
 
-"""md
+""" md
 # Build (`build.py`)
 
-`build.py` wraps `docker buildx bake` so you can regenerate Dockerfiles and build (or push) the generated targets from your workstation.
+`build.py` wraps `docker buildx bake` so you can regenerate Dockerfiles and build
+(or push) the generated targets from your workstation.
 
 ## Usage
 ```bash
@@ -35,9 +36,10 @@ python build.py --push rolling --target base
 - `--target <stage>`: Limit to a single Dockerfile stage.
 - `--no-clean`: Skip the final `docker system prune -f` (or set `DOCKER_CLEAN=false`).
 
-The script always reads from the generated `docker-bake.hcl`, updating tags like `registry/repo:image-stage` and `registry/repo:image-stage-YYYY-MM-DD` when pushing.
+The script always reads from the generated `docker-bake.hcl`, updating tags like
+`registry/repo:image-stage` and `registry/repo:image-stage-YYYY-MM-DD` when pushing.
 
-"""  # noqa:E501
+"""
 
 TODAY = date.today()
 DEFAULT_REGISTRY = "althack"
