@@ -29,6 +29,7 @@ jobs:
         uses: dorny/paths-filter@v3
         id: filter
         with:
+          list-files: csv
           filters: |
             docker:
               - '*.Dockerfile'
