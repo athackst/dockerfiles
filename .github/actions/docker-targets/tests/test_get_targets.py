@@ -142,6 +142,32 @@ class GetTargetsTestCase(unittest.TestCase):
             ],
         )
 
+    def test_main_with_no_changes_produces_empty_outputs(self) -> None:
+        self._write_templates(
+            """
+            ros2:
+              - name: rolling
+                targets:
+                  - target: base
+            """
+        )
+
+        argv = [
+            "get_targets.py",
+            "--all",
+            "false",
+            "--changed",
+            "",
+        ]
+        with patch.object(sys, "argv", argv):
+            exit_code = TARGETS_MODULE.main()
+
+        self.assertEqual(exit_code, 0)
+        outputs = self._outputs()
+        self.assertEqual(outputs.get("distros"), [])
+        self.assertEqual(outputs.get("families"), [])
+        self.assertEqual(outputs.get("stages"), [])
+
     def test_collect_non_eol_respects_platform_filter(self) -> None:
         data = {
             "ros2": [
