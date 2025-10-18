@@ -46,10 +46,17 @@
       ]
     },
     {
+      "label": "action tests",
+      "type": "shell",
+      "command": "python -m unittest discover -s .github/actions -p 'test_*.py'",
+      "problemMatcher": "$python"
+    },
+    {
       "label": "test",
       "dependsOn": [
         "flake8",
-        "pydocstyle"
+        "pydocstyle",
+        "action tests"
       ]
     },
     {
