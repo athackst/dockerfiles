@@ -142,9 +142,7 @@ def main() -> int:
             if not stage:
                 continue
             platforms = target.get("platforms", "")
-            if want_platform and not platforms_support(
-                platforms, want_platform
-            ):
+            if want_platform and not platforms_support(platforms, want_platform):
                 continue
             stage_details.append(
                 {

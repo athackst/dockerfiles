@@ -11,10 +11,7 @@ from unittest.mock import MagicMock, patch
 
 def load_get_variables_module():
     # Ensure the parent directory (containing merge_manifests.py) is importable
-    module_path = (
-        Path(__file__).resolve().parents[1]
-        / "get_variables.py"
-    )
+    module_path = Path(__file__).resolve().parents[1] / "get_variables.py"
     spec = importlib.util.spec_from_file_location(
         "get_variables_under_test", module_path
     )
@@ -38,9 +35,7 @@ class GetVariablesTestCase(unittest.TestCase):
         self.tmpdir.cleanup()
 
     def _write_templates(self, content: str) -> None:
-        Path("templates.yml").write_text(
-            textwrap.dedent(content), encoding="utf-8"
-        )
+        Path("templates.yml").write_text(textwrap.dedent(content), encoding="utf-8")
 
     def _run_main(self, argv: list[str]) -> int:
         with patch.object(sys, "argv", argv):
@@ -94,9 +89,7 @@ class GetVariablesTestCase(unittest.TestCase):
         self.assertEqual(stages, ["base", "dev"])
 
         stage_targets = json.loads(outputs["stage_targets"])
-        self.assertEqual(
-            stage_targets, ["ros2-rolling-base", "ros2-rolling-dev"]
-        )
+        self.assertEqual(stage_targets, ["ros2-rolling-base", "ros2-rolling-dev"])
 
         set_lines = outputs["set_lines"]
         self.assertIn("ghcr.io/gh/ros2", set_lines)

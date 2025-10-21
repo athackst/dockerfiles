@@ -1,7 +1,15 @@
 {
-    "python.defaultInterpreterPath": "/usr/bin/python3",
-    "editor.rulers": [80],
-    "black-formatter.args": [
-        "--line-length=80"
+    "python.terminal.activateEnvInCurrentTerminal": true,
+    "python.defaultInterpreterPath": ".venv/bin/python",
+    "editor.rulers": [
+        88
+    ],
+    "[python]": {
+        "editor.formatOnSave": true,
+        "editor.defaultFormatter": "ms-python.black-formatter"
+    },
+    "python.analysis.typeCheckingMode": "off",
+    "flake8.args": [
+        "--config=/workspaces/dockerfiles/setup.cfg"
     ],
 }

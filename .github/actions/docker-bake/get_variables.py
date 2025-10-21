@@ -198,9 +198,7 @@ def main() -> int:
         if args.ghcr_username:
             destinations.append(f"ghcr.io/{args.ghcr_username}/{args.family}")
         if args.docker_username:
-            destinations.append(
-                f"docker.io/{args.docker_username}/{args.family}"
-            )
+            destinations.append(f"docker.io/{args.docker_username}/{args.family}")
 
         if args.digest:
             set_lines.append(f"{tname}.tags=")

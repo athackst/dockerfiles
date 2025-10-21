@@ -18,9 +18,7 @@ def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(
         description="Create multi-arch manifests from bake metadata."
     )
-    parser.add_argument(
-        "--family", required=True, help="Program/family (e.g., ros2)."
-    )
+    parser.add_argument("--family", required=True, help="Program/family (e.g., ros2).")
     parser.add_argument(
         "--distro", required=True, help="Distro/release (e.g., rolling)."
     )
@@ -29,9 +27,7 @@ def parse_args() -> argparse.Namespace:
         required=True,
         help="Newline/comma separated list of metadata paths.",
     )
-    parser.add_argument(
-        "--gh-owner", default="", help="GHCR owner/org for final tags."
-    )
+    parser.add_argument("--gh-owner", default="", help="GHCR owner/org for final tags.")
     parser.add_argument(
         "--dockerhub-username",
         default="",
@@ -200,9 +196,7 @@ def compute_tags(
     if dockerhub_username:
         tags.append(f"docker.io/{dockerhub_username}/{family}:{suffix}")
         if extra:
-            tags.append(
-                f"docker.io/{dockerhub_username}/{family}:{suffix}-{extra}"
-            )
+            tags.append(f"docker.io/{dockerhub_username}/{family}:{suffix}-{extra}")
     return tags
 
 
@@ -220,16 +214,14 @@ def main() -> int:
     args = parse_args()
     metadata_paths = resolve_metadata_paths(args.metadata_list)
     target_map = collect_targets(metadata_paths)
-    release_targets = ensure_release_targets(
-        args.family, args.distro, target_map
-    )
+    release_targets = ensure_release_targets(args.family, args.distro, target_map)
 
     created_tags: Dict[str, List[str]] = {}
     prefix = f"{args.family}-{args.distro}-"
     for target, entries in sorted(release_targets.items()):
         if not target.startswith(prefix):
             continue
-        stage_name = target[len(prefix):]
+        stage_name = target[len(prefix) :]
         refs = build_refs(entries)
         if not refs:
             continue

@@ -69,8 +69,9 @@ class Templates:
                 continue
             name = distro["name"]
             distro["compose_file"] = f"{repository}.docker-compose.yml.jinja"
-            distro["compose_out_file"] = \
+            distro["compose_out_file"] = (
                 f"docker-compose/{repository}/{name}-docker-compose.yml"
+            )
             docker_compose_files.append(distro)
         return docker_compose_files
 

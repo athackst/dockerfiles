@@ -74,9 +74,7 @@ class DockerBake:
         Args:
             registry: Optional registry root; falls back to env/constant.
         """
-        self.registry = registry or os.getenv(
-            "DOCKER_REGISTRY", DEFAULT_REGISTRY
-        )
+        self.registry = registry or os.getenv("DOCKER_REGISTRY", DEFAULT_REGISTRY)
         self.bake_file = str(DOCKER_BAKE_FILE)
 
     def bake(
@@ -177,13 +175,9 @@ def build(image: str, target: str, push: bool, clean: bool) -> None:
     default=True,
     help="Run `docker system prune -f` after the build.",
 )
-@click.option(
-    "--target", default="", help="Limit to a specific Dockerfile target."
-)
+@click.option("--target", default="", help="Limit to a specific Dockerfile target.")
 @click.argument("image", type=click.Choice(list(templates.images()) + ["all"]))
-def main(
-    generate: bool, push: bool, clean: bool, image: str, target: str
-) -> None:
+def main(generate: bool, push: bool, clean: bool, image: str, target: str) -> None:
     """CLI entry point dispatching generate + build routines."""
     log.setLevel(logging.DEBUG)
     handler = logging.StreamHandler()
