@@ -35,6 +35,13 @@ kilted
 * [kilted-full](https://github.com/athackst/dockerfiles/blob/main/ros2/kilted.Dockerfile)
 * [kilted-gazebo](https://github.com/athackst/dockerfiles/blob/main/ros2/kilted.Dockerfile)
 
+kilted-cuda
+  
+* [kilted-cuda-base](https://github.com/athackst/dockerfiles/blob/main/ros2/kilted-cuda.Dockerfile)
+* [kilted-cuda-dev](https://github.com/athackst/dockerfiles/blob/main/ros2/kilted-cuda.Dockerfile)
+* [kilted-cuda-full](https://github.com/athackst/dockerfiles/blob/main/ros2/kilted-cuda.Dockerfile)
+* [kilted-cuda-gazebo](https://github.com/athackst/dockerfiles/blob/main/ros2/kilted-cuda.Dockerfile)
+
 jazzy
   
 * [jazzy-base](https://github.com/athackst/dockerfiles/blob/main/ros2/jazzy.Dockerfile)

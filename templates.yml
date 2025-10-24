@@ -110,6 +110,21 @@ ros2:
     base_image: "ubuntu"
     image_version: "24.04"
   -
+    name: kilted-cuda
+    ros_distro: kilted
+    targets:
+      - target: base
+        platforms: "linux/amd64"
+      - target: dev
+        platforms: "linux/amd64"
+      - target: full
+        platforms: "linux/amd64"
+      - target: gazebo
+        platforms: "linux/amd64"
+    python_version: "3.12"
+    base_image: "nvidia/cuda"
+    image_version: "13.0.1-cudnn-runtime-ubuntu24.04"
+  -
     name: jazzy
     ros_distro: jazzy
     targets:

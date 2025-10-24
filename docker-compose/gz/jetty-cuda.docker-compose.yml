@@ -1,0 +1,28 @@
+ # Note: Run `xhost +local:docker` on the host before starting this container
+
+services:
+  jetty:
+    image: althack/ros2:kilted-cuda-gazebo
+    gpus: all
+    environment:
+      - DISPLAY=${DISPLAY}
+      - XAUTHORITY=${XAUTHORITY}
+      - XDG_RUNTIME_DIR=${XDG_RUNTIME_DIR}
+      - NVIDIA_VISIBLE_DEVICES=all
+      - NVIDIA_DRIVER_CAPABILITIES=compute,utility,video,graphics,display
+      # - LIBGL_ALWAYS_SOFTWARE=1  # Force software rendering
+      - MESA_GL_VERSION_OVERRIDE=3.3
+    volumes:
+      - /tmp/.X11-unix:/tmp/.X11-unix
+      - /run/user/1000:/run/user/1000
+      # - /${XAUTHORITY:~$HOME/.Xauthority}:/root/.Xauthority:ro
+    ipc: host
+    shm_size: "2gb"
+    devices:
+      - /dev/dri:/dev/dri
+    network_mode: host  # Use host networking
+    security_opt:
+      - seccomp=unconfined
+    command: ros2 run rviz2 rviz2
+    stdin_open: true # docker run -i
+    tty: true        # docker run -t

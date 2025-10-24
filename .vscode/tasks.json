@@ -107,6 +107,7 @@
         "rolling",
         "rolling-cuda",
         "kilted",
+        "kilted-cuda",
         "jazzy",
         "jazzy-cuda",
         "humble",
