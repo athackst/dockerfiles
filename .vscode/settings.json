@@ -1,6 +1,4 @@
 {
-    "python.terminal.activateEnvInCurrentTerminal": true,
-    "python.defaultInterpreterPath": ".venv/bin/python",
     "editor.rulers": [
         88
     ],
