@@ -162,7 +162,7 @@ jobs:
       - uses: actions/checkout@v5
 
       - name: Download bake metadata artifacts
-        uses: actions/download-artifact@v5
+        uses: actions/download-artifact@v6
         with:
           pattern: bake-metadata-${{ matrix.family }}-${{ matrix.distro }}-*
           path: bake-metadata
