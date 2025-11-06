@@ -11,8 +11,8 @@ mccabe==0.7.0
 mdurl==0.1.2
 packaging==25.0
 pycodestyle==2.14.0
-pydantic==2.12.3
-pydantic_core==2.41.4
+pydantic==2.12.4
+pydantic_core==2.41.5
 pyflakes==3.4.0
 Pygments==2.19.2
 pyparsing==3.2.5
