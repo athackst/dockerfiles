@@ -23,7 +23,7 @@ jobs:
       has_changes: ${{ steps.filter.outputs.docker == 'true' }}
 
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
 
       - name: Find changed files
         uses: dorny/paths-filter@v3
@@ -60,7 +60,7 @@ jobs:
         include: ${{ fromJSON(needs.targets.outputs.amd64) }}
 
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
 
       - name: Build via composite action
         uses: ./.github/actions/docker-bake
@@ -84,7 +84,7 @@ jobs:
         include: ${{ fromJSON(needs.targets.outputs.arm64) }}
 
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
 
       - name: Build via composite action
         uses: ./.github/actions/docker-bake
@@ -113,7 +113,7 @@ jobs:
       contents: read
       packages: write
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
 
       - name: Set current date
         id: date

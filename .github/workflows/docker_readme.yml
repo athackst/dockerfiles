@@ -16,7 +16,7 @@ jobs:
       repos: ${{ steps.amd64.outputs.families }}
 
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
 
       - name: Generate list of amd64 targets (filtered)
         id: amd64
@@ -33,7 +33,7 @@ jobs:
 
     steps:
       - name: git checkout
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
       - name: Update repo description
         uses: peter-evans/dockerhub-description@v5
         with:
