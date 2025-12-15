@@ -125,7 +125,7 @@ jobs:
         run: echo "Current date is ${{ steps.date.outputs.date }}"
 
       - name: Download bake metadata artifacts
-        uses: actions/download-artifact@v6
+        uses: actions/download-artifact@v7
         with:
           pattern: bake-metadata-${{ matrix.family }}-${{ matrix.distro }}-*
           path: bake-metadata
