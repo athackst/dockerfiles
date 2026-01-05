@@ -1,5 +1,5 @@
 annotated-types==0.7.0
-certifi==2025.11.12
+certifi==2026.1.4
 charset-normalizer==3.4.4
 click==8.3.1
 flake8==7.3.0
@@ -18,7 +18,7 @@ Pygments==2.19.2
 pyparsing==3.3.1
 requests==2.32.5
 rich==14.2.0
-ruamel.yaml==0.19.0
+ruamel.yaml==0.19.1
 ruamel.yaml.clib==0.2.15
 shellingham==1.5.4
 tqdm==4.67.1
