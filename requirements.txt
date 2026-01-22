@@ -9,7 +9,7 @@ markdown-it-py==4.0.0
 MarkupSafe==3.0.3
 mccabe==0.7.0
 mdurl==0.1.2
-packaging==25.0
+packaging==26.0
 pycodestyle==2.14.0
 pydantic==2.12.5
 pydantic_core==2.41.5
