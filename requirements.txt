@@ -21,7 +21,7 @@ rich==14.3.2
 ruamel.yaml==0.19.1
 ruamel.yaml.clib==0.2.15
 shellingham==1.5.4
-tqdm==4.67.2
+tqdm==4.67.3
 typer==0.21.1
 typing-inspection==0.4.2
 typing_extensions==4.15.0
