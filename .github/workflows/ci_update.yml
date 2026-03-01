@@ -1,0 +1,25 @@
+name: CI Update
+
+on:
+  repository_dispatch:
+    types:
+      - ci-update
+  workflow_dispatch:
+
+concurrency:
+  group: "ci-update-${{ github.ref }}"
+  cancel-in-progress: false
+
+jobs:
+  ci-update:
+    permissions:
+      contents: write
+      pull-requests: write
+      # Required in this environment to allow PRs that modify .github/workflows/*.
+      actions: write
+    uses: athackst/ci/.github/workflows/ci_updater.yml@main
+    with:
+      create-pr: true
+      automerge: true
+    secrets:
+      token: ${{ secrets.CI_BOT_TOKEN }}

@@ -14,10 +14,9 @@ Instructions on how to duplicate my IDE:
 Images will continue to be supported so long as they haven't reached EOL
 
 * **Ignition/Gazebo** https://gazebosim.org/docs/all/releases
-* **Gazebo (classic)** http://classic.gazebosim.org/#status
-* **ROS** http://wiki.ros.org/Distributions
+* **Gazebo (classic)** https://classic.gazebosim.org/#status
+* **ROS** https://wiki.ros.org/Distributions
 * **ROS2** https://docs.ros.org/en/rolling/Releases.html
-
 
 ## Quick start
 

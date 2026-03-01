@@ -20,7 +20,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v6
         with:
-            token: ${{ secrets.COMMIT_TOKEN }}
+            token: ${{ secrets.CI_BOT_TOKEN }}
             fetch-depth: 0
             ref: ${{ github.event.pull_request.head.ref }}
       - name: Set up Python
@@ -54,4 +54,4 @@ jobs:
           gh pr comment ${{ github.event.pull_request.number }} \
             --body "Automated changes were made by running \`generate.py\`. Please review the updates."
         env:
-          GITHUB_TOKEN: ${{ secrets.COMMIT_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.CI_BOT_TOKEN }}
