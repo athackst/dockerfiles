@@ -1,0 +1,23 @@
+name: PR Bot
+
+on:
+  pull_request:
+  pull_request_target:
+
+jobs:
+  pr-label:
+    permissions:
+      contents: read
+      pull-requests: write
+    uses: athackst/ci/.github/workflows/pr_labeler.yml@main
+    secrets: inherit
+
+  pr-automerge:
+    needs: pr-label
+    if: ${{ github.event_name == 'pull_request_target' }}
+    permissions:
+      contents: write
+      pull-requests: write
+    uses: athackst/ci/.github/workflows/automerge.yml@main
+    secrets:
+      token: ${{ secrets.CI_BOT_TOKEN }}
