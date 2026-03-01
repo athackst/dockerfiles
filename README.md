@@ -1,6 +1,6 @@
 # dockerfiles
 
-[![Documentation](https://github.com/athackst/dockerfiles/actions/workflows/publish_docs.yml/badge.svg)](https://github.com/athackst/dockerfiles/actions/workflows/publish_docs.yml)
+[![Documentation](https://github.com/athackst/dockerfiles/actions/workflows/site.yml/badge.svg)](https://github.com/athackst/dockerfiles/actions/workflows/site.yml)
 [![Dockerfiles](https://github.com/athackst/dockerfiles/actions/workflows/docker.yml/badge.svg)](https://github.com/athackst/dockerfiles/actions/workflows/docker.yml)
 
 These are multi-stage docker images I use for developing with [VSCode](https://code.visualstudio.com/).
