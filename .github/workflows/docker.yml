@@ -116,8 +116,6 @@ jobs:
           distro: ${{ matrix.distro }} # e.g. rolling
           ghcr-username: ${{ github.repository_owner }}
           ghcr-password: ${{ secrets.GITHUB_TOKEN }}
-          docker-username: ${{ vars.DOCKERHUB_USERNAME }}
-          docker-password: ${{ secrets.DOCKERHUB_PASSWORD }}
           push: ${{ github.ref == 'refs/heads/main' }}
 
   bake-build-arm64:
@@ -140,8 +138,6 @@ jobs:
           distro: ${{ matrix.distro }} # e.g. rolling
           ghcr-username: ${{ github.repository_owner }}
           ghcr-password: ${{ secrets.GITHUB_TOKEN }}
-          docker-username: ${{ vars.DOCKERHUB_USERNAME }}
-          docker-password: ${{ secrets.DOCKERHUB_PASSWORD }}
           push: ${{ github.ref == 'refs/heads/main' }}
 
   merge-manifests:
@@ -169,7 +165,7 @@ jobs:
 
       - name: Use current date
         shell: bash
-        run: echo "Current date is ${{ steps.date.outputs.date }}"
+        run: echo "Current date is ${{ steps.date.outputs.today }}"
 
       - name: Download bake metadata artifacts
         uses: actions/download-artifact@v8
@@ -190,7 +186,7 @@ jobs:
           ghcr-password: ${{ secrets.GITHUB_TOKEN }}
           docker-username: ${{ vars.DOCKERHUB_USERNAME }}
           docker-password: ${{ secrets.DOCKERHUB_PASSWORD }}
-          dry-run: ${{ github.ref != 'refs/heads/main' }}
+          dry-run: ${{ github.ref != 'refs/heads/main' && github.event_name != 'workflow_dispatch' }}
 
   docker:
     needs:
