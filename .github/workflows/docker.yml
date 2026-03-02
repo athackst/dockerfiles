@@ -21,9 +21,56 @@ jobs:
       amd64: ${{ steps.amd64.outputs.distros }}
       arm64: ${{ steps.arm64.outputs.distros }}
       has_changes: ${{ steps.filter.outputs.docker == 'true' }}
+      dockerhub-rate-limit-before: ${{ steps.dockerhub_rate_before.outputs.rate_limit }}
+      dockerhub-rate-remaining-before: ${{ steps.dockerhub_rate_before.outputs.rate_remaining }}
+      dockerhub-rate-source-before: ${{ steps.dockerhub_rate_before.outputs.source }}
 
     steps:
       - uses: actions/checkout@v6
+      - name: Docker Hub rate limit (before)
+        id: dockerhub_rate_before
+        env:
+          DOCKERHUB_USERNAME: ${{ vars.DOCKERHUB_USERNAME }}
+          DOCKERHUB_PASSWORD: ${{ secrets.DOCKERHUB_PASSWORD }}
+        shell: bash
+        continue-on-error: true
+        run: |
+          image_ref="library/alpine"
+          token_url="https://auth.docker.io/token?service=registry.docker.io&scope=repository:${image_ref}:pull"
+          source="anonymous"
+          token=""
+
+          if [[ -n "${DOCKERHUB_USERNAME}" && -n "${DOCKERHUB_PASSWORD}" ]]; then
+            source="authenticated"
+            token="$(curl -fsSL -u "${DOCKERHUB_USERNAME}:${DOCKERHUB_PASSWORD}" "${token_url}" | python3 -c 'import sys,json; print(json.load(sys.stdin).get("token",""))' || true)"
+          else
+            token="$(curl -fsSL "${token_url}" | python3 -c 'import sys,json; print(json.load(sys.stdin).get("token",""))' || true)"
+          fi
+
+          if [[ -z "${token}" ]]; then
+            echo "Unable to fetch Docker Hub token for rate-limit check."
+            exit 0
+          fi
+
+          headers="$(mktemp)"
+          curl -fsSI \
+            -H "Authorization: Bearer ${token}" \
+            -H "Accept: application/vnd.docker.distribution.manifest.v2+json" \
+            "https://registry-1.docker.io/v2/${image_ref}/manifests/latest" > "${headers}" || true
+
+          rate_limit="$(grep -i '^ratelimit-limit:' "${headers}" | tail -n 1 | cut -d':' -f2- | xargs || true)"
+          rate_remaining="$(grep -i '^ratelimit-remaining:' "${headers}" | tail -n 1 | cut -d':' -f2- | xargs || true)"
+
+          echo "source=${source}" >> "$GITHUB_OUTPUT"
+          echo "rate_limit=${rate_limit}" >> "$GITHUB_OUTPUT"
+          echo "rate_remaining=${rate_remaining}" >> "$GITHUB_OUTPUT"
+
+          {
+            echo "### Docker Hub Rate Limit (Before)"
+            echo "- Source: \`${source}\`"
+            echo "- Limit: \`${rate_limit:-unknown}\`"
+            echo "- Remaining: \`${rate_remaining:-unknown}\`"
+          } >> "$GITHUB_STEP_SUMMARY"
 
       - name: Find changed files
         uses: dorny/paths-filter@v3
@@ -69,8 +116,6 @@ jobs:
           distro: ${{ matrix.distro }} # e.g. rolling
           ghcr-username: ${{ github.repository_owner }}
           ghcr-password: ${{ secrets.GITHUB_TOKEN }}
-          docker-username: ${{ vars.DOCKERHUB_USERNAME }}
-          docker-password: ${{ secrets.DOCKERHUB_PASSWORD }}
           push: ${{ github.ref == 'refs/heads/main' }}
 
   bake-build-arm64:
@@ -93,8 +138,6 @@ jobs:
           distro: ${{ matrix.distro }} # e.g. rolling
           ghcr-username: ${{ github.repository_owner }}
           ghcr-password: ${{ secrets.GITHUB_TOKEN }}
-          docker-username: ${{ vars.DOCKERHUB_USERNAME }}
-          docker-password: ${{ secrets.DOCKERHUB_PASSWORD }}
           push: ${{ github.ref == 'refs/heads/main' }}
 
   merge-manifests:
@@ -122,7 +165,7 @@ jobs:
 
       - name: Use current date
         shell: bash
-        run: echo "Current date is ${{ steps.date.outputs.date }}"
+        run: echo "Current date is ${{ steps.date.outputs.today }}"
 
       - name: Download bake metadata artifacts
         uses: actions/download-artifact@v8
@@ -143,12 +186,84 @@ jobs:
           ghcr-password: ${{ secrets.GITHUB_TOKEN }}
           docker-username: ${{ vars.DOCKERHUB_USERNAME }}
           docker-password: ${{ secrets.DOCKERHUB_PASSWORD }}
-          dry-run: ${{ github.ref != 'refs/heads/main' }}
+          dry-run: ${{ github.ref != 'refs/heads/main' && github.event_name != 'workflow_dispatch' }}
 
   docker:
     needs:
+      - targets
       - merge-manifests
     runs-on: ubuntu-latest
     steps:
+      - name: Docker Hub rate limit (after)
+        id: dockerhub_rate_after
+        env:
+          DOCKERHUB_USERNAME: ${{ vars.DOCKERHUB_USERNAME }}
+          DOCKERHUB_PASSWORD: ${{ secrets.DOCKERHUB_PASSWORD }}
+        shell: bash
+        continue-on-error: true
+        run: |
+          image_ref="library/alpine"
+          token_url="https://auth.docker.io/token?service=registry.docker.io&scope=repository:${image_ref}:pull"
+          source="anonymous"
+          token=""
+
+          if [[ -n "${DOCKERHUB_USERNAME}" && -n "${DOCKERHUB_PASSWORD}" ]]; then
+            source="authenticated"
+            token="$(curl -fsSL -u "${DOCKERHUB_USERNAME}:${DOCKERHUB_PASSWORD}" "${token_url}" | python3 -c 'import sys,json; print(json.load(sys.stdin).get("token",""))' || true)"
+          else
+            token="$(curl -fsSL "${token_url}" | python3 -c 'import sys,json; print(json.load(sys.stdin).get("token",""))' || true)"
+          fi
+
+          if [[ -z "${token}" ]]; then
+            echo "Unable to fetch Docker Hub token for rate-limit check."
+            exit 0
+          fi
+
+          headers="$(mktemp)"
+          curl -fsSI \
+            -H "Authorization: Bearer ${token}" \
+            -H "Accept: application/vnd.docker.distribution.manifest.v2+json" \
+            "https://registry-1.docker.io/v2/${image_ref}/manifests/latest" > "${headers}" || true
+
+          rate_limit="$(grep -i '^ratelimit-limit:' "${headers}" | tail -n 1 | cut -d':' -f2- | xargs || true)"
+          rate_remaining="$(grep -i '^ratelimit-remaining:' "${headers}" | tail -n 1 | cut -d':' -f2- | xargs || true)"
+
+          echo "source=${source}" >> "$GITHUB_OUTPUT"
+          echo "rate_limit=${rate_limit}" >> "$GITHUB_OUTPUT"
+          echo "rate_remaining=${rate_remaining}" >> "$GITHUB_OUTPUT"
+
+          {
+            echo "### Docker Hub Rate Limit (After)"
+            echo "- Source: \`${source}\`"
+            echo "- Limit: \`${rate_limit:-unknown}\`"
+            echo "- Remaining: \`${rate_remaining:-unknown}\`"
+          } >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Docker Hub rate delta
+        if: always()
+        shell: bash
+        env:
+          BEFORE: ${{ needs.targets.outputs.dockerhub-rate-remaining-before }}
+          AFTER: ${{ steps.dockerhub_rate_after.outputs.rate_remaining }}
+        run: |
+          before_num="${BEFORE%%;*}"
+          after_num="${AFTER%%;*}"
+          if [[ "${before_num}" =~ ^[0-9]+$ && "${after_num}" =~ ^[0-9]+$ ]]; then
+            delta=$((before_num - after_num))
+            {
+              echo "### Docker Hub Rate Delta"
+              echo "- Remaining before: \`${BEFORE}\`"
+              echo "- Remaining after: \`${AFTER}\`"
+              echo "- Estimated consumed during workflow: \`${delta}\`"
+            } >> "$GITHUB_STEP_SUMMARY"
+          else
+            {
+              echo "### Docker Hub Rate Delta"
+              echo "- Could not compute numeric delta."
+              echo "- Remaining before: \`${BEFORE:-unknown}\`"
+              echo "- Remaining after: \`${AFTER:-unknown}\`"
+            } >> "$GITHUB_STEP_SUMMARY"
+          fi
+
       - name: Check
         run: echo "Completed successfully!"
