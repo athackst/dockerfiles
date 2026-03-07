@@ -21,6 +21,8 @@ jobs:
       - name: Generate list of amd64 targets (filtered)
         id: amd64
         uses: ./.github/actions/docker-targets
+        with:
+          all: true
 
   readme:
     runs-on: ubuntu-latest
