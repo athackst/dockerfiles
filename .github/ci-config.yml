@@ -1,0 +1,99 @@
+name-template: "Release v$RESOLVED_VERSION"
+tag-template: "v$RESOLVED_VERSION"
+template: |
+  # What’s Changed
+
+  $CHANGES
+
+categories:
+  - title: ':zap: Breaking'
+    labels:
+      - 'breaking'
+      - 'major'
+  - title: ':rocket: New'
+    labels:
+      - 'feature'
+      - 'enhancement'
+  - title: ':bug: Bug Fixes'
+    labels:
+      - 'bug'
+      - 'fix'
+  - title: ':toolbox: Maintenance'
+    labels:
+      - 'maintenance'
+      - 'devops'
+  - title: ':memo: Documentation'
+    labels:
+      - 'docs'
+      - 'documentation'
+  - title: 'Dependency Updates'
+    label: 'dependencies'
+    collapse-after: 3
+
+exclude-labels:
+  - 'skip-changelog'
+
+version-resolver:
+  major:
+    labels:
+      - 'breaking'
+      - 'major'
+  minor:
+    labels:
+      - 'feature'
+      - 'minor'
+      - 'enhancement'
+  patch:
+    labels:
+      - 'bug'
+      - 'fix'
+      - 'maintenance'
+      - 'docs'
+      - 'documentation'
+      - 'devops'
+      - 'dependencies'
+      - 'security'
+
+labels:
+  major:
+    - head-branch: ["^major", "^breaking", "^break"]
+    - description: "Breaking or major-version change"
+    - color: "b91c1c"
+
+  fix:
+    - head-branch: ['^fix', '^bug']
+    - description: "Something isn't working"
+    - color: "ea580c"
+
+  feature:
+    - head-branch: ["^feat", "^new", "^enhance"]
+    - description: "New feature or request"
+    - color: "0f766e"
+
+  documentation:
+    - changed-files:
+      - any-glob-to-any-file: "**/*.md"
+    - head-branch: ["^doc"]
+    - description: "Change to documentation"
+    - color: "65a30d"
+
+  maintenance:
+    - head-branch: ['^chore', '^maint', '^noop', '^no-op', '^upkeep', '^dev']
+    - description: "Non-behavior related change"
+    - color: "7c3aed"
+
+  dependencies:
+    - head-branch: ['^deps', '^dependencies']
+    - description: "Pull requests that update a dependency file"
+    - color: "2563eb"
+
+  devops:
+    - changed-files:
+      - any-glob-to-any-file: [".github/**", ".vscode/**"]
+    - description: "Change to development workflows"
+    - color: "0ea5e9"
+
+  automerge:
+    - head-branch: ['^dependabot/', '^chore/update-ci-template$']
+    - description: "PRs eligible for automatic merge"
+    - color: "eab308"
