@@ -1,10 +1,6 @@
 name-template: "Release v$RESOLVED_VERSION"
 tag-template: "v$RESOLVED_VERSION"
-template: |
-  # What’s Changed
-
-  $CHANGES
-
+template-file: ".github/release_template.md"
 categories:
   - title: ':zap: Breaking'
     labels:

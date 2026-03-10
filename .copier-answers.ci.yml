@@ -1,6 +1,12 @@
 # Changes here will be overwritten by Copier; NEVER EDIT MANUALLY
-_commit: 9be6890
+_commit: abb351b
 _src_path: gh:athackst/ci
 bump_script_path: ''
+release_template: '## What''s changed
+
+
+    $CHANGES
+
+    '
 site_generator: mkdocs
 site_version: false
