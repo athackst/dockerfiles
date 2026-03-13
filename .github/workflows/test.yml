@@ -30,7 +30,7 @@ jobs:
           pip install pydocstyle
           pydocstyle .
 
-  action-tests:
+  test-actions:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v6
@@ -46,6 +46,14 @@ jobs:
           python -m pip install --upgrade pip
           if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
           python -m unittest discover -s .github/actions -p 'test_*.py'
+
+  test-site:
+    permissions:
+      contents: read
+    uses: athackst/ci/.github/workflows/mkdocs_site.yml@main
+    with:
+      pages: false
+    secrets: inherit
 
   targets:
     runs-on: ubuntu-latest
@@ -182,7 +190,8 @@ jobs:
   complete:
     needs:
       - lint
-      - action-tests
+      - test-actions
+      - test-site
       - merge-manifests
     if: ${{ always() && !cancelled() && needs.merge-manifests.result != 'cancelled' }}
     runs-on: ubuntu-latest
@@ -193,8 +202,12 @@ jobs:
             echo "Lint failed"
             exit 1
           fi
-          if [ "${{ needs.action-tests.result }}" != 'success' ]; then
+          if [ "${{ needs.test-actions.result }}" != 'success' ]; then
             echo "Action tests failed"
+            exit 1
+          fi
+          if [ "${{ needs.test-site.result }}" != 'success' ]; then
+            echo "Site tests failed"
             exit 1
           fi
           if [ "${{ needs.merge-manifests.result }}" != 'skipped' ] && \
