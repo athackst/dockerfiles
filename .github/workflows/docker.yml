@@ -73,7 +73,7 @@ jobs:
           } >> "$GITHUB_STEP_SUMMARY"
 
       - name: Find changed files
-        uses: dorny/paths-filter@v3
+        uses: dorny/paths-filter@v4
         id: filter
         with:
           list-files: csv
