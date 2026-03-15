@@ -18,6 +18,7 @@ jobs:
     permissions:
       contents: write
       pull-requests: write
+      checks: read
     uses: athackst/ci/.github/workflows/automerge.yml@main
     secrets:
       token: ${{ secrets.CI_BOT_TOKEN }}

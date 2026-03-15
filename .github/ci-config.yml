@@ -51,7 +51,7 @@ version-resolver:
       - 'security'
 
 labels:
-  major:
+  breaking:
     - head-branch: ["^major", "^breaking", "^break"]
     - description: "Breaking or major-version change"
     - color: "b91c1c"
