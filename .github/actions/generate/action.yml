@@ -1,0 +1,27 @@
+name: "Generate repository artifacts"
+description: "Generate Dockerfiles and related derived files from templates.yml."
+
+inputs:
+  include-eol:
+    description: "Include EOL entries while generating files."
+    required: false
+    default: "false"
+
+runs:
+  using: "composite"
+  steps:
+    - name: Set up Python
+      uses: actions/setup-python@v6
+      with:
+        python-version: "3.x"
+
+    - name: Install action dependencies
+      shell: bash
+      run: pip install -r "${{ github.action_path }}/requirements.txt"
+
+    - name: Generate files
+      shell: bash
+      run: |
+        set -euo pipefail
+        python "${{ github.action_path }}/../../../generate.py" \
+          --include-eol "${{ inputs.include-eol }}"
