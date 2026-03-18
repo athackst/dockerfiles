@@ -55,15 +55,6 @@ jobs:
       pages: false
     secrets: inherit
 
-  test-generate:
-    permissions:
-      contents: read
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v6
-
-      - uses: ./.github/actions/generate
-
   targets:
     runs-on: ubuntu-latest
     outputs:
@@ -201,7 +192,6 @@ jobs:
       - lint
       - test-actions
       - test-site
-      - test-generate
       - merge-manifests
     if: ${{ always() && !cancelled() && needs.merge-manifests.result != 'cancelled' }}
     runs-on: ubuntu-latest

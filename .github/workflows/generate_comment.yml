@@ -1,0 +1,38 @@
+name: Comment generate failure
+
+on:
+  workflow_run:
+    workflows:
+      - Run generate
+    types:
+      - completed
+
+permissions:
+  contents: read
+  issues: write
+  pull-requests: write
+
+jobs:
+  comment:
+    if: ${{ github.event.workflow_run.event == 'pull_request' && github.event.workflow_run.conclusion == 'failure' && github.event.workflow_run.pull_requests[0] != null }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Find existing comment
+        id: find-comment
+        uses: peter-evans/find-comment@v3
+        with:
+          issue-number: ${{ github.event.workflow_run.pull_requests[0].number }}
+          comment-author: "github-actions[bot]"
+          body-includes: "<!-- generate-check -->"
+
+      - name: Create or update comment
+        uses: peter-evans/create-or-update-comment@v5
+        with:
+          comment-id: ${{ steps.find-comment.outputs.comment-id }}
+          issue-number: ${{ github.event.workflow_run.pull_requests[0].number }}
+          body: |
+            <!-- generate-check -->
+            Generated files are out of date.
+
+            Please run `./generate.py` and commit the updated generated files.
+          edit-mode: replace
