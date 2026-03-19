@@ -18,6 +18,7 @@ noetic (eol)
   
 * [noetic-base](https://github.com/athackst/dockerfiles/blob/main/ros/noetic.Dockerfile)
 * [noetic-dev](https://github.com/athackst/dockerfiles/blob/main/ros/noetic.Dockerfile)
+* [noetic-desktop](https://github.com/athackst/dockerfiles/blob/main/ros/noetic.Dockerfile)
 * [noetic-full](https://github.com/athackst/dockerfiles/blob/main/ros/noetic.Dockerfile)
 * [noetic-gazebo](https://github.com/athackst/dockerfiles/blob/main/ros/noetic.Dockerfile)
 
@@ -25,6 +26,7 @@ melodic (eol)
   
 * [melodic-base](https://github.com/athackst/dockerfiles/blob/main/ros/melodic.Dockerfile)
 * [melodic-dev](https://github.com/athackst/dockerfiles/blob/main/ros/melodic.Dockerfile)
+* [melodic-desktop](https://github.com/athackst/dockerfiles/blob/main/ros/melodic.Dockerfile)
 * [melodic-full](https://github.com/athackst/dockerfiles/blob/main/ros/melodic.Dockerfile)
 * [melodic-gazebo](https://github.com/athackst/dockerfiles/blob/main/ros/melodic.Dockerfile)
 
@@ -32,6 +34,7 @@ lunar (eol)
   
 * [lunar-base](https://github.com/athackst/dockerfiles/blob/main/ros/lunar.Dockerfile)
 * [lunar-dev](https://github.com/athackst/dockerfiles/blob/main/ros/lunar.Dockerfile)
+* [lunar-desktop](https://github.com/athackst/dockerfiles/blob/main/ros/lunar.Dockerfile)
 * [lunar-full](https://github.com/athackst/dockerfiles/blob/main/ros/lunar.Dockerfile)
 * [lunar-gazebo](https://github.com/athackst/dockerfiles/blob/main/ros/lunar.Dockerfile)
 
@@ -39,6 +42,7 @@ kinetic (eol)
   
 * [kinetic-base](https://github.com/athackst/dockerfiles/blob/main/ros/kinetic.Dockerfile)
 * [kinetic-dev](https://github.com/athackst/dockerfiles/blob/main/ros/kinetic.Dockerfile)
+* [kinetic-desktop](https://github.com/athackst/dockerfiles/blob/main/ros/kinetic.Dockerfile)
 * [kinetic-full](https://github.com/athackst/dockerfiles/blob/main/ros/kinetic.Dockerfile)
 * [kinetic-gazebo](https://github.com/athackst/dockerfiles/blob/main/ros/kinetic.Dockerfile)
 

@@ -129,14 +129,26 @@ ENV DEBIAN_FRONTEND=
 ENV AMENT_CPPCHECK_ALLOW_SLOW_VERSIONS=1
 
 ###########################################
-#  Full image
+#  Desktop image
 ###########################################
-FROM dev AS full
+FROM dev AS desktop
 
 ENV DEBIAN_FRONTEND=noninteractive
-# Install the full release
+# Install the desktop release
 RUN apt-get update && apt-get install -y --no-install-recommends \
   ros-humble-desktop \
+  && rm -rf /var/lib/apt/lists/*
+ENV DEBIAN_FRONTEND=
+
+###########################################
+#  Full image
+###########################################
+FROM desktop AS full
+
+ENV DEBIAN_FRONTEND=noninteractive
+# Install the desktop release
+RUN apt-get update && apt-get install -y --no-install-recommends \
+  ros-humble-desktop-full \
   && rm -rf /var/lib/apt/lists/*
 ENV DEBIAN_FRONTEND=
 
@@ -154,3 +166,27 @@ RUN wget https://packages.osrfoundation.org/gazebo.gpg -O /usr/share/keyrings/pk
     ros-humble-ros-gz \
   && rm -rf /var/lib/apt/lists/*
 ENV DEBIAN_FRONTEND=
+
+###########################################
+#  Full+Gazebo+Nvidia image
+###########################################
+
+FROM gazebo AS nvidia
+
+################
+# Expose the nvidia driver to allow opengl
+# Dependencies for glvnd and X11.
+################
+RUN apt-get update \
+ && apt-get install -y -qq --no-install-recommends \
+  libglvnd0 \
+  libgl1 \
+  libglx0 \
+  libegl1 \
+  libxext6 \
+  libx11-6
+
+# Env vars for the nvidia-container-runtime.
+ENV NVIDIA_VISIBLE_DEVICES=all
+ENV NVIDIA_DRIVER_CAPABILITIES=graphics,utility,compute
+ENV QT_X11_NO_MITSHM=1

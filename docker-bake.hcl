@@ -23,6 +23,15 @@ target "ros2-rolling-dev" {
   ]
 }
 
+target "ros2-rolling-desktop" {
+  context    = "ros2"
+  dockerfile = "rolling.Dockerfile"
+  target     = "desktop"
+  tags       = [
+    "${REGISTRY}/ros2:rolling-desktop",
+  ]
+}
+
 target "ros2-rolling-full" {
   context    = "ros2"
   dockerfile = "rolling.Dockerfile"
@@ -43,7 +52,7 @@ target "ros2-rolling-gazebo" {
 
 # ---- group for all ros2-rolling  ----
 group "ros2-rolling" {
-  targets = ["ros2-rolling-base", "ros2-rolling-dev", "ros2-rolling-full", "ros2-rolling-gazebo"]
+  targets = ["ros2-rolling-base", "ros2-rolling-dev", "ros2-rolling-desktop", "ros2-rolling-full", "ros2-rolling-gazebo"]
 }
 
 # ----------- targets for ros2-rolling-cuda -----------
@@ -63,6 +72,15 @@ target "ros2-rolling-cuda-dev" {
   target     = "dev"
   tags       = [
     "${REGISTRY}/ros2:rolling-cuda-dev",
+  ]
+}
+
+target "ros2-rolling-cuda-desktop" {
+  context    = "ros2"
+  dockerfile = "rolling-cuda.Dockerfile"
+  target     = "desktop"
+  tags       = [
+    "${REGISTRY}/ros2:rolling-cuda-desktop",
   ]
 }
 
@@ -86,7 +104,7 @@ target "ros2-rolling-cuda-gazebo" {
 
 # ---- group for all ros2-rolling-cuda  ----
 group "ros2-rolling-cuda" {
-  targets = ["ros2-rolling-cuda-base", "ros2-rolling-cuda-dev", "ros2-rolling-cuda-full", "ros2-rolling-cuda-gazebo"]
+  targets = ["ros2-rolling-cuda-base", "ros2-rolling-cuda-dev", "ros2-rolling-cuda-desktop", "ros2-rolling-cuda-full", "ros2-rolling-cuda-gazebo"]
 }
 
 # ----------- targets for ros2-kilted -----------
@@ -106,6 +124,15 @@ target "ros2-kilted-dev" {
   target     = "dev"
   tags       = [
     "${REGISTRY}/ros2:kilted-dev",
+  ]
+}
+
+target "ros2-kilted-desktop" {
+  context    = "ros2"
+  dockerfile = "kilted.Dockerfile"
+  target     = "desktop"
+  tags       = [
+    "${REGISTRY}/ros2:kilted-desktop",
   ]
 }
 
@@ -129,7 +156,7 @@ target "ros2-kilted-gazebo" {
 
 # ---- group for all ros2-kilted  ----
 group "ros2-kilted" {
-  targets = ["ros2-kilted-base", "ros2-kilted-dev", "ros2-kilted-full", "ros2-kilted-gazebo"]
+  targets = ["ros2-kilted-base", "ros2-kilted-dev", "ros2-kilted-desktop", "ros2-kilted-full", "ros2-kilted-gazebo"]
 }
 
 # ----------- targets for ros2-jazzy -----------
@@ -149,6 +176,15 @@ target "ros2-jazzy-dev" {
   target     = "dev"
   tags       = [
     "${REGISTRY}/ros2:jazzy-dev",
+  ]
+}
+
+target "ros2-jazzy-desktop" {
+  context    = "ros2"
+  dockerfile = "jazzy.Dockerfile"
+  target     = "desktop"
+  tags       = [
+    "${REGISTRY}/ros2:jazzy-desktop",
   ]
 }
 
@@ -172,7 +208,7 @@ target "ros2-jazzy-gazebo" {
 
 # ---- group for all ros2-jazzy  ----
 group "ros2-jazzy" {
-  targets = ["ros2-jazzy-base", "ros2-jazzy-dev", "ros2-jazzy-full", "ros2-jazzy-gazebo"]
+  targets = ["ros2-jazzy-base", "ros2-jazzy-dev", "ros2-jazzy-desktop", "ros2-jazzy-full", "ros2-jazzy-gazebo"]
 }
 
 # ----------- targets for ros2-jazzy-cuda -----------
@@ -192,6 +228,15 @@ target "ros2-jazzy-cuda-dev" {
   target     = "dev"
   tags       = [
     "${REGISTRY}/ros2:jazzy-cuda-dev",
+  ]
+}
+
+target "ros2-jazzy-cuda-desktop" {
+  context    = "ros2"
+  dockerfile = "jazzy-cuda.Dockerfile"
+  target     = "desktop"
+  tags       = [
+    "${REGISTRY}/ros2:jazzy-cuda-desktop",
   ]
 }
 
@@ -215,7 +260,7 @@ target "ros2-jazzy-cuda-gazebo" {
 
 # ---- group for all ros2-jazzy-cuda  ----
 group "ros2-jazzy-cuda" {
-  targets = ["ros2-jazzy-cuda-base", "ros2-jazzy-cuda-dev", "ros2-jazzy-cuda-full", "ros2-jazzy-cuda-gazebo"]
+  targets = ["ros2-jazzy-cuda-base", "ros2-jazzy-cuda-dev", "ros2-jazzy-cuda-desktop", "ros2-jazzy-cuda-full", "ros2-jazzy-cuda-gazebo"]
 }
 
 # ----------- targets for ros2-humble -----------
@@ -235,6 +280,15 @@ target "ros2-humble-dev" {
   target     = "dev"
   tags       = [
     "${REGISTRY}/ros2:humble-dev",
+  ]
+}
+
+target "ros2-humble-desktop" {
+  context    = "ros2"
+  dockerfile = "humble.Dockerfile"
+  target     = "desktop"
+  tags       = [
+    "${REGISTRY}/ros2:humble-desktop",
   ]
 }
 
@@ -258,7 +312,7 @@ target "ros2-humble-gazebo" {
 
 # ---- group for all ros2-humble  ----
 group "ros2-humble" {
-  targets = ["ros2-humble-base", "ros2-humble-dev", "ros2-humble-full", "ros2-humble-gazebo"]
+  targets = ["ros2-humble-base", "ros2-humble-dev", "ros2-humble-desktop", "ros2-humble-full", "ros2-humble-gazebo"]
 }
 
 # ----------- targets for ros2-humble-cuda -----------
@@ -278,6 +332,15 @@ target "ros2-humble-cuda-dev" {
   target     = "dev"
   tags       = [
     "${REGISTRY}/ros2:humble-cuda-dev",
+  ]
+}
+
+target "ros2-humble-cuda-desktop" {
+  context    = "ros2"
+  dockerfile = "humble-cuda.Dockerfile"
+  target     = "desktop"
+  tags       = [
+    "${REGISTRY}/ros2:humble-cuda-desktop",
   ]
 }
 
@@ -301,7 +364,7 @@ target "ros2-humble-cuda-gazebo" {
 
 # ---- group for all ros2-humble-cuda  ----
 group "ros2-humble-cuda" {
-  targets = ["ros2-humble-cuda-base", "ros2-humble-cuda-dev", "ros2-humble-cuda-full", "ros2-humble-cuda-gazebo"]
+  targets = ["ros2-humble-cuda-base", "ros2-humble-cuda-dev", "ros2-humble-cuda-desktop", "ros2-humble-cuda-full", "ros2-humble-cuda-gazebo"]
 }
 
 # ----------- targets for ignition-fortress -----------
@@ -482,29 +545,29 @@ group "gz-harmonic-cuda" {
 
 # ---------- Parent-platform groups per entry (os/arch; variant-agnostic) ---------- #
 
-group "ros2-rolling-linux-amd64" { targets = [ "ros2-rolling-base", "ros2-rolling-dev", "ros2-rolling-full", "ros2-rolling-gazebo" ] }
+group "ros2-rolling-linux-amd64" { targets = [ "ros2-rolling-base", "ros2-rolling-dev", "ros2-rolling-desktop", "ros2-rolling-full", "ros2-rolling-gazebo" ] }
 group "ros2-rolling-linux-arm64" { targets = [ "ros2-rolling-base" ] }
 
 
-group "ros2-rolling-cuda-linux-amd64" { targets = [ "ros2-rolling-cuda-base", "ros2-rolling-cuda-dev", "ros2-rolling-cuda-full", "ros2-rolling-cuda-gazebo" ] }
+group "ros2-rolling-cuda-linux-amd64" { targets = [ "ros2-rolling-cuda-base", "ros2-rolling-cuda-dev", "ros2-rolling-cuda-desktop", "ros2-rolling-cuda-full", "ros2-rolling-cuda-gazebo" ] }
 
 
-group "ros2-kilted-linux-amd64" { targets = [ "ros2-kilted-base", "ros2-kilted-dev", "ros2-kilted-full", "ros2-kilted-gazebo" ] }
+group "ros2-kilted-linux-amd64" { targets = [ "ros2-kilted-base", "ros2-kilted-dev", "ros2-kilted-desktop", "ros2-kilted-full", "ros2-kilted-gazebo" ] }
 group "ros2-kilted-linux-arm64" { targets = [ "ros2-kilted-base" ] }
 
 
-group "ros2-jazzy-linux-amd64" { targets = [ "ros2-jazzy-base", "ros2-jazzy-dev", "ros2-jazzy-full", "ros2-jazzy-gazebo" ] }
+group "ros2-jazzy-linux-amd64" { targets = [ "ros2-jazzy-base", "ros2-jazzy-dev", "ros2-jazzy-desktop", "ros2-jazzy-full", "ros2-jazzy-gazebo" ] }
 group "ros2-jazzy-linux-arm64" { targets = [ "ros2-jazzy-base" ] }
 
 
-group "ros2-jazzy-cuda-linux-amd64" { targets = [ "ros2-jazzy-cuda-base", "ros2-jazzy-cuda-dev", "ros2-jazzy-cuda-full", "ros2-jazzy-cuda-gazebo" ] }
+group "ros2-jazzy-cuda-linux-amd64" { targets = [ "ros2-jazzy-cuda-base", "ros2-jazzy-cuda-dev", "ros2-jazzy-cuda-desktop", "ros2-jazzy-cuda-full", "ros2-jazzy-cuda-gazebo" ] }
 
 
-group "ros2-humble-linux-amd64" { targets = [ "ros2-humble-base", "ros2-humble-dev", "ros2-humble-full", "ros2-humble-gazebo" ] }
-group "ros2-humble-linux-arm64" { targets = [ "ros2-humble-base", "ros2-humble-dev", "ros2-humble-full" ] }
+group "ros2-humble-linux-amd64" { targets = [ "ros2-humble-base", "ros2-humble-dev", "ros2-humble-desktop", "ros2-humble-full", "ros2-humble-gazebo" ] }
+group "ros2-humble-linux-arm64" { targets = [ "ros2-humble-base", "ros2-humble-dev", "ros2-humble-desktop", "ros2-humble-full" ] }
 
 
-group "ros2-humble-cuda-linux-amd64" { targets = [ "ros2-humble-cuda-base", "ros2-humble-cuda-dev", "ros2-humble-cuda-full", "ros2-humble-cuda-gazebo" ] }
+group "ros2-humble-cuda-linux-amd64" { targets = [ "ros2-humble-cuda-base", "ros2-humble-cuda-dev", "ros2-humble-cuda-desktop", "ros2-humble-cuda-full", "ros2-humble-cuda-gazebo" ] }
 
 
 group "ignition-fortress-linux-amd64" { targets = [ "ignition-fortress-base", "ignition-fortress-dev" ] }
@@ -531,7 +594,7 @@ group "gz-harmonic-cuda-linux-amd64" { targets = [ "gz-harmonic-cuda-base", "gz-
 # ---------- Family-level groups (e.g., ros2, gz, ignition) ----------
 
 group "ros" { targets = [  ] }
-group "ros2" { targets = [ "ros2-rolling-base", "ros2-rolling-dev", "ros2-rolling-full", "ros2-rolling-gazebo", "ros2-rolling-cuda-base", "ros2-rolling-cuda-dev", "ros2-rolling-cuda-full", "ros2-rolling-cuda-gazebo", "ros2-kilted-base", "ros2-kilted-dev", "ros2-kilted-full", "ros2-kilted-gazebo", "ros2-jazzy-base", "ros2-jazzy-dev", "ros2-jazzy-full", "ros2-jazzy-gazebo", "ros2-jazzy-cuda-base", "ros2-jazzy-cuda-dev", "ros2-jazzy-cuda-full", "ros2-jazzy-cuda-gazebo", "ros2-humble-base", "ros2-humble-dev", "ros2-humble-full", "ros2-humble-gazebo", "ros2-humble-cuda-base", "ros2-humble-cuda-dev", "ros2-humble-cuda-full", "ros2-humble-cuda-gazebo" ] }
+group "ros2" { targets = [ "ros2-rolling-base", "ros2-rolling-dev", "ros2-rolling-desktop", "ros2-rolling-full", "ros2-rolling-gazebo", "ros2-rolling-cuda-base", "ros2-rolling-cuda-dev", "ros2-rolling-cuda-desktop", "ros2-rolling-cuda-full", "ros2-rolling-cuda-gazebo", "ros2-kilted-base", "ros2-kilted-dev", "ros2-kilted-desktop", "ros2-kilted-full", "ros2-kilted-gazebo", "ros2-jazzy-base", "ros2-jazzy-dev", "ros2-jazzy-desktop", "ros2-jazzy-full", "ros2-jazzy-gazebo", "ros2-jazzy-cuda-base", "ros2-jazzy-cuda-dev", "ros2-jazzy-cuda-desktop", "ros2-jazzy-cuda-full", "ros2-jazzy-cuda-gazebo", "ros2-humble-base", "ros2-humble-dev", "ros2-humble-desktop", "ros2-humble-full", "ros2-humble-gazebo", "ros2-humble-cuda-base", "ros2-humble-cuda-dev", "ros2-humble-cuda-desktop", "ros2-humble-cuda-full", "ros2-humble-cuda-gazebo" ] }
 group "gazebo" { targets = [  ] }
 group "ignition" { targets = [ "ignition-fortress-base", "ignition-fortress-dev" ] }
 group "gz" { targets = [ "gz-jetty-base", "gz-jetty-dev", "gz-jetty-cuda-base", "gz-jetty-cuda-dev", "gz-ionic-base", "gz-ionic-dev", "gz-ionic-cuda-base", "gz-ionic-cuda-dev", "gz-harmonic-base", "gz-harmonic-dev", "gz-harmonic-cuda-base", "gz-harmonic-cuda-dev" ] }
@@ -539,6 +602,6 @@ group "gz" { targets = [ "gz-jetty-base", "gz-jetty-dev", "gz-jetty-cuda-base", 
 # ---- all non-EOL ----
 group "default" {
   targets = [
-    "ros2-rolling-base", "ros2-rolling-dev", "ros2-rolling-full", "ros2-rolling-gazebo", "ros2-rolling-cuda-base", "ros2-rolling-cuda-dev", "ros2-rolling-cuda-full", "ros2-rolling-cuda-gazebo", "ros2-kilted-base", "ros2-kilted-dev", "ros2-kilted-full", "ros2-kilted-gazebo", "ros2-jazzy-base", "ros2-jazzy-dev", "ros2-jazzy-full", "ros2-jazzy-gazebo", "ros2-jazzy-cuda-base", "ros2-jazzy-cuda-dev", "ros2-jazzy-cuda-full", "ros2-jazzy-cuda-gazebo", "ros2-humble-base", "ros2-humble-dev", "ros2-humble-full", "ros2-humble-gazebo", "ros2-humble-cuda-base", "ros2-humble-cuda-dev", "ros2-humble-cuda-full", "ros2-humble-cuda-gazebo", "ignition-fortress-base", "ignition-fortress-dev", "gz-jetty-base", "gz-jetty-dev", "gz-jetty-cuda-base", "gz-jetty-cuda-dev", "gz-ionic-base", "gz-ionic-dev", "gz-ionic-cuda-base", "gz-ionic-cuda-dev", "gz-harmonic-base", "gz-harmonic-dev", "gz-harmonic-cuda-base", "gz-harmonic-cuda-dev"
+    "ros2-rolling-base", "ros2-rolling-dev", "ros2-rolling-desktop", "ros2-rolling-full", "ros2-rolling-gazebo", "ros2-rolling-cuda-base", "ros2-rolling-cuda-dev", "ros2-rolling-cuda-desktop", "ros2-rolling-cuda-full", "ros2-rolling-cuda-gazebo", "ros2-kilted-base", "ros2-kilted-dev", "ros2-kilted-desktop", "ros2-kilted-full", "ros2-kilted-gazebo", "ros2-jazzy-base", "ros2-jazzy-dev", "ros2-jazzy-desktop", "ros2-jazzy-full", "ros2-jazzy-gazebo", "ros2-jazzy-cuda-base", "ros2-jazzy-cuda-dev", "ros2-jazzy-cuda-desktop", "ros2-jazzy-cuda-full", "ros2-jazzy-cuda-gazebo", "ros2-humble-base", "ros2-humble-dev", "ros2-humble-desktop", "ros2-humble-full", "ros2-humble-gazebo", "ros2-humble-cuda-base", "ros2-humble-cuda-dev", "ros2-humble-cuda-desktop", "ros2-humble-cuda-full", "ros2-humble-cuda-gazebo", "ignition-fortress-base", "ignition-fortress-dev", "gz-jetty-base", "gz-jetty-dev", "gz-jetty-cuda-base", "gz-jetty-cuda-dev", "gz-ionic-base", "gz-ionic-dev", "gz-ionic-cuda-base", "gz-ionic-cuda-dev", "gz-harmonic-base", "gz-harmonic-dev", "gz-harmonic-cuda-base", "gz-harmonic-cuda-dev"
   ]
 }
