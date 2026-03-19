@@ -1,15 +1,7 @@
 {
 	"name": "Docker in Docker",
-	"image": "mcr.microsoft.com/devcontainers/base:bullseye",
+	"image": "mcr.microsoft.com/devcontainers/base:jammy",
 	"features": {
-		"ghcr.io/devcontainers/features/common-utils:2": {
-			"installZsh": "true",
-			"upgradePackages": "false",
-			"uid": "1000",
-			"gid": "1000",
-			"installOhMyZsh": "true",
-			"nonFreePackages": "true"
-		},
 		"ghcr.io/devcontainers/features/docker-from-docker:1": {
 			"version": "latest",
 			"enableNonRootDocker": "true",

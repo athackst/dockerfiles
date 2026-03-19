@@ -18,6 +18,7 @@ rolling
   
 * [rolling-base](https://github.com/athackst/dockerfiles/blob/main/ros2/rolling.Dockerfile)
 * [rolling-dev](https://github.com/athackst/dockerfiles/blob/main/ros2/rolling.Dockerfile)
+* [rolling-desktop](https://github.com/athackst/dockerfiles/blob/main/ros2/rolling.Dockerfile)
 * [rolling-full](https://github.com/athackst/dockerfiles/blob/main/ros2/rolling.Dockerfile)
 * [rolling-gazebo](https://github.com/athackst/dockerfiles/blob/main/ros2/rolling.Dockerfile)
 
@@ -25,6 +26,7 @@ rolling-cuda
   
 * [rolling-cuda-base](https://github.com/athackst/dockerfiles/blob/main/ros2/rolling-cuda.Dockerfile)
 * [rolling-cuda-dev](https://github.com/athackst/dockerfiles/blob/main/ros2/rolling-cuda.Dockerfile)
+* [rolling-cuda-desktop](https://github.com/athackst/dockerfiles/blob/main/ros2/rolling-cuda.Dockerfile)
 * [rolling-cuda-full](https://github.com/athackst/dockerfiles/blob/main/ros2/rolling-cuda.Dockerfile)
 * [rolling-cuda-gazebo](https://github.com/athackst/dockerfiles/blob/main/ros2/rolling-cuda.Dockerfile)
 
@@ -32,6 +34,7 @@ kilted
   
 * [kilted-base](https://github.com/athackst/dockerfiles/blob/main/ros2/kilted.Dockerfile)
 * [kilted-dev](https://github.com/athackst/dockerfiles/blob/main/ros2/kilted.Dockerfile)
+* [kilted-desktop](https://github.com/athackst/dockerfiles/blob/main/ros2/kilted.Dockerfile)
 * [kilted-full](https://github.com/athackst/dockerfiles/blob/main/ros2/kilted.Dockerfile)
 * [kilted-gazebo](https://github.com/athackst/dockerfiles/blob/main/ros2/kilted.Dockerfile)
 
@@ -39,6 +42,7 @@ jazzy
   
 * [jazzy-base](https://github.com/athackst/dockerfiles/blob/main/ros2/jazzy.Dockerfile)
 * [jazzy-dev](https://github.com/athackst/dockerfiles/blob/main/ros2/jazzy.Dockerfile)
+* [jazzy-desktop](https://github.com/athackst/dockerfiles/blob/main/ros2/jazzy.Dockerfile)
 * [jazzy-full](https://github.com/athackst/dockerfiles/blob/main/ros2/jazzy.Dockerfile)
 * [jazzy-gazebo](https://github.com/athackst/dockerfiles/blob/main/ros2/jazzy.Dockerfile)
 
@@ -46,6 +50,7 @@ jazzy-cuda
   
 * [jazzy-cuda-base](https://github.com/athackst/dockerfiles/blob/main/ros2/jazzy-cuda.Dockerfile)
 * [jazzy-cuda-dev](https://github.com/athackst/dockerfiles/blob/main/ros2/jazzy-cuda.Dockerfile)
+* [jazzy-cuda-desktop](https://github.com/athackst/dockerfiles/blob/main/ros2/jazzy-cuda.Dockerfile)
 * [jazzy-cuda-full](https://github.com/athackst/dockerfiles/blob/main/ros2/jazzy-cuda.Dockerfile)
 * [jazzy-cuda-gazebo](https://github.com/athackst/dockerfiles/blob/main/ros2/jazzy-cuda.Dockerfile)
 
@@ -53,6 +58,7 @@ iron (eol)
   
 * [iron-base](https://github.com/athackst/dockerfiles/blob/main/ros2/iron.Dockerfile)
 * [iron-dev](https://github.com/athackst/dockerfiles/blob/main/ros2/iron.Dockerfile)
+* [iron-desktop](https://github.com/athackst/dockerfiles/blob/main/ros2/iron.Dockerfile)
 * [iron-full](https://github.com/athackst/dockerfiles/blob/main/ros2/iron.Dockerfile)
 * [iron-gazebo](https://github.com/athackst/dockerfiles/blob/main/ros2/iron.Dockerfile)
 
@@ -60,6 +66,7 @@ iron-cuda (eol)
   
 * [iron-cuda-base](https://github.com/athackst/dockerfiles/blob/main/ros2/iron-cuda.Dockerfile)
 * [iron-cuda-dev](https://github.com/athackst/dockerfiles/blob/main/ros2/iron-cuda.Dockerfile)
+* [iron-cuda-desktop](https://github.com/athackst/dockerfiles/blob/main/ros2/iron-cuda.Dockerfile)
 * [iron-cuda-full](https://github.com/athackst/dockerfiles/blob/main/ros2/iron-cuda.Dockerfile)
 * [iron-cuda-gazebo](https://github.com/athackst/dockerfiles/blob/main/ros2/iron-cuda.Dockerfile)
 
@@ -67,6 +74,7 @@ humble
   
 * [humble-base](https://github.com/athackst/dockerfiles/blob/main/ros2/humble.Dockerfile)
 * [humble-dev](https://github.com/athackst/dockerfiles/blob/main/ros2/humble.Dockerfile)
+* [humble-desktop](https://github.com/athackst/dockerfiles/blob/main/ros2/humble.Dockerfile)
 * [humble-full](https://github.com/athackst/dockerfiles/blob/main/ros2/humble.Dockerfile)
 * [humble-gazebo](https://github.com/athackst/dockerfiles/blob/main/ros2/humble.Dockerfile)
 
@@ -74,6 +82,7 @@ humble-cuda
   
 * [humble-cuda-base](https://github.com/athackst/dockerfiles/blob/main/ros2/humble-cuda.Dockerfile)
 * [humble-cuda-dev](https://github.com/athackst/dockerfiles/blob/main/ros2/humble-cuda.Dockerfile)
+* [humble-cuda-desktop](https://github.com/athackst/dockerfiles/blob/main/ros2/humble-cuda.Dockerfile)
 * [humble-cuda-full](https://github.com/athackst/dockerfiles/blob/main/ros2/humble-cuda.Dockerfile)
 * [humble-cuda-gazebo](https://github.com/athackst/dockerfiles/blob/main/ros2/humble-cuda.Dockerfile)
 
@@ -81,6 +90,7 @@ galactic (eol)
   
 * [galactic-base](https://github.com/athackst/dockerfiles/blob/main/ros2/galactic.Dockerfile)
 * [galactic-dev](https://github.com/athackst/dockerfiles/blob/main/ros2/galactic.Dockerfile)
+* [galactic-desktop](https://github.com/athackst/dockerfiles/blob/main/ros2/galactic.Dockerfile)
 * [galactic-full](https://github.com/athackst/dockerfiles/blob/main/ros2/galactic.Dockerfile)
 * [galactic-gazebo](https://github.com/athackst/dockerfiles/blob/main/ros2/galactic.Dockerfile)
 
@@ -88,6 +98,7 @@ galactic-cuda (eol)
   
 * [galactic-cuda-base](https://github.com/athackst/dockerfiles/blob/main/ros2/galactic-cuda.Dockerfile)
 * [galactic-cuda-dev](https://github.com/athackst/dockerfiles/blob/main/ros2/galactic-cuda.Dockerfile)
+* [galactic-cuda-desktop](https://github.com/athackst/dockerfiles/blob/main/ros2/galactic-cuda.Dockerfile)
 * [galactic-cuda-full](https://github.com/athackst/dockerfiles/blob/main/ros2/galactic-cuda.Dockerfile)
 * [galactic-cuda-gazebo](https://github.com/athackst/dockerfiles/blob/main/ros2/galactic-cuda.Dockerfile)
 
@@ -95,6 +106,7 @@ foxy (eol)
   
 * [foxy-base](https://github.com/athackst/dockerfiles/blob/main/ros2/foxy.Dockerfile)
 * [foxy-dev](https://github.com/athackst/dockerfiles/blob/main/ros2/foxy.Dockerfile)
+* [foxy-desktop](https://github.com/athackst/dockerfiles/blob/main/ros2/foxy.Dockerfile)
 * [foxy-full](https://github.com/athackst/dockerfiles/blob/main/ros2/foxy.Dockerfile)
 * [foxy-gazebo](https://github.com/athackst/dockerfiles/blob/main/ros2/foxy.Dockerfile)
 
@@ -102,6 +114,7 @@ foxy-cuda (eol)
   
 * [foxy-cuda-base](https://github.com/athackst/dockerfiles/blob/main/ros2/foxy-cuda.Dockerfile)
 * [foxy-cuda-dev](https://github.com/athackst/dockerfiles/blob/main/ros2/foxy-cuda.Dockerfile)
+* [foxy-cuda-desktop](https://github.com/athackst/dockerfiles/blob/main/ros2/foxy-cuda.Dockerfile)
 * [foxy-cuda-full](https://github.com/athackst/dockerfiles/blob/main/ros2/foxy-cuda.Dockerfile)
 * [foxy-cuda-gazebo](https://github.com/athackst/dockerfiles/blob/main/ros2/foxy-cuda.Dockerfile)
 
@@ -109,6 +122,7 @@ eloquent (eol)
   
 * [eloquent-base](https://github.com/athackst/dockerfiles/blob/main/ros2/eloquent.Dockerfile)
 * [eloquent-dev](https://github.com/athackst/dockerfiles/blob/main/ros2/eloquent.Dockerfile)
+* [eloquent-desktop](https://github.com/athackst/dockerfiles/blob/main/ros2/eloquent.Dockerfile)
 * [eloquent-full](https://github.com/athackst/dockerfiles/blob/main/ros2/eloquent.Dockerfile)
 * [eloquent-gazebo](https://github.com/athackst/dockerfiles/blob/main/ros2/eloquent.Dockerfile)
 
@@ -116,6 +130,7 @@ dashing (eol)
   
 * [dashing-base](https://github.com/athackst/dockerfiles/blob/main/ros2/dashing.Dockerfile)
 * [dashing-dev](https://github.com/athackst/dockerfiles/blob/main/ros2/dashing.Dockerfile)
+* [dashing-desktop](https://github.com/athackst/dockerfiles/blob/main/ros2/dashing.Dockerfile)
 * [dashing-full](https://github.com/athackst/dockerfiles/blob/main/ros2/dashing.Dockerfile)
 * [dashing-gazebo](https://github.com/athackst/dockerfiles/blob/main/ros2/dashing.Dockerfile)
 

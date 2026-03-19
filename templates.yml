@@ -7,6 +7,8 @@ ros:
         platforms: "linux/amd64,linux/arm64"
       - target: dev
         platforms: "linux/amd64,linux/arm64"
+      - target: desktop
+        platforms: "linux/amd64,linux/arm64"
       - target: full
         platforms: "linux/amd64,linux/arm64"
       - target: gazebo
@@ -22,6 +24,8 @@ ros:
       - target: base
         platforms: "linux/amd64,linux/arm64"
       - target: dev
+        platforms: "linux/amd64,linux/arm64"
+      - target: desktop
         platforms: "linux/amd64,linux/arm64"
       - target: full
         platforms: "linux/amd64,linux/arm64"
@@ -39,6 +43,8 @@ ros:
         platforms: "linux/amd64,linux/arm64"
       - target: dev
         platforms: "linux/amd64,linux/arm64"
+      - target: desktop
+        platforms: "linux/amd64,linux/arm64"
       - target: full
         platforms: "linux/amd64,linux/arm64"
       - target: gazebo
@@ -54,6 +60,8 @@ ros:
       - target: base
         platforms: "linux/amd64,linux/arm64"
       - target: dev
+        platforms: "linux/amd64,linux/arm64"
+      - target: desktop
         platforms: "linux/amd64,linux/arm64"
       - target: full
         platforms: "linux/amd64,linux/arm64"
@@ -72,6 +80,8 @@ ros2:
         platforms: "linux/amd64,linux/arm64"
       - target: dev
         platforms: "linux/amd64"
+      - target: desktop
+        platforms: "linux/amd64"
       - target: full
         platforms: "linux/amd64"
       - target: gazebo
@@ -86,6 +96,8 @@ ros2:
       - target: base
         platforms: "linux/amd64"
       - target: dev
+        platforms: "linux/amd64"
+      - target: desktop
         platforms: "linux/amd64"
       - target: full
         platforms: "linux/amd64"
@@ -102,6 +114,8 @@ ros2:
         platforms: "linux/amd64,linux/arm64"
       - target: dev
         platforms: "linux/amd64"
+      - target: desktop
+        platforms: "linux/amd64"
       - target: full
         platforms: "linux/amd64"
       - target: gazebo
@@ -116,6 +130,8 @@ ros2:
       - target: base
         platforms: "linux/amd64,linux/arm64"
       - target: dev
+        platforms: "linux/amd64"
+      - target: desktop
         platforms: "linux/amd64"
       - target: full
         platforms: "linux/amd64"
@@ -132,6 +148,8 @@ ros2:
         platforms: "linux/amd64"
       - target: dev
         platforms: "linux/amd64"
+      - target: desktop
+        platforms: "linux/amd64"
       - target: full
         platforms: "linux/amd64"
       - target: gazebo
@@ -146,6 +164,8 @@ ros2:
       - target: base
         platforms: "linux/amd64,linux/arm64"
       - target: dev
+        platforms: "linux/amd64,linux/arm64"
+      - target: desktop
         platforms: "linux/amd64,linux/arm64"
       - target: full
         platforms: "linux/amd64,linux/arm64"
@@ -163,6 +183,8 @@ ros2:
         platforms: "linux/amd64"
       - target: dev
         platforms: "linux/amd64"
+      - target: desktop
+        platforms: "linux/amd64"
       - target: full
         platforms: "linux/amd64"
       - target: gazebo
@@ -179,6 +201,8 @@ ros2:
         platforms: "linux/amd64,linux/arm64"
       - target: dev
         platforms: "linux/amd64,linux/arm64"
+      - target: desktop
+        platforms: "linux/amd64,linux/arm64"
       - target: full
         platforms: "linux/amd64,linux/arm64"
       - target: gazebo
@@ -194,6 +218,8 @@ ros2:
         platforms: "linux/amd64"
       - target: dev
         platforms: "linux/amd64"
+      - target: desktop
+        platforms: "linux/amd64"
       - target: full
         platforms: "linux/amd64"
       - target: gazebo
@@ -208,6 +234,8 @@ ros2:
       - target: base
         platforms: "linux/amd64,linux/arm64"
       - target: dev
+        platforms: "linux/amd64,linux/arm64"
+      - target: desktop
         platforms: "linux/amd64,linux/arm64"
       - target: full
         platforms: "linux/amd64,linux/arm64"
@@ -225,6 +253,8 @@ ros2:
         platforms: "linux/amd64"
       - target: dev
         platforms: "linux/amd64"
+      - target: desktop
+        platforms: "linux/amd64"
       - target: full
         platforms: "linux/amd64"
       - target: gazebo
@@ -240,6 +270,8 @@ ros2:
       - target: base
         platforms: "linux/amd64,linux/arm64"
       - target: dev
+        platforms: "linux/amd64,linux/arm64"
+      - target: desktop
         platforms: "linux/amd64,linux/arm64"
       - target: full
         platforms: "linux/amd64,linux/arm64"
@@ -257,6 +289,8 @@ ros2:
         platforms: "linux/amd64"
       - target: dev
         platforms: "linux/amd64"
+      - target: desktop
+        platforms: "linux/amd64"
       - target: full
         platforms: "linux/amd64"
       - target: gazebo
@@ -273,6 +307,8 @@ ros2:
         platforms: "linux/amd64,linux/arm64"
       - target: dev
         platforms: "linux/amd64,linux/arm64"
+      - target: desktop
+        platforms: "linux/amd64,linux/arm64"
       - target: full
         platforms: "linux/amd64,linux/arm64"
       - target: gazebo
@@ -288,6 +324,8 @@ ros2:
       - target: base
         platforms: "linux/amd64,linux/arm64"
       - target: dev
+        platforms: "linux/amd64,linux/arm64"
+      - target: desktop
         platforms: "linux/amd64,linux/arm64"
       - target: full
         platforms: "linux/amd64,linux/arm64"
