@@ -79,7 +79,7 @@ jobs:
           list-files: csv
           filters: |
             docker:
-              - '*.Dockerfile'
+              - '*/*.Dockerfile'
 
       - name: Generate list of amd64 targets (filtered)
         id: amd64
