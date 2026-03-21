@@ -6,6 +6,7 @@ on:
 
 jobs:
   pr-label:
+    if: ${{ github.event_name == 'pull_request' }}
     permissions:
       contents: read
       pull-requests: write
