@@ -1,3 +1,6 @@
+# This file is generated from athackst/ci/template/.github/workflows/pr_bot.yml.jinja.
+# Do not edit directly; update the template instead.
+
 name: PR Bot
 
 on:
@@ -6,7 +9,6 @@ on:
 
 jobs:
   pr-label:
-    if: ${{ github.event_name == 'pull_request' }}
     permissions:
       contents: read
       pull-requests: write
@@ -14,8 +16,8 @@ jobs:
     secrets: inherit
 
   pr-automerge:
-    needs: pr-label
     if: ${{ github.event_name == 'pull_request_target' }}
+    needs: pr-label
     permissions:
       contents: write
       pull-requests: write
