@@ -4,6 +4,17 @@ on:
   repository_dispatch:
     types:
       - ci-update
+  push:
+    branches:
+      - main
+    paths:
+      - ".copier-answers.ci.yml"
+      - ".github/workflows/site.yml"
+      - ".github/workflows/ci_update.yml"
+      - ".github/workflows/pr_bot.yml"
+      - ".github/workflows/release_draft.yml"
+      - ".github/ci-config.yml"
+      - ".github/release_template.yml"
   workflow_dispatch:
 
 concurrency:

@@ -52,44 +52,64 @@ version-resolver:
 
 labels:
   breaking:
-    - head-branch: ["^major", "^breaking", "^break"]
+    - head-branch: ["^major", "^break"]
     - description: "Breaking or major-version change"
-    - color: "b91c1c"
+    - color: "#7f1d1d"
 
-  fix:
+  bug:
     - head-branch: ['^fix', '^bug']
     - description: "Something isn't working"
-    - color: "ea580c"
+    - color: "#d73a4a"
 
-  feature:
+  enhancement:
     - head-branch: ["^feat", "^new", "^enhance"]
     - description: "New feature or request"
-    - color: "0f766e"
+    - color: "#0f766e"
+    
+  maintenance:
+    - head-branch: ['^chore', '^maint', '^noop', '^no-op', '^upkeep', '^dev']
+    - changed-files:
+      - any-glob-to-any-file: [".github/**", ".vscode/**"]
+    - description: "Non-behavior related change"
+    - color: "#0ea5e9"
+
+  dependencies:
+    - head-branch: ['^deps', '^dependencies']
+    - description: "Pull requests that update a dependency file"
+    - color: "#1d4ed8"
 
   documentation:
     - changed-files:
       - any-glob-to-any-file: "**/*.md"
     - head-branch: ["^doc"]
-    - description: "Change to documentation"
-    - color: "65a30d"
-
-  maintenance:
-    - head-branch: ['^chore', '^maint', '^noop', '^no-op', '^upkeep', '^dev']
-    - description: "Non-behavior related change"
-    - color: "7c3aed"
-
-  dependencies:
-    - head-branch: ['^deps', '^dependencies']
-    - description: "Pull requests that update a dependency file"
-    - color: "2563eb"
-
-  devops:
-    - changed-files:
-      - any-glob-to-any-file: [".github/**", ".vscode/**"]
-    - description: "Change to development workflows"
-    - color: "0ea5e9"
+    - description: "Improvements or additions to documentation"
+    - color: "#64748b"
 
   automerge:
-    - head-branch: ['^dependabot/', '^chore/update-ci-template$']
-    - description: "PRs eligible for automatic merge"
-    - color: "eab308"
+    - head-branch: ['^dependabot/', '^ci/']
+    - description: "Automatically merge"
+    - color: "#eab308"
+
+  good first issue:
+    - description: "Good for newcomers"
+    - color: "#c4b5fd"
+
+  help wanted:
+    - description: "Extra attention is needed"
+    - color: "#db2777"
+
+  question:
+    - description: "Further information is requested"
+    - color: "#7e22ce"
+
+  duplicate:
+    - description: "This is a duplicate"
+    - color: "#cbd5e1"
+
+  invalid:
+    - description: "This doesn't seem right"
+    - color: "#a3a3a3"
+  
+  wontfix:
+    - description: "This will not be worked on"
+    - color: "#78716c"
