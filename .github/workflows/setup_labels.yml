@@ -1,0 +1,22 @@
+# This file is generated from athackst/ci/template/.github/workflows/setup_labels.yml.jinja.
+# Do not edit directly; update the template instead.
+
+name: Setup labels
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - ".github/ci-config.yml"
+  workflow_dispatch:
+
+jobs:
+  setup-labels:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Setup labels
+        id: setup-labels
+        uses: athackst/ci/actions/setup-labels@main
+        with:
+          github-token: ${{ secrets.CI_BOT_TOKEN || github.token }}
+          configuration-path: .github/ci-config.yml
