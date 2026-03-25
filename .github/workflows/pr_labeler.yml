@@ -1,0 +1,16 @@
+# This file is generated from athackst/ci/template/.github/workflows/pr_labeler.yml.jinja.
+# Do not edit directly; update the template instead.
+
+name: PR Labeler
+
+on:
+  pull_request_target:
+
+jobs:
+  pr-label:
+    permissions:
+      contents: read
+      pull-requests: write
+    uses: athackst/ci/.github/workflows/labeler.yml@main
+    secrets:
+      token: ${{ secrets.CI_BOT_TOKEN }}
