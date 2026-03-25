@@ -1,7 +1,7 @@
 # This file is generated from athackst/ci/template/.github/workflows/setup_labels.yml.jinja.
 # Do not edit directly; update the template instead.
 
-name: Setup labels
+name: Setup Labels
 
 on:
   push:

@@ -89,7 +89,7 @@ labels:
     - color: "#64748b"
 
   automerge:
-    - head-branch: ['^dependabot/', '^ci/']
+    - head-branch: ['^dependabot/']
     - description: "Automatically merge"
     - color: "#eab308"
 
