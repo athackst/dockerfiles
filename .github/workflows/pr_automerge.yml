@@ -13,6 +13,10 @@ on:
       - labeled
       - unlabeled
 
+concurrency:
+  group: "pr-automerge-${{ github.event.pull_request.number || github.ref }}"
+  cancel-in-progress: true
+
 jobs:
   pr-automerge:
     permissions:
