@@ -6,6 +6,10 @@ name: PR Labeler
 on:
   pull_request_target:
 
+concurrency:
+  group: "pr-labeler-${{ github.event.pull_request.number || github.ref }}"
+  cancel-in-progress: true
+
 jobs:
   pr-label:
     permissions:
