@@ -4,24 +4,12 @@
 name: PR Bot
 
 on:
-  pull_request:
-  pull_request_target:
+  workflow_dispatch:
 
 jobs:
-  pr-label:
-    permissions:
-      contents: read
-      pull-requests: write
-    uses: athackst/ci/.github/workflows/pr_labeler.yml@main
-    secrets: inherit
-
-  pr-automerge:
-    if: ${{ github.event_name == 'pull_request_target' }}
-    needs: pr-label
-    permissions:
-      contents: write
-      pull-requests: write
-      checks: read
-    uses: athackst/ci/.github/workflows/automerge.yml@main
-    secrets:
-      token: ${{ secrets.CI_BOT_TOKEN }}
+  deprecated:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deprecated
+        run: |
+          echo "Use labeler.yml, automerge.yml, and bump.yml instead of pr_bot.yml."
