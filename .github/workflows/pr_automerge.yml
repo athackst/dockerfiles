@@ -19,6 +19,7 @@ concurrency:
 
 jobs:
   pr-automerge:
+    if: ${{ github.event.pull_request.state == 'open' }}
     permissions:
       contents: write
       pull-requests: write
