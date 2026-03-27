@@ -23,13 +23,3 @@ updates:
         patterns:
           - "*"
     open-pull-requests-limit: 10
-  - package-ecosystem: docker
-    directories: 
-      - "/**"
-    schedule:
-      interval: daily
-    open-pull-requests-limit: 10
-  - package-ecosystem: "devcontainers"
-    directory: "/"
-    schedule:
-      interval: weekly
