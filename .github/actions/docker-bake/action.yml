@@ -31,6 +31,10 @@ inputs:
     description: "Push digests to registry"
     default: "true"
     required: false
+  gha-cache:
+    description: "GitHub Actions cache mode: all|none|from"
+    default: "all"
+    required: false
 
 outputs:
   platform:
@@ -133,8 +137,8 @@ runs:
         push: ${{ inputs.push }}
         set: |
           ${{ steps.gen.outputs.release }}-*.platform=${{ steps.detect.outputs.platform }}
-          ${{ inputs.push == 'true' && format('*.cache-to=type=gha,mode=max,scope={0},ignore-error=true', steps.gen.outputs.group) || format('*.cache-to=type=gha,mode=min,scope={0},ignore-error=true', steps.gen.outputs.group) }}
-          *.cache-from=type=gha,scope=${{ steps.gen.outputs.group }}
+          ${{ inputs.gha-cache == 'all' && (inputs.push == 'true' && format('*.cache-to=type=gha,mode=max,scope={0},ignore-error=true', steps.gen.outputs.group) || format('*.cache-to=type=gha,mode=min,scope={0},ignore-error=true', steps.gen.outputs.group)) || '' }}
+          ${{ (inputs.gha-cache == 'all' || inputs.gha-cache == 'from') && format('*.cache-from=type=gha,scope={0}', steps.gen.outputs.group) || '' }}
           ${{ (inputs.push == 'true' && inputs.ghcr-password && steps.refs.outputs.ghcr_owner) && format('*.cache-to=type=registry,ref=ghcr.io/{0}/{1}:{2}-{3}-buildcache,mode=max', steps.refs.outputs.ghcr_owner, steps.refs.outputs.family, steps.refs.outputs.distro, steps.detect.outputs.platform_key) || '' }}
           ${{ (inputs.ghcr-password && steps.refs.outputs.ghcr_owner) && format('*.cache-from=type=registry,ref=ghcr.io/{0}/{1}:{2}-{3}-buildcache', steps.refs.outputs.ghcr_owner, steps.refs.outputs.family, steps.refs.outputs.distro, steps.detect.outputs.platform_key) || '' }}
           ${{ steps.gen.outputs.set_lines }}

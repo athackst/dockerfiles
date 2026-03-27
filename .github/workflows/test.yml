@@ -127,6 +127,7 @@ jobs:
           distro: ${{ matrix.distro }} # e.g. rolling
           ghcr-username: ${{ github.actor }} # optional
           ghcr-password: ${{ secrets.GITHUB_TOKEN }} # optional
+          gha-cache: ${{ contains(matrix.distro, 'cuda') && 'from' || 'all' }}
           push: "false"
 
   bake-build-arm64:
@@ -149,6 +150,7 @@ jobs:
           distro: ${{ matrix.distro }} # e.g. rolling
           ghcr-username: ${{ github.actor }} # optional
           ghcr-password: ${{ secrets.GITHUB_TOKEN }} # optional
+          gha-cache: ${{ contains(matrix.distro, 'cuda') && 'from' || 'all' }}
           push: "false"
 
   merge-manifests:
