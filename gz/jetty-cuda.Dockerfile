@@ -5,7 +5,7 @@
 ###########################################
 # Base image
 ###########################################
-FROM nvidia/cuda:12.8.1-runtime-ubuntu24.04 AS base
+FROM nvidia/cuda:13.2.0-runtime-ubuntu24.04 AS base
 
 # Avoid warnings by switching to noninteractive
 ENV DEBIAN_FRONTEND=noninteractive
