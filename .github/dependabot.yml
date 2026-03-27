@@ -24,7 +24,8 @@ updates:
           - "*"
     open-pull-requests-limit: 10
   - package-ecosystem: docker
-    directory: "/**"
+    directories: 
+      - "/**"
     schedule:
       interval: daily
     open-pull-requests-limit: 10
