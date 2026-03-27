@@ -7,6 +7,8 @@ Builds per-platform images from `templates.yml` using `docker buildx bake`, uplo
 - Authenticates to Docker Hub and/or GHCR when credentials are supplied.
 - Runs `docker/bake-action@v6` to build or push the image targets.
 - Reuses BuildKit cache from GHCR when credentials are provided (while still priming the GitHub Actions cache as a fallback).
+  - Registry cache export is enabled only when `push=true`.
+  - GHCR cache/image namespace parts are normalized for valid registry references.
 - Persists the bake metadata as an artifact so the merge job can create multi-arch manifests.
 
 ## Inputs

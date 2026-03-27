@@ -220,9 +220,19 @@ def main() -> int:
     args = parse_args()
     metadata_paths = resolve_metadata_paths(args.metadata_list)
     target_map = collect_targets(metadata_paths)
-    release_targets = ensure_release_targets(
-        args.family, args.distro, target_map
-    )
+    try:
+        release_targets = ensure_release_targets(
+            args.family, args.distro, target_map
+        )
+    except ValueError:
+        if args.dry_run:
+            print(
+                "[merge] No release targets found in metadata during dry-run; "
+                "skipping manifest merge."
+            )
+            write_output("created_tags", "{}")
+            return 0
+        raise
 
     created_tags: Dict[str, List[str]] = {}
     prefix = f"{args.family}-{args.distro}-"
@@ -255,6 +265,13 @@ def main() -> int:
         created_tags[stage_name] = tags
 
     if not created_tags:
+        if args.dry_run:
+            print(
+                "[merge] No mergeable digest refs found during dry-run; "
+                "skipping manifest creation."
+            )
+            write_output("created_tags", "{}")
+            return 0
         raise ValueError("No manifests were created.")
 
     write_output("created_tags", json.dumps(created_tags))

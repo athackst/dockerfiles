@@ -5,9 +5,11 @@ from __future__ import annotations
 
 import importlib.util
 import json
+import os
 import tempfile
 import unittest
 from pathlib import Path
+from unittest.mock import patch
 
 
 def load_module():
@@ -138,6 +140,40 @@ class MergeManifestsTestCase(unittest.TestCase):
                 "sha256:ffceda33bb4a147b69cd01e894eaa87bf2aa6ebc449300ad8c8f2525b7b91a47",  # noqa:E501
             },
         )
+
+    def test_main_dry_run_succeeds_when_release_targets_missing(self):
+        payload = {
+            "other-release-base": {
+                "image.name": "ghcr.io/acme/other:base",
+                "containerimage.digest": "sha256:abc",
+            }
+        }
+        metadata_path = self._write_metadata(payload)
+
+        with tempfile.NamedTemporaryFile("w", delete=False) as out:
+            output_path = out.name
+        self.addCleanup(lambda: os.path.exists(output_path) and os.unlink(output_path))
+
+        argv = [
+            "merge_manifests.py",
+            "--family",
+            "gz",
+            "--distro",
+            "harmonic-cuda",
+            "--metadata-list",
+            str(metadata_path),
+            "--gh-owner",
+            "athackst",
+            "--dry-run",
+        ]
+        with patch("sys.argv", argv), patch.dict(
+            os.environ, {"GITHUB_OUTPUT": output_path}, clear=False
+        ):
+            exit_code = MERGE_MODULE.main()
+
+        self.assertEqual(exit_code, 0)
+        output_text = Path(output_path).read_text(encoding="utf-8")
+        self.assertIn("created_tags={}", output_text)
 
 
 if __name__ == "__main__":
