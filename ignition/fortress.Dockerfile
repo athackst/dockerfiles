@@ -5,7 +5,7 @@
 ###########################################
 # Base image 
 ###########################################
-FROM ubuntu:20.04 AS base
+FROM ubuntu:24.04 AS base
 
 # Avoid warnings by switching to noninteractive
 ENV DEBIAN_FRONTEND=noninteractive
