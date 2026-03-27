@@ -5,7 +5,7 @@
 ###########################################
 # Base image 
 ###########################################
-FROM nvidia/cuda:11.7.0-runtime-ubuntu20.04 AS base
+FROM nvidia/cuda:12.9.1-runtime-ubuntu20.04 AS base
 
 ENV DEBIAN_FRONTEND=noninteractive
 

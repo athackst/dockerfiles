@@ -5,7 +5,7 @@
 ###########################################
 # Base image
 ###########################################
-FROM nvidia/cuda:13.0.1-cudnn-runtime-ubuntu24.04 AS base
+FROM nvidia/cuda:13.2.0-cudnn-runtime-ubuntu24.04 AS base
 
 ENV DEBIAN_FRONTEND=noninteractive
 
