@@ -6,6 +6,10 @@ updates:
       - "/.github/actions/**"
     schedule:
       interval: daily
+    groups:
+      github-actions-all:
+        patterns:
+          - "*"
     open-pull-requests-limit: 10
   - package-ecosystem: pip
     directory: "/"
@@ -20,7 +24,7 @@ updates:
           - "*"
     open-pull-requests-limit: 10
   - package-ecosystem: docker
-    directory: "/"
+    directory: "/**"
     schedule:
       interval: daily
     open-pull-requests-limit: 10
