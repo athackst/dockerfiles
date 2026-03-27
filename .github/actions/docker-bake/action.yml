@@ -60,25 +60,11 @@ runs:
       shell: bash
       run: |
         set -euo pipefail
-        ghcr_login_user="${{ inputs.ghcr-username }}"
-        if [[ -z "$ghcr_login_user" ]]; then
-          ghcr_login_user="${{ github.actor }}"
-        fi
 
-        ghcr_owner="${{ inputs.ghcr-username }}"
-        # Dependabot usernames include brackets (e.g. dependabot[bot]) which are
-        # invalid in image/cache references; fall back to repo owner namespace.
-        if [[ -z "$ghcr_owner" || "$ghcr_owner" == *"["* || "$ghcr_owner" == *"]"* ]]; then
-          ghcr_owner="${{ github.repository_owner }}"
-        fi
-        ghcr_owner="$(printf '%s' "$ghcr_owner" | tr '[:upper:]' '[:lower:]' | sed -E 's/[^a-z0-9._-]+/-/g; s/^-+//; s/-+$//')"
-        if [[ -z "$ghcr_owner" ]]; then
-          ghcr_owner="$(printf '%s' "${{ github.repository_owner }}" | tr '[:upper:]' '[:lower:]' | sed -E 's/[^a-z0-9._-]+/-/g; s/^-+//; s/-+$//')"
-        fi
+        ghcr_owner="${{ github.repository_owner }}"
 
         family="${{ inputs.family }}"
         distro="${{ inputs.distro }}"
-        echo "ghcr_login_user=$ghcr_login_user" >> "$GITHUB_OUTPUT"
         echo "ghcr_owner=$ghcr_owner" >> "$GITHUB_OUTPUT"
         echo "family=${family,,}" >> "$GITHUB_OUTPUT"
         echo "distro=${distro,,}" >> "$GITHUB_OUTPUT"
@@ -91,11 +77,11 @@ runs:
         password: ${{ inputs.docker-password }}
 
     - name: Log in to GHCR
-      if: ${{ inputs.ghcr-password && steps.refs.outputs.ghcr_login_user }}
+      if: ${{ inputs.ghcr-username && inputs.ghcr-password }}
       uses: docker/login-action@v3
       with:
         registry: ghcr.io
-        username: ${{ steps.refs.outputs.ghcr_login_user }}
+        username: ${{ inputs.ghcr-username }}
         password: ${{ inputs.ghcr-password }}
 
     - name: Set up Python
@@ -131,7 +117,7 @@ runs:
              --family "${{ inputs.family }}"
              --distro "${{ inputs.distro }}"
              --platform "${{ steps.detect.outputs.platform }}"
-             ${{ inputs.ghcr-password && format('--ghcr-username "{0}"', steps.refs.outputs.ghcr_owner) || '' }}
+             ${{ inputs.ghcr-password && format('--ghcr-owner "{0}"', steps.refs.outputs.ghcr_owner) || '' }}
              ${{ inputs.docker-password && format('--docker-username "{0}"', inputs.docker-username) || '' }}
              ${{ inputs.push == 'true' && '--digest' || '' }}
         )
@@ -147,7 +133,7 @@ runs:
         push: ${{ inputs.push }}
         set: |
           ${{ steps.gen.outputs.release }}-*.platform=${{ steps.detect.outputs.platform }}
-          *.cache-to=type=gha,mode=max,scope=${{ steps.gen.outputs.group }}
+          ${{ inputs.push == 'true' && format('*.cache-to=type=gha,mode=max,scope={0},ignore-error=true', steps.gen.outputs.group) || format('*.cache-to=type=gha,mode=min,scope={0},ignore-error=true', steps.gen.outputs.group) }}
           *.cache-from=type=gha,scope=${{ steps.gen.outputs.group }}
           ${{ (inputs.push == 'true' && inputs.ghcr-password && steps.refs.outputs.ghcr_owner) && format('*.cache-to=type=registry,ref=ghcr.io/{0}/{1}:{2}-{3}-buildcache,mode=max', steps.refs.outputs.ghcr_owner, steps.refs.outputs.family, steps.refs.outputs.distro, steps.detect.outputs.platform_key) || '' }}
           ${{ (inputs.ghcr-password && steps.refs.outputs.ghcr_owner) && format('*.cache-from=type=registry,ref=ghcr.io/{0}/{1}:{2}-{3}-buildcache', steps.refs.outputs.ghcr_owner, steps.refs.outputs.family, steps.refs.outputs.distro, steps.detect.outputs.platform_key) || '' }}
@@ -161,8 +147,9 @@ runs:
         meta_dir="${{ github.workspace }}/.tmp"
         mkdir -p "$meta_dir"
         meta_file="bake-metadata-${{ inputs.family }}-${{ inputs.distro }}-${{ steps.detect.outputs.platform_key }}.json"
-        metadata='${{ steps.bake.outputs.metadata }}'
-        printf '%s' "$metadata" > "$meta_dir/$meta_file"
+        cat > "$meta_dir/$meta_file" <<'__DOCKER_BAKE_METADATA__'
+        ${{ steps.bake.outputs.metadata }}
+        __DOCKER_BAKE_METADATA__
         echo "metadata_path=$meta_dir/$meta_file" >> "$GITHUB_OUTPUT"
         echo "Saved $meta_file ($(wc -c < "$meta_dir/$meta_file") bytes)"
 

@@ -11,7 +11,7 @@ Example:
     --family ros2 \
     --distro rolling \
     --platform linux/amd64 \
-    --ghcr-username <user> \
+    --ghcr-owner <owner> \
     --docker-username <user> \
     --digest
 
@@ -142,7 +142,15 @@ def main() -> int:
         help="Docker platform os/arch[/variant] (e.g., linux/amd64).",
     )
     parser.add_argument(
-        "--ghcr-username", default="", help="GHCR owner/org for final tags."
+        "--ghcr-owner",
+        dest="ghcr_owner",
+        default="",
+        help="GHCR owner/org for final tags.",
+    )
+    parser.add_argument(
+        "--ghcr-username",
+        dest="ghcr_owner",
+        help=argparse.SUPPRESS,
     )
     parser.add_argument(
         "--docker-username",
@@ -187,7 +195,7 @@ def main() -> int:
     stage_targets: list[str] = []
     set_lines: list[str] = []
     normalized_family = args.family.strip().lower()
-    normalized_ghcr_user = args.ghcr_username.strip().lower()
+    normalized_ghcr_owner = args.ghcr_owner.strip().lower()
     normalized_docker_user = args.docker_username.strip().lower()
     for tgt in entry.get("targets", []):
         if not platforms_support(tgt.get("platforms", ""), platform):
@@ -198,9 +206,9 @@ def main() -> int:
         stage_targets.append(tname)
 
         destinations: list[str] = []
-        if normalized_ghcr_user:
+        if normalized_ghcr_owner:
             destinations.append(
-                f"ghcr.io/{normalized_ghcr_user}/{normalized_family}"
+                f"ghcr.io/{normalized_ghcr_owner}/{normalized_family}"
             )
         if normalized_docker_user:
             destinations.append(
