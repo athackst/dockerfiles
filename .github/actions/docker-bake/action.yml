@@ -94,6 +94,18 @@ runs:
         key="${plat//\//-}"
         echo "platform_key=$key" >> "$GITHUB_OUTPUT"
 
+    - name: Normalize registry ref parts
+      id: refs
+      shell: bash
+      run: |
+        set -euo pipefail
+        ghcr_owner="${{ inputs.ghcr-username }}"
+        family="${{ inputs.family }}"
+        distro="${{ inputs.distro }}"
+        echo "ghcr_owner=${ghcr_owner,,}" >> "$GITHUB_OUTPUT"
+        echo "family=${family,,}" >> "$GITHUB_OUTPUT"
+        echo "distro=${distro,,}" >> "$GITHUB_OUTPUT"
+
     - name: Compute bake variables
       id: gen
       shell: bash
@@ -121,8 +133,8 @@ runs:
           ${{ steps.gen.outputs.release }}-*.platform=${{ steps.detect.outputs.platform }}
           *.cache-to=type=gha,mode=max,scope=${{ steps.gen.outputs.group }}
           *.cache-from=type=gha,scope=${{ steps.gen.outputs.group }}
-          ${{ (inputs.push && inputs.ghcr-password && inputs.ghcr-username) && format('*.cache-to=type=registry,ref=ghcr.io/{0}/{1}:{2}-{3}-buildcache,mode=max', inputs.ghcr-username, inputs.family, inputs.distro, steps.detect.outputs.platform_key) || '' }}
-          ${{ (inputs.ghcr-password && inputs.ghcr-username) && format('*.cache-from=type=registry,ref=ghcr.io/{0}/{1}:{2}-{3}-buildcache', inputs.ghcr-username, inputs.family, inputs.distro, steps.detect.outputs.platform_key) || '' }}
+          ${{ (inputs.push && inputs.ghcr-password && steps.refs.outputs.ghcr_owner) && format('*.cache-to=type=registry,ref=ghcr.io/{0}/{1}:{2}-{3}-buildcache,mode=max', steps.refs.outputs.ghcr_owner, steps.refs.outputs.family, steps.refs.outputs.distro, steps.detect.outputs.platform_key) || '' }}
+          ${{ (inputs.ghcr-password && steps.refs.outputs.ghcr_owner) && format('*.cache-from=type=registry,ref=ghcr.io/{0}/{1}:{2}-{3}-buildcache', steps.refs.outputs.ghcr_owner, steps.refs.outputs.family, steps.refs.outputs.distro, steps.detect.outputs.platform_key) || '' }}
           ${{ steps.gen.outputs.set_lines }}
 
     - name: Persist Bake metadata for merge
@@ -138,7 +150,7 @@ runs:
         echo "metadata_path=$meta_dir/$meta_file" >> "$GITHUB_OUTPUT"
         echo "Saved $meta_file ($(wc -c < "$meta_dir/$meta_file") bytes)"
 
-    - uses: actions/upload-artifact@v4
+    - uses: actions/upload-artifact@v6
       with:
         name: bake-metadata-${{ steps.gen.outputs.group }}
         path: ${{ steps.persist.outputs.metadata_path }}

@@ -76,9 +76,9 @@ class GetVariablesTestCase(unittest.TestCase):
                 "--platform",
                 "linux/amd64",
                 "--ghcr-username",
-                "gh",
+                "GhUser",
                 "--docker-username",
-                "dk",
+                "DockerUSER",
                 "--digest",
             ]
         )
@@ -99,8 +99,8 @@ class GetVariablesTestCase(unittest.TestCase):
         )
 
         set_lines = outputs["set_lines"]
-        self.assertIn("ghcr.io/gh/ros2", set_lines)
-        self.assertIn("docker.io/dk/ros2", set_lines)
+        self.assertIn("ghcr.io/ghuser/ros2", set_lines)
+        self.assertIn("docker.io/dockeruser/ros2", set_lines)
 
     def test_main_sets_exists_false_when_targets_missing(self):
         self._write_templates(

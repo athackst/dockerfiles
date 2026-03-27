@@ -186,6 +186,9 @@ def main() -> int:
     stages: list[str] = []
     stage_targets: list[str] = []
     set_lines: list[str] = []
+    normalized_family = args.family.strip().lower()
+    normalized_ghcr_user = args.ghcr_username.strip().lower()
+    normalized_docker_user = args.docker_username.strip().lower()
     for tgt in entry.get("targets", []):
         if not platforms_support(tgt.get("platforms", ""), platform):
             continue
@@ -195,11 +198,13 @@ def main() -> int:
         stage_targets.append(tname)
 
         destinations: list[str] = []
-        if args.ghcr_username:
-            destinations.append(f"ghcr.io/{args.ghcr_username}/{args.family}")
-        if args.docker_username:
+        if normalized_ghcr_user:
             destinations.append(
-                f"docker.io/{args.docker_username}/{args.family}"
+                f"ghcr.io/{normalized_ghcr_user}/{normalized_family}"
+            )
+        if normalized_docker_user:
+            destinations.append(
+                f"docker.io/{normalized_docker_user}/{normalized_family}"
             )
 
         if args.digest:
