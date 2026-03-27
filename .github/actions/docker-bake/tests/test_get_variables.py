@@ -75,7 +75,7 @@ class GetVariablesTestCase(unittest.TestCase):
                 "rolling",
                 "--platform",
                 "linux/amd64",
-                "--ghcr-username",
+                "--ghcr-owner",
                 "GhUser",
                 "--docker-username",
                 "DockerUSER",
