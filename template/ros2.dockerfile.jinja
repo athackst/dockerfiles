@@ -42,6 +42,8 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     python3-rosdep \
   && rm -rf /var/lib/apt/lists/*
 
+{% include 'snippits/ros2_user.jinja' %}
+
 {%- if 'nvidia' in base_image %}
 
 {% include 'snippits/nvidia.jinja' %}
@@ -74,8 +76,6 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
   && rm -rf /var/lib/apt/lists/*
 
 RUN rosdep init || echo "rosdep already initialized"
-
-{% include 'snippits/ros2_user.jinja' %}
 
 ENV DEBIAN_FRONTEND=
 ENV AMENT_CPPCHECK_ALLOW_SLOW_VERSIONS=1
