@@ -130,7 +130,7 @@ runs:
 
     - name: Bake
       id: bake
-      uses: docker/bake-action@v6
+      uses: docker/bake-action@v7
       with:
         files: docker-bake.hcl
         targets: ${{ steps.gen.outputs.group }}
