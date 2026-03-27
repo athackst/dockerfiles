@@ -150,7 +150,7 @@ runs:
         echo "metadata_path=$meta_dir/$meta_file" >> "$GITHUB_OUTPUT"
         echo "Saved $meta_file ($(wc -c < "$meta_dir/$meta_file") bytes)"
 
-    - uses: actions/upload-artifact@v6
+    - uses: actions/upload-artifact@v7
       with:
         name: bake-metadata-${{ steps.gen.outputs.group }}
         path: ${{ steps.persist.outputs.metadata_path }}
