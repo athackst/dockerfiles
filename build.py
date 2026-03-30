@@ -12,7 +12,7 @@ from typing import Iterable
 
 import click
 
-from generate import generate_dockerfiles as gen
+from generate import gen
 from generate import templates
 
 """ md

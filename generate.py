@@ -4,6 +4,7 @@ import os
 import ruamel.yaml
 import json
 import logging
+import click
 from jinja2 import Environment, FileSystemLoader
 
 
@@ -70,8 +71,9 @@ class Templates:
                 continue
             name = distro["name"]
             distro["compose_file"] = f"{repository}.docker-compose.yml.jinja"
-            distro["compose_out_file"] = \
+            distro["compose_out_file"] = (
                 f"docker-compose/{repository}/{name}-docker-compose.yml"
+            )
             docker_compose_files.append(distro)
         return docker_compose_files
 
@@ -155,12 +157,12 @@ class Templates:
 templates = Templates()
 
 
-def generate_dockerfiles(log):
+def generate_dockerfiles(eol: bool = False):
     """Generate the dockerfiles for this repo."""
     file_loader = FileSystemLoader("template")
     env = Environment(loader=file_loader)
 
-    for dockerfile in templates.dockerfile_settings():
+    for dockerfile in templates.dockerfile_settings(eol=eol):
         # The jinja template
         template = env.get_template(dockerfile["template_file"])
         output = template.render(dockerfile)
@@ -172,7 +174,7 @@ def generate_dockerfiles(log):
         dockerfile_out.close()
 
 
-def generate_readmes(log):
+def generate_readmes():
     """Generate the readme files."""
     file_loader = FileSystemLoader("template")
     env = Environment(loader=file_loader)
@@ -191,12 +193,12 @@ def generate_readmes(log):
         readme_out.close()
 
 
-def generate_docker_compose(log):
+def generate_docker_compose(eol: bool = False):
     """Generate the docker compose files."""
     file_loader = FileSystemLoader("template")
     env = Environment(loader=file_loader)
 
-    for compose_settings in templates.dockercompose_settings():
+    for compose_settings in templates.dockercompose_settings(eol=eol):
         template = env.get_template(compose_settings["compose_file"])
         output = template.render(compose_settings)
         out_file = compose_settings["compose_out_file"]
@@ -207,20 +209,20 @@ def generate_docker_compose(log):
         compose_out.close()
 
 
-def generate_tasks(log):
-    """Generate tasks with non-eol images."""
+def generate_tasks(eol: bool = False):
+    """Generate tasks with available image names."""
     log.info("Generating tasks.")
     tasks_file = ".vscode/tasks.json"
     with open(tasks_file, "r") as file:
         tasks = json_parser.load(file)
         for input in tasks["inputs"]:
             if input["id"] == "build_name":
-                input["options"] = templates.task_names() + ["all"]
+                input["options"] = templates.task_names(eol=eol) + ["all"]
     with open(tasks_file, "w") as file:
         json_parser.dump(tasks, file, indent=2)
 
 
-def generate_bake(log, include_eol=False):
+def generate_bake(include_eol=False):
     """Generate docker-bake.hcl from templates.yml."""
     file_loader = FileSystemLoader("template")
     env = Environment(loader=file_loader, trim_blocks=True, lstrip_blocks=True)
@@ -241,7 +243,15 @@ def generate_bake(log, include_eol=False):
         f.write(output)
 
 
-if __name__ == "__main__":
+def gen(log, eol: bool = False):
+    log = log
+    generate_dockerfiles(eol=eol)
+    generate_readmes()
+    generate_docker_compose(eol=eol)
+    generate_tasks(eol=eol)
+
+
+def setup_logging():
     # Set up logger.
     log.setLevel(logging.INFO)
     formatter = logging.Formatter("%(message)s")
@@ -250,9 +260,21 @@ if __name__ == "__main__":
     stream_handler.setFormatter(formatter)
     log.addHandler(stream_handler)
 
-    generate_dockerfiles(log)
-    generate_readmes(log)
-    generate_docker_compose(log)
-    generate_tasks(log)
-    generate_bake(log, include_eol=False)
+
+@click.command()
+@click.option(
+    "--eol/--no-eol",
+    default=False,
+    help="Include end-of-life images when generating files.",
+)
+def main(eol: bool):
+    """Generate Dockerfiles, compose files, readmes, and task entries."""
+    setup_logging()
+    gen(log, eol=eol)
+    generate_bake(include_eol=eol)
     log.info("Finished generating dockerfiles.")
+
+
+if __name__ == "__main__":
+    # pylint: disable=no-value-for-parameter
+    main()

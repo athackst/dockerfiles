@@ -99,14 +99,26 @@ RUN apt-get update && apt-get install -y --no-install-recommends git-core bash-c
 ENV DEBIAN_FRONTEND=
 
 ###########################################
-# Full image
+# Desktop image
 ###########################################
-FROM dev AS full
+FROM dev AS desktop
 
 ENV DEBIAN_FRONTEND=noninteractive
-# Install the full release
+# Install the desktop release
 RUN apt-get update && apt-get install -y --no-install-recommends \
   ros-noetic-desktop \
+  && rm -rf /var/lib/apt/lists/*
+ENV DEBIAN_FRONTEND=
+
+###########################################
+# Full image
+###########################################
+FROM desktop AS full
+
+ENV DEBIAN_FRONTEND=noninteractive
+# Install the desktop release
+RUN apt-get update && apt-get install -y --no-install-recommends \
+  ros-noetic-desktop-full \
   && rm -rf /var/lib/apt/lists/*
 ENV DEBIAN_FRONTEND=
 

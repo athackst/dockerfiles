@@ -15,7 +15,7 @@ ros:
         platforms: "linux/amd64"
     python_env: "3"
     python_version: "3"
-    ubuntu_distro: "20.04"
+    base_image: "ubuntu:20.04"
     eol: true
   -
     name: melodic
@@ -33,7 +33,7 @@ ros:
         platforms: "linux/amd64"
     python_env: ""
     python_version: "2.7"
-    ubuntu_distro: "18.04"
+    base_image: "ubuntu:18.04"
     eol: true
   -
     name: lunar
@@ -51,7 +51,7 @@ ros:
         platforms: "linux/amd64"
     python_env: ""
     python_version: "2.7"
-    ubuntu_distro: "18.04"
+    base_image: "ubuntu:18.04"
     eol: true
   -
     name: kinetic
@@ -69,7 +69,7 @@ ros:
         platforms: "linux/amd64"
     python_env: ""
     python_version: "2.7"
-    ubuntu_distro: "16.04"
+    base_image: "ubuntu:16.04"
     eol: true
 ros2:
   -
@@ -87,8 +87,7 @@ ros2:
       - target: gazebo
         platforms: "linux/amd64"
     python_version: "3.12"
-    base_image: "ubuntu"
-    image_version: "24.04"
+    base_image: "ubuntu:24.04"
   -
     name: rolling-cuda
     ros_distro: rolling
@@ -104,8 +103,7 @@ ros2:
       - target: gazebo
         platforms: "linux/amd64"
     python_version: "3.12"
-    base_image: "nvidia/cuda"
-    image_version: "13.0.1-cudnn-runtime-ubuntu24.04"
+    base_image: "nvidia/cuda:13.0.1-cudnn-runtime-ubuntu24.04"
   -
     name: kilted
     ros_distro: kilted
@@ -121,8 +119,7 @@ ros2:
       - target: gazebo
         platforms: "linux/amd64"
     python_version: "3.12"
-    base_image: "ubuntu"
-    image_version: "24.04"
+    base_image: "ubuntu:24.04"
   -
     name: jazzy
     ros_distro: jazzy
@@ -138,8 +135,7 @@ ros2:
       - target: gazebo
         platforms: "linux/amd64"
     python_version: "3.12"
-    base_image: "ubuntu"
-    image_version: "24.04"
+    base_image: "ubuntu:24.04"
   -
     name: jazzy-cuda
     ros_distro: jazzy
@@ -155,8 +151,7 @@ ros2:
       - target: gazebo
         platforms: "linux/amd64"
     python_version: "3.12"
-    base_image: "nvidia/cuda"
-    image_version: "13.0.1-cudnn-runtime-ubuntu24.04"
+    base_image: "nvidia/cuda:13.0.1-cudnn-runtime-ubuntu24.04"
   -
     name: iron
     ros_distro: iron
@@ -172,8 +167,7 @@ ros2:
       - target: gazebo
         platforms: "linux/amd64"
     python_version: "3.10"
-    base_image: "ubuntu"
-    image_version: "22.04"
+    base_image: "ubuntu:22.04"
     eol: true
   -
     name: iron-cuda
@@ -190,8 +184,7 @@ ros2:
       - target: gazebo
         platforms: "linux/amd64"
     python_version: "3.10"
-    base_image: "nvidia/cuda"
-    image_version: "13.0.1-cudnn-runtime-ubuntu24.04"
+    base_image: "nvidia/cuda:13.0.1-cudnn-runtime-ubuntu24.04"
     eol: true
   -
     name: humble
@@ -208,8 +201,7 @@ ros2:
       - target: gazebo
         platforms: "linux/amd64"
     python_version: "3.10"
-    base_image: "ubuntu"
-    image_version: "22.04"
+    base_image: "ubuntu:22.04"
   -
     name: humble-cuda
     ros_distro: humble
@@ -225,8 +217,7 @@ ros2:
       - target: gazebo
         platforms: "linux/amd64"
     python_version: "3.10"
-    base_image: "nvidia/cuda"
-    image_version: "13.0.1-cudnn-runtime-ubuntu22.04"
+    base_image: "nvidia/cuda:13.0.1-cudnn-runtime-ubuntu22.04"
   -
     name: galactic
     ros_distro: galactic
@@ -242,8 +233,7 @@ ros2:
       - target: gazebo
         platforms: "linux/amd64"
     python_version: "3.8"
-    base_image: "ubuntu"
-    image_version: "20.04"
+    base_image: "ubuntu:20.04"
     eol: true
   -
     name: galactic-cuda
@@ -260,8 +250,7 @@ ros2:
       - target: gazebo
         platforms: "linux/amd64"
     python_version: "3.8"
-    base_image: "nvidia/cuda"
-    image_version: "11.7.0-runtime-ubuntu20.04"
+    base_image: "nvidia/cuda:11.7.0-runtime-ubuntu20.04"
     eol: true
   -
     name: foxy
@@ -278,8 +267,7 @@ ros2:
       - target: gazebo
         platforms: "linux/amd64"
     python_version: "3.8"
-    base_image: "ubuntu"
-    image_version: "20.04"
+    base_image: "ubuntu:20.04"
     eol: true
   -
     name: foxy-cuda
@@ -296,8 +284,7 @@ ros2:
       - target: gazebo
         platforms: "linux/amd64"
     python_version: "3.8"
-    base_image: "nvidia/cuda"
-    image_version: "11.8.0-runtime-ubuntu20.04"
+    base_image: "nvidia/cuda:11.8.0-runtime-ubuntu20.04"
     eol: true
   -
     name: eloquent
@@ -314,8 +301,7 @@ ros2:
       - target: gazebo
         platforms: "linux/amd64"
     python_version: "3.6"
-    base_image: "ubuntu"
-    image_version: "18.04"
+    base_image: "ubuntu:18.04"
     eol: true
   -
     name: dashing
@@ -332,8 +318,7 @@ ros2:
       - target: gazebo
         platforms: "linux/amd64"
     python_version: "3.6"
-    base_image: "ubuntu"
-    image_version: "18.04"
+    base_image: "ubuntu:18.04"
     eol: true
 gazebo:
   -
@@ -344,7 +329,7 @@ gazebo:
         platforms: "linux/amd64"
       - target: dev
         platforms: "linux/amd64"
-    ubuntu_distro: "20.04"
+    base_image: "ubuntu:20.04"
     eol: true
   -
     name: gazebo10
@@ -354,7 +339,7 @@ gazebo:
         platforms: "linux/amd64"
       - target: dev
         platforms: "linux/amd64"
-    ubuntu_distro: "18.04"
+    base_image: "ubuntu:18.04"
     eol: true
   -
     name: gazebo9
@@ -364,7 +349,7 @@ gazebo:
         platforms: "linux/amd64"
       - target: dev
         platforms: "linux/amd64"
-    ubuntu_distro: "18.04"
+    base_image: "ubuntu:18.04"
     eol: true
 ignition:
   -
@@ -376,7 +361,7 @@ ignition:
       - target: dev
         platforms: "linux/amd64"
     gazebo_version: "6"
-    ubuntu_distro: "20.04"
+    base_image: "ubuntu:20.04"
   -
     name: edifice
     ign_distro: edifice
@@ -386,7 +371,7 @@ ignition:
       - target: dev
         platforms: "linux/amd64"
     gazebo_version: "5"
-    ubuntu_distro: "20.04"
+    base_image: "ubuntu:20.04"
     eol: true
   -
     name: dome
@@ -397,7 +382,7 @@ ignition:
       - target: dev
         platforms: "linux/amd64"
     gazebo_version: "4"
-    ubuntu_distro: "18.04"
+    base_image: "ubuntu:18.04"
     eol: true
   -
     name: citadel
@@ -408,7 +393,7 @@ ignition:
       - target: dev
         platforms: "linux/amd64"
     gazebo_version: "3"
-    ubuntu_distro: "18.04"
+    base_image: "ubuntu:18.04"
     eol: true
 gz:
   -
@@ -419,8 +404,7 @@ gz:
         platforms: "linux/amd64"
       - target: dev
         platforms: "linux/amd64"
-    base_image: "ubuntu"
-    image_version: "24.04"
+    base_image: "ubuntu:24.04"
   -
     name: jetty-cuda
     gz_distro: jetty
@@ -429,8 +413,7 @@ gz:
         platforms: "linux/amd64"
       - target: dev
         platforms: "linux/amd64"
-    base_image: "nvidia/cuda"
-    image_version: "12.8.1-runtime-ubuntu24.04"
+    base_image: "nvidia/cuda:12.8.1-runtime-ubuntu24.04"
   -
     name: ionic
     gz_distro: ionic
@@ -439,8 +422,7 @@ gz:
         platforms: "linux/amd64"
       - target: dev
         platforms: "linux/amd64"
-    base_image: "ubuntu"
-    image_version: "24.04"
+    base_image: "ubuntu:24.04"
   -
     name: ionic-cuda
     gz_distro: ionic
@@ -449,8 +431,7 @@ gz:
         platforms: "linux/amd64"
       - target: dev
         platforms: "linux/amd64"
-    base_image: "nvidia/cuda"
-    image_version: "12.8.1-runtime-ubuntu24.04"
+    base_image: "nvidia/cuda:12.8.1-runtime-ubuntu24.04"
   -
     name: harmonic
     gz_distro: harmonic
@@ -459,8 +440,7 @@ gz:
         platforms: "linux/amd64"
       - target: dev
         platforms: "linux/amd64"
-    base_image: "ubuntu"
-    image_version: "22.04"
+    base_image: "ubuntu:22.04"
   -
     name: harmonic-cuda
     gz_distro: harmonic
@@ -469,8 +449,7 @@ gz:
         platforms: "linux/amd64"
       - target: dev
         platforms: "linux/amd64"
-    base_image: "nvidia/cuda"
-    image_version: "12.5.0-runtime-ubuntu22.04"
+    base_image: "nvidia/cuda:12.5.0-runtime-ubuntu22.04"
   -
     name: garden
     gz_distro: garden
@@ -479,8 +458,7 @@ gz:
         platforms: "linux/amd64"
       - target: dev
         platforms: "linux/amd64"
-    base_image: "ubuntu"
-    image_version: "20.04"
+    base_image: "ubuntu:20.04"
     eol: true
   -
     name: garden-cuda
@@ -490,6 +468,5 @@ gz:
         platforms: "linux/amd64"
       - target: dev
         platforms: "linux/amd64"
-    base_image: "nvidia/cuda"
-    image_version: "12.5.0-runtime-ubuntu20.04"
+    base_image: "nvidia/cuda:12.5.0-runtime-ubuntu20.04"
     eol: true
