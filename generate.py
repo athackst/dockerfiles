@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 """Generate the dockerfiles from a jinja template."""
+import os
 import ruamel.yaml
 import json
 import logging
@@ -165,6 +166,7 @@ def generate_dockerfiles(log):
         output = template.render(dockerfile)
         out_file = dockerfile["out_file"]
         log.info(f"Generating {out_file}")
+        os.makedirs(os.path.dirname(out_file), exist_ok=True)
         dockerfile_out = open(out_file, "w")
         dockerfile_out.write(output)
         dockerfile_out.close()
@@ -183,6 +185,7 @@ def generate_readmes(log):
             {"repo_name": repository, "dockerfiles": dockerfiles}
         )
         readme_file = f"{repository}/README.md"
+        os.makedirs(os.path.dirname(readme_file), exist_ok=True)
         readme_out = open(readme_file, "w")
         readme_out.write(readme_output)
         readme_out.close()
@@ -198,6 +201,7 @@ def generate_docker_compose(log):
         output = template.render(compose_settings)
         out_file = compose_settings["compose_out_file"]
         log.info(f"Generating {out_file}")
+        os.makedirs(os.path.dirname(out_file), exist_ok=True)
         compose_out = open(out_file, "w")
         compose_out.write(output)
         compose_out.close()
