@@ -108,23 +108,30 @@ RUN curl -L -s -o /tmp/ros2-apt-source.deb https://github.com/ros-infrastructure
 
 # Get dev tools
 RUN apt-get update && apt-get install -y --no-install-recommends\
+    bash-completion \
     build-essential \
+    ca-certificates \
     clang \
     cmake \
+    curl \
     git \
-    git \
+    gnupg \
     lcov \
     libasio-dev \
     libc++-dev \
     libc++abi-dev \
     libssl-dev \
     libtinyxml2-dev \
+    lsb-release \
+    pkg-config \
+    python3-argcomplete \
     python3-colcon-common-extensions \
     python3-dev \
     python3-pip \
     python3-setuptools \
     python3-vcstool \
     python3-wheel \
+    wget \
     vim \
   && rm -rf /var/lib/apt/lists/*
 
