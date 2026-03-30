@@ -14,7 +14,7 @@ pycodestyle==2.14.0
 pydantic==2.12.5
 pydantic_core==2.41.5
 pyflakes==3.4.0
-Pygments==2.19.2
+Pygments==2.20.0
 pyparsing==3.3.2
 requests==2.33.0
 rich==14.3.3
