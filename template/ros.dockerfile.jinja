@@ -5,7 +5,7 @@
 ###########################################
 # Base image
 ###########################################
-FROM ubuntu:{{ ubuntu_distro }} AS base
+FROM {{ base_image }} AS base
 
 ENV DEBIAN_FRONTEND=noninteractive
 
@@ -23,24 +23,19 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
   && sh -c 'echo "deb http://packages.ros.org/ros/ubuntu $(lsb_release -sc) main" > /etc/apt/sources.list.d/ros-latest.list' \
   && curl -sSL 'http://keyserver.ubuntu.com/pks/lookup?op=get&search=0xC1CF6E31E6BADE8868B172B4F42ED6FBAB17C654' | apt-key add - \
   && apt-get update && apt-get install -y --no-install-recommends \
-    ros-{{ ros_distro }}-ros-base \
+    ros-{{ distro }}-ros-base \
   && rm -rf /var/lib/apt/lists/*
 
 # Setup environment
-ENV LD_LIBRARY_PATH=/opt/ros/{{ ros_distro }}/lib
-ENV ROS_DISTRO={{ ros_distro }}
-ENV ROS_ROOT=/opt/ros/{{ ros_distro }}/share/ros
-ENV ROS_PACKAGE_PATH=/opt/ros/{{ ros_distro }}/share
-ENV ROS_MASTER_URI=http://localhost:11311
-ENV ROS_PYTHON_VERSION={{ python_env }}
-ENV ROS_VERSION=1
-ENV PATH=/opt/ros/{{ ros_distro }}/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
-ENV ROSLISP_PACKAGE_DIRECTORIES=
-ENV PYTHONPATH=/opt/ros/{{ ros_distro }}/lib/python{{ python_version }}/dist-packages
-ENV PKG_CONFIG_PATH=/opt/ros/{{ ros_distro }}/lib/pkgconfig
-ENV ROS_ETC_DIR=/opt/ros/{{ ros_distro }}/etc/ros
-ENV CMAKE_PREFIX_PATH=/opt/ros/{{ ros_distro }}
 ENV DEBIAN_FRONTEND=
+
+ENV ROS_DISTRO={{ distro }}
+
+# setup entrypoint
+COPY ./ros_entrypoint.sh /
+
+ENTRYPOINT ["/ros_entrypoint.sh"]
+CMD ["bash"]
 
 ###########################################
 # Develop image
@@ -50,14 +45,14 @@ FROM base AS dev
 ENV DEBIAN_FRONTEND=noninteractive
 # Install dev tools
 RUN apt-get update && apt-get install -y --no-install-recommends \
-    python{{ python_env }}-rosdep \
-    python{{ python_env }}-rosinstall \
-    python{{ python_env }}-rosinstall-generator \
-    python{{ python_env }}-wstool \
-    python{{ python_env }}-pip \
-    python{{ python_env }}-pep8 \
-    python{{ python_env }}-autopep8 \
-    pylint{{ python_env }} \
+    python-rosdep \
+    python-rosinstall \
+    python-rosinstall-generator \
+    python-wstool \
+    python-pip \
+    python-pep8 \
+    python-autopep8 \
+    pylint \
     build-essential \
     bash-completion \
     git \
@@ -76,7 +71,7 @@ FROM dev AS desktop
 ENV DEBIAN_FRONTEND=noninteractive
 # Install the desktop release
 RUN apt-get update && apt-get install -y --no-install-recommends \
-  ros-{{ ros_distro }}-desktop \
+  ros-{{ distro }}-desktop \
   && rm -rf /var/lib/apt/lists/*
 ENV DEBIAN_FRONTEND=
 
@@ -88,7 +83,7 @@ FROM desktop AS full
 ENV DEBIAN_FRONTEND=noninteractive
 # Install the desktop release
 RUN apt-get update && apt-get install -y --no-install-recommends \
-  ros-{{ ros_distro }}-desktop-full \
+  ros-{{ distro }}-desktop-full \
   && rm -rf /var/lib/apt/lists/*
 ENV DEBIAN_FRONTEND=
 
@@ -100,7 +95,7 @@ FROM full AS gazebo
 ENV DEBIAN_FRONTEND=noninteractive
 # Install gazebo
 RUN apt-get update && apt-get install -y --no-install-recommends \
-   ros-{{ ros_distro }}-gazebo-ros-pkgs ros-{{ ros_distro }}-gazebo-ros-control \
+   ros-{{ distro }}-gazebo-ros-pkgs ros-{{ distro }}-gazebo-ros-control \
   && rm -rf /var/lib/apt/lists/*
 ENV DEBIAN_FRONTEND=
 

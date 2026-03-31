@@ -167,7 +167,7 @@ runs:
       shell: bash
       run: |
         {
-          echo "### Bake summary"
+          echo "## Docker Bake summary"
           echo "- Family: \`${{ inputs.family }}\`"
           echo "- Distro:  \`${{ inputs.distro }}\`"
           echo "- Platform: \`${{ steps.detect.outputs.platform }}\`"

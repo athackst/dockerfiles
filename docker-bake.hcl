@@ -3,6 +3,214 @@
 variable "REGISTRY" { default = "althack" }
 
  
+# ----------- targets for ros-noetic -----------
+
+target "ros-noetic-base" {
+  context    = "ros"
+  dockerfile = "noetic.Dockerfile"
+  target     = "base"
+  tags       = [
+    "${REGISTRY}/ros:noetic-base",
+  ]
+}
+
+target "ros-noetic-dev" {
+  context    = "ros"
+  dockerfile = "noetic.Dockerfile"
+  target     = "dev"
+  tags       = [
+    "${REGISTRY}/ros:noetic-dev",
+  ]
+}
+
+target "ros-noetic-desktop" {
+  context    = "ros"
+  dockerfile = "noetic.Dockerfile"
+  target     = "desktop"
+  tags       = [
+    "${REGISTRY}/ros:noetic-desktop",
+  ]
+}
+
+target "ros-noetic-full" {
+  context    = "ros"
+  dockerfile = "noetic.Dockerfile"
+  target     = "full"
+  tags       = [
+    "${REGISTRY}/ros:noetic-full",
+  ]
+}
+
+target "ros-noetic-gazebo" {
+  context    = "ros"
+  dockerfile = "noetic.Dockerfile"
+  target     = "gazebo"
+  tags       = [
+    "${REGISTRY}/ros:noetic-gazebo",
+  ]
+}
+
+# ---- group for all ros-noetic  ----
+group "ros-noetic" {
+  targets = ["ros-noetic-base", "ros-noetic-dev", "ros-noetic-desktop", "ros-noetic-full", "ros-noetic-gazebo"]
+}
+
+# ----------- targets for ros-melodic -----------
+
+target "ros-melodic-base" {
+  context    = "ros"
+  dockerfile = "melodic.Dockerfile"
+  target     = "base"
+  tags       = [
+    "${REGISTRY}/ros:melodic-base",
+  ]
+}
+
+target "ros-melodic-dev" {
+  context    = "ros"
+  dockerfile = "melodic.Dockerfile"
+  target     = "dev"
+  tags       = [
+    "${REGISTRY}/ros:melodic-dev",
+  ]
+}
+
+target "ros-melodic-desktop" {
+  context    = "ros"
+  dockerfile = "melodic.Dockerfile"
+  target     = "desktop"
+  tags       = [
+    "${REGISTRY}/ros:melodic-desktop",
+  ]
+}
+
+target "ros-melodic-full" {
+  context    = "ros"
+  dockerfile = "melodic.Dockerfile"
+  target     = "full"
+  tags       = [
+    "${REGISTRY}/ros:melodic-full",
+  ]
+}
+
+target "ros-melodic-gazebo" {
+  context    = "ros"
+  dockerfile = "melodic.Dockerfile"
+  target     = "gazebo"
+  tags       = [
+    "${REGISTRY}/ros:melodic-gazebo",
+  ]
+}
+
+# ---- group for all ros-melodic  ----
+group "ros-melodic" {
+  targets = ["ros-melodic-base", "ros-melodic-dev", "ros-melodic-desktop", "ros-melodic-full", "ros-melodic-gazebo"]
+}
+
+# ----------- targets for ros-lunar -----------
+
+target "ros-lunar-base" {
+  context    = "ros"
+  dockerfile = "lunar.Dockerfile"
+  target     = "base"
+  tags       = [
+    "${REGISTRY}/ros:lunar-base",
+  ]
+}
+
+target "ros-lunar-dev" {
+  context    = "ros"
+  dockerfile = "lunar.Dockerfile"
+  target     = "dev"
+  tags       = [
+    "${REGISTRY}/ros:lunar-dev",
+  ]
+}
+
+target "ros-lunar-desktop" {
+  context    = "ros"
+  dockerfile = "lunar.Dockerfile"
+  target     = "desktop"
+  tags       = [
+    "${REGISTRY}/ros:lunar-desktop",
+  ]
+}
+
+target "ros-lunar-full" {
+  context    = "ros"
+  dockerfile = "lunar.Dockerfile"
+  target     = "full"
+  tags       = [
+    "${REGISTRY}/ros:lunar-full",
+  ]
+}
+
+target "ros-lunar-gazebo" {
+  context    = "ros"
+  dockerfile = "lunar.Dockerfile"
+  target     = "gazebo"
+  tags       = [
+    "${REGISTRY}/ros:lunar-gazebo",
+  ]
+}
+
+# ---- group for all ros-lunar  ----
+group "ros-lunar" {
+  targets = ["ros-lunar-base", "ros-lunar-dev", "ros-lunar-desktop", "ros-lunar-full", "ros-lunar-gazebo"]
+}
+
+# ----------- targets for ros-kinetic -----------
+
+target "ros-kinetic-base" {
+  context    = "ros"
+  dockerfile = "kinetic.Dockerfile"
+  target     = "base"
+  tags       = [
+    "${REGISTRY}/ros:kinetic-base",
+  ]
+}
+
+target "ros-kinetic-dev" {
+  context    = "ros"
+  dockerfile = "kinetic.Dockerfile"
+  target     = "dev"
+  tags       = [
+    "${REGISTRY}/ros:kinetic-dev",
+  ]
+}
+
+target "ros-kinetic-desktop" {
+  context    = "ros"
+  dockerfile = "kinetic.Dockerfile"
+  target     = "desktop"
+  tags       = [
+    "${REGISTRY}/ros:kinetic-desktop",
+  ]
+}
+
+target "ros-kinetic-full" {
+  context    = "ros"
+  dockerfile = "kinetic.Dockerfile"
+  target     = "full"
+  tags       = [
+    "${REGISTRY}/ros:kinetic-full",
+  ]
+}
+
+target "ros-kinetic-gazebo" {
+  context    = "ros"
+  dockerfile = "kinetic.Dockerfile"
+  target     = "gazebo"
+  tags       = [
+    "${REGISTRY}/ros:kinetic-gazebo",
+  ]
+}
+
+# ---- group for all ros-kinetic  ----
+group "ros-kinetic" {
+  targets = ["ros-kinetic-base", "ros-kinetic-dev", "ros-kinetic-desktop", "ros-kinetic-full", "ros-kinetic-gazebo"]
+}
+
 # ----------- targets for ros2-rolling -----------
 
 target "ros2-rolling-base" {
@@ -263,6 +471,110 @@ group "ros2-jazzy-cuda" {
   targets = ["ros2-jazzy-cuda-base", "ros2-jazzy-cuda-dev", "ros2-jazzy-cuda-desktop", "ros2-jazzy-cuda-full", "ros2-jazzy-cuda-gazebo"]
 }
 
+# ----------- targets for ros2-iron -----------
+
+target "ros2-iron-base" {
+  context    = "ros2"
+  dockerfile = "iron.Dockerfile"
+  target     = "base"
+  tags       = [
+    "${REGISTRY}/ros2:iron-base",
+  ]
+}
+
+target "ros2-iron-dev" {
+  context    = "ros2"
+  dockerfile = "iron.Dockerfile"
+  target     = "dev"
+  tags       = [
+    "${REGISTRY}/ros2:iron-dev",
+  ]
+}
+
+target "ros2-iron-desktop" {
+  context    = "ros2"
+  dockerfile = "iron.Dockerfile"
+  target     = "desktop"
+  tags       = [
+    "${REGISTRY}/ros2:iron-desktop",
+  ]
+}
+
+target "ros2-iron-full" {
+  context    = "ros2"
+  dockerfile = "iron.Dockerfile"
+  target     = "full"
+  tags       = [
+    "${REGISTRY}/ros2:iron-full",
+  ]
+}
+
+target "ros2-iron-gazebo" {
+  context    = "ros2"
+  dockerfile = "iron.Dockerfile"
+  target     = "gazebo"
+  tags       = [
+    "${REGISTRY}/ros2:iron-gazebo",
+  ]
+}
+
+# ---- group for all ros2-iron  ----
+group "ros2-iron" {
+  targets = ["ros2-iron-base", "ros2-iron-dev", "ros2-iron-desktop", "ros2-iron-full", "ros2-iron-gazebo"]
+}
+
+# ----------- targets for ros2-iron-cuda -----------
+
+target "ros2-iron-cuda-base" {
+  context    = "ros2"
+  dockerfile = "iron-cuda.Dockerfile"
+  target     = "base"
+  tags       = [
+    "${REGISTRY}/ros2:iron-cuda-base",
+  ]
+}
+
+target "ros2-iron-cuda-dev" {
+  context    = "ros2"
+  dockerfile = "iron-cuda.Dockerfile"
+  target     = "dev"
+  tags       = [
+    "${REGISTRY}/ros2:iron-cuda-dev",
+  ]
+}
+
+target "ros2-iron-cuda-desktop" {
+  context    = "ros2"
+  dockerfile = "iron-cuda.Dockerfile"
+  target     = "desktop"
+  tags       = [
+    "${REGISTRY}/ros2:iron-cuda-desktop",
+  ]
+}
+
+target "ros2-iron-cuda-full" {
+  context    = "ros2"
+  dockerfile = "iron-cuda.Dockerfile"
+  target     = "full"
+  tags       = [
+    "${REGISTRY}/ros2:iron-cuda-full",
+  ]
+}
+
+target "ros2-iron-cuda-gazebo" {
+  context    = "ros2"
+  dockerfile = "iron-cuda.Dockerfile"
+  target     = "gazebo"
+  tags       = [
+    "${REGISTRY}/ros2:iron-cuda-gazebo",
+  ]
+}
+
+# ---- group for all ros2-iron-cuda  ----
+group "ros2-iron-cuda" {
+  targets = ["ros2-iron-cuda-base", "ros2-iron-cuda-dev", "ros2-iron-cuda-desktop", "ros2-iron-cuda-full", "ros2-iron-cuda-gazebo"]
+}
+
 # ----------- targets for ros2-humble -----------
 
 target "ros2-humble-base" {
@@ -367,6 +679,393 @@ group "ros2-humble-cuda" {
   targets = ["ros2-humble-cuda-base", "ros2-humble-cuda-dev", "ros2-humble-cuda-desktop", "ros2-humble-cuda-full", "ros2-humble-cuda-gazebo"]
 }
 
+# ----------- targets for ros2-galactic -----------
+
+target "ros2-galactic-base" {
+  context    = "ros2"
+  dockerfile = "galactic.Dockerfile"
+  target     = "base"
+  tags       = [
+    "${REGISTRY}/ros2:galactic-base",
+  ]
+}
+
+target "ros2-galactic-dev" {
+  context    = "ros2"
+  dockerfile = "galactic.Dockerfile"
+  target     = "dev"
+  tags       = [
+    "${REGISTRY}/ros2:galactic-dev",
+  ]
+}
+
+target "ros2-galactic-desktop" {
+  context    = "ros2"
+  dockerfile = "galactic.Dockerfile"
+  target     = "desktop"
+  tags       = [
+    "${REGISTRY}/ros2:galactic-desktop",
+  ]
+}
+
+target "ros2-galactic-full" {
+  context    = "ros2"
+  dockerfile = "galactic.Dockerfile"
+  target     = "full"
+  tags       = [
+    "${REGISTRY}/ros2:galactic-full",
+  ]
+}
+
+target "ros2-galactic-gazebo" {
+  context    = "ros2"
+  dockerfile = "galactic.Dockerfile"
+  target     = "gazebo"
+  tags       = [
+    "${REGISTRY}/ros2:galactic-gazebo",
+  ]
+}
+
+# ---- group for all ros2-galactic  ----
+group "ros2-galactic" {
+  targets = ["ros2-galactic-base", "ros2-galactic-dev", "ros2-galactic-desktop", "ros2-galactic-full", "ros2-galactic-gazebo"]
+}
+
+# ----------- targets for ros2-galactic-cuda -----------
+
+target "ros2-galactic-cuda-base" {
+  context    = "ros2"
+  dockerfile = "galactic-cuda.Dockerfile"
+  target     = "base"
+  tags       = [
+    "${REGISTRY}/ros2:galactic-cuda-base",
+  ]
+}
+
+target "ros2-galactic-cuda-dev" {
+  context    = "ros2"
+  dockerfile = "galactic-cuda.Dockerfile"
+  target     = "dev"
+  tags       = [
+    "${REGISTRY}/ros2:galactic-cuda-dev",
+  ]
+}
+
+target "ros2-galactic-cuda-desktop" {
+  context    = "ros2"
+  dockerfile = "galactic-cuda.Dockerfile"
+  target     = "desktop"
+  tags       = [
+    "${REGISTRY}/ros2:galactic-cuda-desktop",
+  ]
+}
+
+target "ros2-galactic-cuda-full" {
+  context    = "ros2"
+  dockerfile = "galactic-cuda.Dockerfile"
+  target     = "full"
+  tags       = [
+    "${REGISTRY}/ros2:galactic-cuda-full",
+  ]
+}
+
+target "ros2-galactic-cuda-gazebo" {
+  context    = "ros2"
+  dockerfile = "galactic-cuda.Dockerfile"
+  target     = "gazebo"
+  tags       = [
+    "${REGISTRY}/ros2:galactic-cuda-gazebo",
+  ]
+}
+
+# ---- group for all ros2-galactic-cuda  ----
+group "ros2-galactic-cuda" {
+  targets = ["ros2-galactic-cuda-base", "ros2-galactic-cuda-dev", "ros2-galactic-cuda-desktop", "ros2-galactic-cuda-full", "ros2-galactic-cuda-gazebo"]
+}
+
+# ----------- targets for ros2-foxy -----------
+
+target "ros2-foxy-base" {
+  context    = "ros2"
+  dockerfile = "foxy.Dockerfile"
+  target     = "base"
+  tags       = [
+    "${REGISTRY}/ros2:foxy-base",
+  ]
+}
+
+target "ros2-foxy-dev" {
+  context    = "ros2"
+  dockerfile = "foxy.Dockerfile"
+  target     = "dev"
+  tags       = [
+    "${REGISTRY}/ros2:foxy-dev",
+  ]
+}
+
+target "ros2-foxy-desktop" {
+  context    = "ros2"
+  dockerfile = "foxy.Dockerfile"
+  target     = "desktop"
+  tags       = [
+    "${REGISTRY}/ros2:foxy-desktop",
+  ]
+}
+
+target "ros2-foxy-full" {
+  context    = "ros2"
+  dockerfile = "foxy.Dockerfile"
+  target     = "full"
+  tags       = [
+    "${REGISTRY}/ros2:foxy-full",
+  ]
+}
+
+target "ros2-foxy-gazebo" {
+  context    = "ros2"
+  dockerfile = "foxy.Dockerfile"
+  target     = "gazebo"
+  tags       = [
+    "${REGISTRY}/ros2:foxy-gazebo",
+  ]
+}
+
+# ---- group for all ros2-foxy  ----
+group "ros2-foxy" {
+  targets = ["ros2-foxy-base", "ros2-foxy-dev", "ros2-foxy-desktop", "ros2-foxy-full", "ros2-foxy-gazebo"]
+}
+
+# ----------- targets for ros2-foxy-cuda -----------
+
+target "ros2-foxy-cuda-base" {
+  context    = "ros2"
+  dockerfile = "foxy-cuda.Dockerfile"
+  target     = "base"
+  tags       = [
+    "${REGISTRY}/ros2:foxy-cuda-base",
+  ]
+}
+
+target "ros2-foxy-cuda-dev" {
+  context    = "ros2"
+  dockerfile = "foxy-cuda.Dockerfile"
+  target     = "dev"
+  tags       = [
+    "${REGISTRY}/ros2:foxy-cuda-dev",
+  ]
+}
+
+target "ros2-foxy-cuda-desktop" {
+  context    = "ros2"
+  dockerfile = "foxy-cuda.Dockerfile"
+  target     = "desktop"
+  tags       = [
+    "${REGISTRY}/ros2:foxy-cuda-desktop",
+  ]
+}
+
+target "ros2-foxy-cuda-full" {
+  context    = "ros2"
+  dockerfile = "foxy-cuda.Dockerfile"
+  target     = "full"
+  tags       = [
+    "${REGISTRY}/ros2:foxy-cuda-full",
+  ]
+}
+
+target "ros2-foxy-cuda-gazebo" {
+  context    = "ros2"
+  dockerfile = "foxy-cuda.Dockerfile"
+  target     = "gazebo"
+  tags       = [
+    "${REGISTRY}/ros2:foxy-cuda-gazebo",
+  ]
+}
+
+# ---- group for all ros2-foxy-cuda  ----
+group "ros2-foxy-cuda" {
+  targets = ["ros2-foxy-cuda-base", "ros2-foxy-cuda-dev", "ros2-foxy-cuda-desktop", "ros2-foxy-cuda-full", "ros2-foxy-cuda-gazebo"]
+}
+
+# ----------- targets for ros2-eloquent -----------
+
+target "ros2-eloquent-base" {
+  context    = "ros2"
+  dockerfile = "eloquent.Dockerfile"
+  target     = "base"
+  tags       = [
+    "${REGISTRY}/ros2:eloquent-base",
+  ]
+}
+
+target "ros2-eloquent-dev" {
+  context    = "ros2"
+  dockerfile = "eloquent.Dockerfile"
+  target     = "dev"
+  tags       = [
+    "${REGISTRY}/ros2:eloquent-dev",
+  ]
+}
+
+target "ros2-eloquent-desktop" {
+  context    = "ros2"
+  dockerfile = "eloquent.Dockerfile"
+  target     = "desktop"
+  tags       = [
+    "${REGISTRY}/ros2:eloquent-desktop",
+  ]
+}
+
+target "ros2-eloquent-full" {
+  context    = "ros2"
+  dockerfile = "eloquent.Dockerfile"
+  target     = "full"
+  tags       = [
+    "${REGISTRY}/ros2:eloquent-full",
+  ]
+}
+
+target "ros2-eloquent-gazebo" {
+  context    = "ros2"
+  dockerfile = "eloquent.Dockerfile"
+  target     = "gazebo"
+  tags       = [
+    "${REGISTRY}/ros2:eloquent-gazebo",
+  ]
+}
+
+# ---- group for all ros2-eloquent  ----
+group "ros2-eloquent" {
+  targets = ["ros2-eloquent-base", "ros2-eloquent-dev", "ros2-eloquent-desktop", "ros2-eloquent-full", "ros2-eloquent-gazebo"]
+}
+
+# ----------- targets for ros2-dashing -----------
+
+target "ros2-dashing-base" {
+  context    = "ros2"
+  dockerfile = "dashing.Dockerfile"
+  target     = "base"
+  tags       = [
+    "${REGISTRY}/ros2:dashing-base",
+  ]
+}
+
+target "ros2-dashing-dev" {
+  context    = "ros2"
+  dockerfile = "dashing.Dockerfile"
+  target     = "dev"
+  tags       = [
+    "${REGISTRY}/ros2:dashing-dev",
+  ]
+}
+
+target "ros2-dashing-desktop" {
+  context    = "ros2"
+  dockerfile = "dashing.Dockerfile"
+  target     = "desktop"
+  tags       = [
+    "${REGISTRY}/ros2:dashing-desktop",
+  ]
+}
+
+target "ros2-dashing-full" {
+  context    = "ros2"
+  dockerfile = "dashing.Dockerfile"
+  target     = "full"
+  tags       = [
+    "${REGISTRY}/ros2:dashing-full",
+  ]
+}
+
+target "ros2-dashing-gazebo" {
+  context    = "ros2"
+  dockerfile = "dashing.Dockerfile"
+  target     = "gazebo"
+  tags       = [
+    "${REGISTRY}/ros2:dashing-gazebo",
+  ]
+}
+
+# ---- group for all ros2-dashing  ----
+group "ros2-dashing" {
+  targets = ["ros2-dashing-base", "ros2-dashing-dev", "ros2-dashing-desktop", "ros2-dashing-full", "ros2-dashing-gazebo"]
+}
+
+# ----------- targets for gazebo-gazebo11 -----------
+
+target "gazebo-gazebo11-base" {
+  context    = "gazebo"
+  dockerfile = "gazebo11.Dockerfile"
+  target     = "base"
+  tags       = [
+    "${REGISTRY}/gazebo:gazebo11-base",
+  ]
+}
+
+target "gazebo-gazebo11-dev" {
+  context    = "gazebo"
+  dockerfile = "gazebo11.Dockerfile"
+  target     = "dev"
+  tags       = [
+    "${REGISTRY}/gazebo:gazebo11-dev",
+  ]
+}
+
+# ---- group for all gazebo-gazebo11  ----
+group "gazebo-gazebo11" {
+  targets = ["gazebo-gazebo11-base", "gazebo-gazebo11-dev"]
+}
+
+# ----------- targets for gazebo-gazebo10 -----------
+
+target "gazebo-gazebo10-base" {
+  context    = "gazebo"
+  dockerfile = "gazebo10.Dockerfile"
+  target     = "base"
+  tags       = [
+    "${REGISTRY}/gazebo:gazebo10-base",
+  ]
+}
+
+target "gazebo-gazebo10-dev" {
+  context    = "gazebo"
+  dockerfile = "gazebo10.Dockerfile"
+  target     = "dev"
+  tags       = [
+    "${REGISTRY}/gazebo:gazebo10-dev",
+  ]
+}
+
+# ---- group for all gazebo-gazebo10  ----
+group "gazebo-gazebo10" {
+  targets = ["gazebo-gazebo10-base", "gazebo-gazebo10-dev"]
+}
+
+# ----------- targets for gazebo-gazebo9 -----------
+
+target "gazebo-gazebo9-base" {
+  context    = "gazebo"
+  dockerfile = "gazebo9.Dockerfile"
+  target     = "base"
+  tags       = [
+    "${REGISTRY}/gazebo:gazebo9-base",
+  ]
+}
+
+target "gazebo-gazebo9-dev" {
+  context    = "gazebo"
+  dockerfile = "gazebo9.Dockerfile"
+  target     = "dev"
+  tags       = [
+    "${REGISTRY}/gazebo:gazebo9-dev",
+  ]
+}
+
+# ---- group for all gazebo-gazebo9  ----
+group "gazebo-gazebo9" {
+  targets = ["gazebo-gazebo9-base", "gazebo-gazebo9-dev"]
+}
+
 # ----------- targets for ignition-fortress -----------
 
 target "ignition-fortress-base" {
@@ -390,6 +1089,81 @@ target "ignition-fortress-dev" {
 # ---- group for all ignition-fortress  ----
 group "ignition-fortress" {
   targets = ["ignition-fortress-base", "ignition-fortress-dev"]
+}
+
+# ----------- targets for ignition-edifice -----------
+
+target "ignition-edifice-base" {
+  context    = "ignition"
+  dockerfile = "edifice.Dockerfile"
+  target     = "base"
+  tags       = [
+    "${REGISTRY}/ignition:edifice-base",
+  ]
+}
+
+target "ignition-edifice-dev" {
+  context    = "ignition"
+  dockerfile = "edifice.Dockerfile"
+  target     = "dev"
+  tags       = [
+    "${REGISTRY}/ignition:edifice-dev",
+  ]
+}
+
+# ---- group for all ignition-edifice  ----
+group "ignition-edifice" {
+  targets = ["ignition-edifice-base", "ignition-edifice-dev"]
+}
+
+# ----------- targets for ignition-dome -----------
+
+target "ignition-dome-base" {
+  context    = "ignition"
+  dockerfile = "dome.Dockerfile"
+  target     = "base"
+  tags       = [
+    "${REGISTRY}/ignition:dome-base",
+  ]
+}
+
+target "ignition-dome-dev" {
+  context    = "ignition"
+  dockerfile = "dome.Dockerfile"
+  target     = "dev"
+  tags       = [
+    "${REGISTRY}/ignition:dome-dev",
+  ]
+}
+
+# ---- group for all ignition-dome  ----
+group "ignition-dome" {
+  targets = ["ignition-dome-base", "ignition-dome-dev"]
+}
+
+# ----------- targets for ignition-citadel -----------
+
+target "ignition-citadel-base" {
+  context    = "ignition"
+  dockerfile = "citadel.Dockerfile"
+  target     = "base"
+  tags       = [
+    "${REGISTRY}/ignition:citadel-base",
+  ]
+}
+
+target "ignition-citadel-dev" {
+  context    = "ignition"
+  dockerfile = "citadel.Dockerfile"
+  target     = "dev"
+  tags       = [
+    "${REGISTRY}/ignition:citadel-dev",
+  ]
+}
+
+# ---- group for all ignition-citadel  ----
+group "ignition-citadel" {
+  targets = ["ignition-citadel-base", "ignition-citadel-dev"]
 }
 
 # ----------- targets for gz-jetty -----------
@@ -542,8 +1316,74 @@ group "gz-harmonic-cuda" {
   targets = ["gz-harmonic-cuda-base", "gz-harmonic-cuda-dev"]
 }
 
+# ----------- targets for gz-garden -----------
+
+target "gz-garden-base" {
+  context    = "gz"
+  dockerfile = "garden.Dockerfile"
+  target     = "base"
+  tags       = [
+    "${REGISTRY}/gz:garden-base",
+  ]
+}
+
+target "gz-garden-dev" {
+  context    = "gz"
+  dockerfile = "garden.Dockerfile"
+  target     = "dev"
+  tags       = [
+    "${REGISTRY}/gz:garden-dev",
+  ]
+}
+
+# ---- group for all gz-garden  ----
+group "gz-garden" {
+  targets = ["gz-garden-base", "gz-garden-dev"]
+}
+
+# ----------- targets for gz-garden-cuda -----------
+
+target "gz-garden-cuda-base" {
+  context    = "gz"
+  dockerfile = "garden-cuda.Dockerfile"
+  target     = "base"
+  tags       = [
+    "${REGISTRY}/gz:garden-cuda-base",
+  ]
+}
+
+target "gz-garden-cuda-dev" {
+  context    = "gz"
+  dockerfile = "garden-cuda.Dockerfile"
+  target     = "dev"
+  tags       = [
+    "${REGISTRY}/gz:garden-cuda-dev",
+  ]
+}
+
+# ---- group for all gz-garden-cuda  ----
+group "gz-garden-cuda" {
+  targets = ["gz-garden-cuda-base", "gz-garden-cuda-dev"]
+}
+
 
 # ---------- Parent-platform groups per entry (os/arch; variant-agnostic) ---------- #
+
+group "ros-noetic-linux-amd64" { targets = [ "ros-noetic-base", "ros-noetic-dev", "ros-noetic-desktop", "ros-noetic-full", "ros-noetic-gazebo" ] }
+group "ros-noetic-linux-arm64" { targets = [ "ros-noetic-base", "ros-noetic-dev", "ros-noetic-desktop", "ros-noetic-full" ] }
+
+
+group "ros-melodic-linux-amd64" { targets = [ "ros-melodic-base", "ros-melodic-dev", "ros-melodic-desktop", "ros-melodic-full", "ros-melodic-gazebo" ] }
+group "ros-melodic-linux-arm64" { targets = [ "ros-melodic-base", "ros-melodic-dev", "ros-melodic-desktop", "ros-melodic-full" ] }
+
+
+group "ros-lunar-linux-amd64" { targets = [ "ros-lunar-base", "ros-lunar-dev", "ros-lunar-desktop", "ros-lunar-full", "ros-lunar-gazebo" ] }
+group "ros-lunar-linux-arm64" { targets = [ "ros-lunar-base", "ros-lunar-dev", "ros-lunar-desktop", "ros-lunar-full" ] }
+
+
+group "ros-kinetic-linux-amd64" { targets = [ "ros-kinetic-base", "ros-kinetic-dev", "ros-kinetic-desktop", "ros-kinetic-full", "ros-kinetic-gazebo" ] }
+group "ros-kinetic-linux-arm64" { targets = [ "ros-kinetic-base", "ros-kinetic-dev", "ros-kinetic-desktop", "ros-kinetic-full" ] }
+
 
 group "ros2-rolling-linux-amd64" { targets = [ "ros2-rolling-base", "ros2-rolling-dev", "ros2-rolling-desktop", "ros2-rolling-full", "ros2-rolling-gazebo" ] }
 group "ros2-rolling-linux-arm64" { targets = [ "ros2-rolling-base" ] }
@@ -563,6 +1403,13 @@ group "ros2-jazzy-linux-arm64" { targets = [ "ros2-jazzy-base" ] }
 group "ros2-jazzy-cuda-linux-amd64" { targets = [ "ros2-jazzy-cuda-base", "ros2-jazzy-cuda-dev", "ros2-jazzy-cuda-desktop", "ros2-jazzy-cuda-full", "ros2-jazzy-cuda-gazebo" ] }
 
 
+group "ros2-iron-linux-amd64" { targets = [ "ros2-iron-base", "ros2-iron-dev", "ros2-iron-desktop", "ros2-iron-full", "ros2-iron-gazebo" ] }
+group "ros2-iron-linux-arm64" { targets = [ "ros2-iron-base", "ros2-iron-dev", "ros2-iron-desktop", "ros2-iron-full" ] }
+
+
+group "ros2-iron-cuda-linux-amd64" { targets = [ "ros2-iron-cuda-base", "ros2-iron-cuda-dev", "ros2-iron-cuda-desktop", "ros2-iron-cuda-full", "ros2-iron-cuda-gazebo" ] }
+
+
 group "ros2-humble-linux-amd64" { targets = [ "ros2-humble-base", "ros2-humble-dev", "ros2-humble-desktop", "ros2-humble-full", "ros2-humble-gazebo" ] }
 group "ros2-humble-linux-arm64" { targets = [ "ros2-humble-base", "ros2-humble-dev", "ros2-humble-desktop", "ros2-humble-full" ] }
 
@@ -570,7 +1417,47 @@ group "ros2-humble-linux-arm64" { targets = [ "ros2-humble-base", "ros2-humble-d
 group "ros2-humble-cuda-linux-amd64" { targets = [ "ros2-humble-cuda-base", "ros2-humble-cuda-dev", "ros2-humble-cuda-desktop", "ros2-humble-cuda-full", "ros2-humble-cuda-gazebo" ] }
 
 
+group "ros2-galactic-linux-amd64" { targets = [ "ros2-galactic-base", "ros2-galactic-dev", "ros2-galactic-desktop", "ros2-galactic-full", "ros2-galactic-gazebo" ] }
+group "ros2-galactic-linux-arm64" { targets = [ "ros2-galactic-base", "ros2-galactic-dev", "ros2-galactic-desktop", "ros2-galactic-full" ] }
+
+
+group "ros2-galactic-cuda-linux-amd64" { targets = [ "ros2-galactic-cuda-base", "ros2-galactic-cuda-dev", "ros2-galactic-cuda-desktop", "ros2-galactic-cuda-full", "ros2-galactic-cuda-gazebo" ] }
+
+
+group "ros2-foxy-linux-amd64" { targets = [ "ros2-foxy-base", "ros2-foxy-dev", "ros2-foxy-desktop", "ros2-foxy-full", "ros2-foxy-gazebo" ] }
+group "ros2-foxy-linux-arm64" { targets = [ "ros2-foxy-base", "ros2-foxy-dev", "ros2-foxy-desktop", "ros2-foxy-full" ] }
+
+
+group "ros2-foxy-cuda-linux-amd64" { targets = [ "ros2-foxy-cuda-base", "ros2-foxy-cuda-dev", "ros2-foxy-cuda-desktop", "ros2-foxy-cuda-full", "ros2-foxy-cuda-gazebo" ] }
+
+
+group "ros2-eloquent-linux-amd64" { targets = [ "ros2-eloquent-base", "ros2-eloquent-dev", "ros2-eloquent-desktop", "ros2-eloquent-full", "ros2-eloquent-gazebo" ] }
+group "ros2-eloquent-linux-arm64" { targets = [ "ros2-eloquent-base", "ros2-eloquent-dev", "ros2-eloquent-desktop", "ros2-eloquent-full" ] }
+
+
+group "ros2-dashing-linux-amd64" { targets = [ "ros2-dashing-base", "ros2-dashing-dev", "ros2-dashing-desktop", "ros2-dashing-full", "ros2-dashing-gazebo" ] }
+group "ros2-dashing-linux-arm64" { targets = [ "ros2-dashing-base", "ros2-dashing-dev", "ros2-dashing-desktop", "ros2-dashing-full" ] }
+
+
+group "gazebo-gazebo11-linux-amd64" { targets = [ "gazebo-gazebo11-base", "gazebo-gazebo11-dev" ] }
+
+
+group "gazebo-gazebo10-linux-amd64" { targets = [ "gazebo-gazebo10-base", "gazebo-gazebo10-dev" ] }
+
+
+group "gazebo-gazebo9-linux-amd64" { targets = [ "gazebo-gazebo9-base", "gazebo-gazebo9-dev" ] }
+
+
 group "ignition-fortress-linux-amd64" { targets = [ "ignition-fortress-base", "ignition-fortress-dev" ] }
+
+
+group "ignition-edifice-linux-amd64" { targets = [ "ignition-edifice-base", "ignition-edifice-dev" ] }
+
+
+group "ignition-dome-linux-amd64" { targets = [ "ignition-dome-base", "ignition-dome-dev" ] }
+
+
+group "ignition-citadel-linux-amd64" { targets = [ "ignition-citadel-base", "ignition-citadel-dev" ] }
 
 
 group "gz-jetty-linux-amd64" { targets = [ "gz-jetty-base", "gz-jetty-dev" ] }
@@ -591,15 +1478,21 @@ group "gz-harmonic-linux-amd64" { targets = [ "gz-harmonic-base", "gz-harmonic-d
 group "gz-harmonic-cuda-linux-amd64" { targets = [ "gz-harmonic-cuda-base", "gz-harmonic-cuda-dev" ] }
 
 
+group "gz-garden-linux-amd64" { targets = [ "gz-garden-base", "gz-garden-dev" ] }
+
+
+group "gz-garden-cuda-linux-amd64" { targets = [ "gz-garden-cuda-base", "gz-garden-cuda-dev" ] }
+
+
 # ---------- Family-level groups (e.g., ros2, gz, ignition) ----------
 
-group "ros" { targets = [  ] }
-group "ros2" { targets = [ "ros2-rolling-base", "ros2-rolling-dev", "ros2-rolling-desktop", "ros2-rolling-full", "ros2-rolling-gazebo", "ros2-rolling-cuda-base", "ros2-rolling-cuda-dev", "ros2-rolling-cuda-desktop", "ros2-rolling-cuda-full", "ros2-rolling-cuda-gazebo", "ros2-kilted-base", "ros2-kilted-dev", "ros2-kilted-desktop", "ros2-kilted-full", "ros2-kilted-gazebo", "ros2-jazzy-base", "ros2-jazzy-dev", "ros2-jazzy-desktop", "ros2-jazzy-full", "ros2-jazzy-gazebo", "ros2-jazzy-cuda-base", "ros2-jazzy-cuda-dev", "ros2-jazzy-cuda-desktop", "ros2-jazzy-cuda-full", "ros2-jazzy-cuda-gazebo", "ros2-humble-base", "ros2-humble-dev", "ros2-humble-desktop", "ros2-humble-full", "ros2-humble-gazebo", "ros2-humble-cuda-base", "ros2-humble-cuda-dev", "ros2-humble-cuda-desktop", "ros2-humble-cuda-full", "ros2-humble-cuda-gazebo" ] }
-group "gazebo" { targets = [  ] }
-group "ignition" { targets = [ "ignition-fortress-base", "ignition-fortress-dev" ] }
-group "gz" { targets = [ "gz-jetty-base", "gz-jetty-dev", "gz-jetty-cuda-base", "gz-jetty-cuda-dev", "gz-ionic-base", "gz-ionic-dev", "gz-ionic-cuda-base", "gz-ionic-cuda-dev", "gz-harmonic-base", "gz-harmonic-dev", "gz-harmonic-cuda-base", "gz-harmonic-cuda-dev" ] }
+group "ros" { targets = [ "ros-noetic-base", "ros-noetic-dev", "ros-noetic-desktop", "ros-noetic-full", "ros-noetic-gazebo", "ros-melodic-base", "ros-melodic-dev", "ros-melodic-desktop", "ros-melodic-full", "ros-melodic-gazebo", "ros-lunar-base", "ros-lunar-dev", "ros-lunar-desktop", "ros-lunar-full", "ros-lunar-gazebo", "ros-kinetic-base", "ros-kinetic-dev", "ros-kinetic-desktop", "ros-kinetic-full", "ros-kinetic-gazebo" ] }
+group "ros2" { targets = [ "ros2-rolling-base", "ros2-rolling-dev", "ros2-rolling-desktop", "ros2-rolling-full", "ros2-rolling-gazebo", "ros2-rolling-cuda-base", "ros2-rolling-cuda-dev", "ros2-rolling-cuda-desktop", "ros2-rolling-cuda-full", "ros2-rolling-cuda-gazebo", "ros2-kilted-base", "ros2-kilted-dev", "ros2-kilted-desktop", "ros2-kilted-full", "ros2-kilted-gazebo", "ros2-jazzy-base", "ros2-jazzy-dev", "ros2-jazzy-desktop", "ros2-jazzy-full", "ros2-jazzy-gazebo", "ros2-jazzy-cuda-base", "ros2-jazzy-cuda-dev", "ros2-jazzy-cuda-desktop", "ros2-jazzy-cuda-full", "ros2-jazzy-cuda-gazebo", "ros2-iron-base", "ros2-iron-dev", "ros2-iron-desktop", "ros2-iron-full", "ros2-iron-gazebo", "ros2-iron-cuda-base", "ros2-iron-cuda-dev", "ros2-iron-cuda-desktop", "ros2-iron-cuda-full", "ros2-iron-cuda-gazebo", "ros2-humble-base", "ros2-humble-dev", "ros2-humble-desktop", "ros2-humble-full", "ros2-humble-gazebo", "ros2-humble-cuda-base", "ros2-humble-cuda-dev", "ros2-humble-cuda-desktop", "ros2-humble-cuda-full", "ros2-humble-cuda-gazebo", "ros2-galactic-base", "ros2-galactic-dev", "ros2-galactic-desktop", "ros2-galactic-full", "ros2-galactic-gazebo", "ros2-galactic-cuda-base", "ros2-galactic-cuda-dev", "ros2-galactic-cuda-desktop", "ros2-galactic-cuda-full", "ros2-galactic-cuda-gazebo", "ros2-foxy-base", "ros2-foxy-dev", "ros2-foxy-desktop", "ros2-foxy-full", "ros2-foxy-gazebo", "ros2-foxy-cuda-base", "ros2-foxy-cuda-dev", "ros2-foxy-cuda-desktop", "ros2-foxy-cuda-full", "ros2-foxy-cuda-gazebo", "ros2-eloquent-base", "ros2-eloquent-dev", "ros2-eloquent-desktop", "ros2-eloquent-full", "ros2-eloquent-gazebo", "ros2-dashing-base", "ros2-dashing-dev", "ros2-dashing-desktop", "ros2-dashing-full", "ros2-dashing-gazebo" ] }
+group "gazebo" { targets = [ "gazebo-gazebo11-base", "gazebo-gazebo11-dev", "gazebo-gazebo10-base", "gazebo-gazebo10-dev", "gazebo-gazebo9-base", "gazebo-gazebo9-dev" ] }
+group "ignition" { targets = [ "ignition-fortress-base", "ignition-fortress-dev", "ignition-edifice-base", "ignition-edifice-dev", "ignition-dome-base", "ignition-dome-dev", "ignition-citadel-base", "ignition-citadel-dev" ] }
+group "gz" { targets = [ "gz-jetty-base", "gz-jetty-dev", "gz-jetty-cuda-base", "gz-jetty-cuda-dev", "gz-ionic-base", "gz-ionic-dev", "gz-ionic-cuda-base", "gz-ionic-cuda-dev", "gz-harmonic-base", "gz-harmonic-dev", "gz-harmonic-cuda-base", "gz-harmonic-cuda-dev", "gz-garden-base", "gz-garden-dev", "gz-garden-cuda-base", "gz-garden-cuda-dev" ] }
 
-# ---- all non-EOL ----
+# ---- all non-EOL targets ----
 group "default" {
   targets = [
     "ros2-rolling-base", "ros2-rolling-dev", "ros2-rolling-desktop", "ros2-rolling-full", "ros2-rolling-gazebo", "ros2-rolling-cuda-base", "ros2-rolling-cuda-dev", "ros2-rolling-cuda-desktop", "ros2-rolling-cuda-full", "ros2-rolling-cuda-gazebo", "ros2-kilted-base", "ros2-kilted-dev", "ros2-kilted-desktop", "ros2-kilted-full", "ros2-kilted-gazebo", "ros2-jazzy-base", "ros2-jazzy-dev", "ros2-jazzy-desktop", "ros2-jazzy-full", "ros2-jazzy-gazebo", "ros2-jazzy-cuda-base", "ros2-jazzy-cuda-dev", "ros2-jazzy-cuda-desktop", "ros2-jazzy-cuda-full", "ros2-jazzy-cuda-gazebo", "ros2-humble-base", "ros2-humble-dev", "ros2-humble-desktop", "ros2-humble-full", "ros2-humble-gazebo", "ros2-humble-cuda-base", "ros2-humble-cuda-dev", "ros2-humble-cuda-desktop", "ros2-humble-cuda-full", "ros2-humble-cuda-gazebo", "ignition-fortress-base", "ignition-fortress-dev", "gz-jetty-base", "gz-jetty-dev", "gz-jetty-cuda-base", "gz-jetty-cuda-dev", "gz-ionic-base", "gz-ionic-dev", "gz-ionic-cuda-base", "gz-ionic-cuda-dev", "gz-harmonic-base", "gz-harmonic-dev", "gz-harmonic-cuda-base", "gz-harmonic-cuda-dev"

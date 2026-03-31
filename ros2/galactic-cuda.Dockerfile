@@ -3,141 +3,84 @@
 ##############################################
 
 ###########################################
-# Base image 
+# Base image
 ###########################################
 FROM nvidia/cuda:11.7.0-runtime-ubuntu20.04 AS base
 
 ENV DEBIAN_FRONTEND=noninteractive
 
 # Install language
-RUN apt-get update && apt-get install -y \
+RUN apt-get update && apt-get install -y --no-install-recommends \
   locales \
   && locale-gen en_US.UTF-8 \
   && update-locale LC_ALL=en_US.UTF-8 LANG=en_US.UTF-8 \
   && rm -rf /var/lib/apt/lists/*
-ENV LANG en_US.UTF-8
+ENV LANG=en_US.UTF-8
 
 # Install timezone
 RUN ln -fs /usr/share/zoneinfo/UTC /etc/localtime \
   && export DEBIAN_FRONTEND=noninteractive \
   && apt-get update \
-  && apt-get install -y tzdata \
+  && apt-get install -y --no-install-recommends tzdata \
   && dpkg-reconfigure --frontend noninteractive tzdata \
   && rm -rf /var/lib/apt/lists/*
 
-# Install ROS2
-RUN apt-get update && apt-get install -y \
+RUN apt-get update && apt-get -y upgrade \
+    && rm -rf /var/lib/apt/lists/*
+
+# Install common programs
+RUN apt-get update && apt-get install -y --no-install-recommends \
     curl \
     gnupg2 \
     lsb-release \
     sudo \
-  && curl -sSL https://raw.githubusercontent.com/ros/rosdistro/master/ros.key -o /usr/share/keyrings/ros-archive-keyring.gpg \
-  && echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/ros-archive-keyring.gpg] http://packages.ros.org/ros2/ubuntu $(lsb_release -cs) main" | tee /etc/apt/sources.list.d/ros2.list > /dev/null \
-  && apt-get update && apt-get install -y \
-    ros-galactic-ros-base \
-    python3-argcomplete \
-  && rm -rf /var/lib/apt/lists/*
+    software-properties-common \
+    wget \
+    && rm -rf /var/lib/apt/lists/*
+
+# Setup ROS Apt sources
+RUN curl -L -s -o /tmp/ros2-apt-source.deb https://github.com/ros-infrastructure/ros-apt-source/releases/download/1.1.0/ros2-apt-source_1.1.0.$(lsb_release -cs)_all.deb \
+    && apt-get update \
+    && apt-get install /tmp/ros2-apt-source.deb \
+    && rm -f /tmp/ros2-apt-source.deb \
+    && rm -rf /var/lib/apt/lists/*
 
 ENV ROS_DISTRO=galactic
-ENV AMENT_PREFIX_PATH=/opt/ros/galactic
-ENV COLCON_PREFIX_PATH=/opt/ros/galactic
-ENV LD_LIBRARY_PATH=/opt/ros/galactic/lib
-ENV PATH=/opt/ros/galactic/bin:$PATH
-ENV PYTHONPATH=/opt/ros/galactic/lib/python3.8/site-packages
-ENV ROS_PYTHON_VERSION=3
-ENV ROS_VERSION=2
-ENV DEBIAN_FRONTEND=
 
-###########################################
-#  Develop image 
-###########################################
-FROM base AS dev
-
-ENV DEBIAN_FRONTEND=noninteractive
-RUN apt-get update && apt-get install -y \
-  bash-completion \
-  build-essential \
-  cmake \
-  gdb \
-  git \
-  pylint3 \
-  python3-argcomplete \
-  python3-colcon-common-extensions \
-  python3-pip \
-  python3-rosdep \
-  python3-vcstool \
-  vim \
-  wget \
-  # Install ros distro testing packages
-  ros-galactic-ament-lint \
-  ros-galactic-launch-testing \
-  ros-galactic-launch-testing-ament-cmake \
-  ros-galactic-launch-testing-ros \
-  python3-autopep8 \
-  && rm -rf /var/lib/apt/lists/* \
-  && rosdep init || echo "rosdep already initialized" \
-  # Update pydocstyle
-  && pip install --upgrade pydocstyle
+# Install ROS2
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    ros-galactic-ros-base \
+    python3-argcomplete \
+    python3-rosdep \
+  && rm -rf /var/lib/apt/lists/*
 
 ARG USERNAME=ros
 ARG USER_UID=1000
 ARG USER_GID=$USER_UID
 
-# Create a non-root user
-RUN groupadd --gid $USER_GID $USERNAME \
-  && useradd -s /bin/bash --uid $USER_UID --gid $USER_GID -m $USERNAME \
-  # [Optional] Add sudo support for the non-root user
-  && apt-get update \
-  && apt-get install -y sudo \
+# Check if "ubuntu" user exists, delete it if it does, then create the desired user
+RUN if getent passwd ubuntu > /dev/null 2>&1; then \
+        userdel -r ubuntu && \
+        echo "Deleted existing ubuntu user"; \
+    fi && \
+    groupadd --gid $USER_GID $USERNAME && \
+    useradd -s /bin/bash --uid $USER_UID --gid $USER_GID -m $USERNAME && \
+    echo "Created new user $USERNAME"
+
+# Add sudo support for the non-root user
+RUN apt-get update && apt-get install -y sudo \
   && echo $USERNAME ALL=\(root\) NOPASSWD:ALL > /etc/sudoers.d/$USERNAME\
   && chmod 0440 /etc/sudoers.d/$USERNAME \
-  # Cleanup
-  && rm -rf /var/lib/apt/lists/* \
-  && echo "source /usr/share/bash-completion/completions/git" >> /home/$USERNAME/.bashrc \
-  && echo "if [ -f /opt/ros/${ROS_DISTRO}/setup.bash ]; then source /opt/ros/${ROS_DISTRO}/setup.bash; fi" >> /home/$USERNAME/.bashrc
-
-ENV DEBIAN_FRONTEND=
-ENV AMENT_CPPCHECK_ALLOW_SLOW_VERSIONS=1
-
-###########################################
-#  Full image 
-###########################################
-FROM dev AS full
-
-ENV DEBIAN_FRONTEND=noninteractive
-# Install the full release
-RUN apt-get update && apt-get install -y \
-  ros-galactic-desktop \
   && rm -rf /var/lib/apt/lists/*
-ENV DEBIAN_FRONTEND=
 
-###########################################
-#  Full+Gazebo image 
-###########################################
-FROM full AS gazebo
-
-ENV DEBIAN_FRONTEND=noninteractive
-# Install gazebo
-RUN apt-get update && apt-get install -q -y \
-  lsb-release \
-  wget \
-  gnupg \
-  sudo \
-  && wget https://packages.osrfoundation.org/gazebo.gpg -O /usr/share/keyrings/pkgs-osrf-archive-keyring.gpg \
-  && echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/pkgs-osrf-archive-keyring.gpg] http://packages.osrfoundation.org/gazebo/ubuntu-stable $(lsb_release -cs) main" | sudo tee /etc/apt/sources.list.d/gazebo-stable.list > /dev/null \
-  && apt-get update && apt-get install -q -y \
-    ros-galactic-gazebo* \
+# Set up autocompletion for user
+RUN apt-get update && apt-get install -y --no-install-recommends git-core bash-completion \
+  && echo "if [ -f /opt/ros/${ROS_DISTRO}/setup.bash ]; then source /opt/ros/${ROS_DISTRO}/setup.bash; fi" >> /home/$USERNAME/.bashrc \
+  && echo "if [ -f /usr/share/colcon_argcomplete/hook/colcon-argcomplete.bash ]; then source /usr/share/colcon_argcomplete/hook/colcon-argcomplete.bash; fi" >> /home/$USERNAME/.bashrc \
   && rm -rf /var/lib/apt/lists/*
-ENV DEBIAN_FRONTEND=
-
-###########################################
-#  Full+Gazebo+Nvidia image 
-###########################################
-
-FROM gazebo AS gazebo-nvidia
 
 ################
-# Expose the nvidia driver to allow opengl 
+# Expose the nvidia driver to allow opengl
 # Dependencies for glvnd and X11.
 ################
 RUN apt-get update \
@@ -150,6 +93,100 @@ RUN apt-get update \
   libx11-6
 
 # Env vars for the nvidia-container-runtime.
-ENV NVIDIA_VISIBLE_DEVICES all
-ENV NVIDIA_DRIVER_CAPABILITIES graphics,utility,compute
-ENV QT_X11_NO_MITSHM 1
+ENV NVIDIA_VISIBLE_DEVICES=all
+ENV NVIDIA_DRIVER_CAPABILITIES=graphics,utility,compute
+ENV QT_X11_NO_MITSHM=1
+ENV DEBIAN_FRONTEND=
+
+# setup entrypoint
+COPY ./ros_entrypoint.sh /
+
+ENTRYPOINT ["/ros_entrypoint.sh"]
+CMD ["bash"]
+###########################################
+#  Develop image
+###########################################
+FROM base AS dev
+
+ENV DEBIAN_FRONTEND=noninteractive
+RUN apt-get update && apt-get install -y --no-install-recommends \
+  bash-completion \
+  build-essential \
+  cmake \
+  gdb \
+  git \
+  openssh-client \
+  python3-argcomplete \
+  python3-pip \
+  ros-dev-tools \
+  ros-galactic-ament-* \
+  vim \
+  && rm -rf /var/lib/apt/lists/*
+
+RUN rosdep init || echo "rosdep already initialized"
+
+ENV DEBIAN_FRONTEND=
+ENV AMENT_CPPCHECK_ALLOW_SLOW_VERSIONS=1
+
+###########################################
+#  Desktop image
+###########################################
+FROM dev AS desktop
+
+ENV DEBIAN_FRONTEND=noninteractive
+# Install the desktop release
+RUN apt-get update && apt-get install -y --no-install-recommends \
+  ros-galactic-desktop \
+  && rm -rf /var/lib/apt/lists/*
+ENV DEBIAN_FRONTEND=
+
+###########################################
+#  Full image
+###########################################
+FROM desktop AS full
+
+ENV DEBIAN_FRONTEND=noninteractive
+# Install the desktop release
+RUN apt-get update && apt-get install -y --no-install-recommends \
+  ros-galactic-desktop-full \
+  && rm -rf /var/lib/apt/lists/*
+ENV DEBIAN_FRONTEND=
+
+
+###########################################
+#  Full+Gazebo image
+###########################################
+FROM full AS gazebo
+
+ENV DEBIAN_FRONTEND=noninteractive
+# Install gazebo
+RUN wget https://packages.osrfoundation.org/gazebo.gpg -O /usr/share/keyrings/pkgs-osrf-archive-keyring.gpg \
+  && echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/pkgs-osrf-archive-keyring.gpg] http://packages.osrfoundation.org/gazebo/ubuntu-stable $(lsb_release -cs) main" | sudo tee /etc/apt/sources.list.d/gazebo-stable.list > /dev/null \
+  && apt-get update && apt-get install -q -y --no-install-recommends \
+    ros-galactic-ros-gz \
+  && rm -rf /var/lib/apt/lists/*
+ENV DEBIAN_FRONTEND=
+
+###########################################
+#  Full+Gazebo+Nvidia image
+###########################################
+
+FROM gazebo AS nvidia
+
+################
+# Expose the nvidia driver to allow opengl
+# Dependencies for glvnd and X11.
+################
+RUN apt-get update \
+ && apt-get install -y -qq --no-install-recommends \
+  libglvnd0 \
+  libgl1 \
+  libglx0 \
+  libegl1 \
+  libxext6 \
+  libx11-6
+
+# Env vars for the nvidia-container-runtime.
+ENV NVIDIA_VISIBLE_DEVICES=all
+ENV NVIDIA_DRIVER_CAPABILITIES=graphics,utility,compute
+ENV QT_X11_NO_MITSHM=1

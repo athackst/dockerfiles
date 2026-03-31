@@ -1,495 +1,457 @@
-ros:
-  -
+dockerfiles:
+  - family: "ros"
     name: noetic
-    ros_distro: noetic
+    distro: noetic
     targets:
       - target: base
-        platforms: "linux/amd64,linux/arm64"
+        platforms: ["linux/amd64", "linux/arm64"]
       - target: dev
-        platforms: "linux/amd64,linux/arm64"
+        platforms: ["linux/amd64", "linux/arm64"]
       - target: desktop
-        platforms: "linux/amd64,linux/arm64"
+        platforms: ["linux/amd64", "linux/arm64"]
       - target: full
-        platforms: "linux/amd64,linux/arm64"
+        platforms: ["linux/amd64", "linux/arm64"]
       - target: gazebo
-        platforms: "linux/amd64"
-    python_env: "3"
-    python_version: "3"
-    ubuntu_distro: "20.04"
-    eol: true
-  -
+        platforms: ["linux/amd64"]
+    base_image: "ubuntu:20.04"
+    eol: "2025-05-31"
+  - family: "ros"
     name: melodic
-    ros_distro: melodic
+    distro: melodic
     targets:
       - target: base
-        platforms: "linux/amd64,linux/arm64"
+        platforms: ["linux/amd64", "linux/arm64"]
       - target: dev
-        platforms: "linux/amd64,linux/arm64"
+        platforms: ["linux/amd64", "linux/arm64"]
       - target: desktop
-        platforms: "linux/amd64,linux/arm64"
+        platforms: ["linux/amd64", "linux/arm64"]
       - target: full
-        platforms: "linux/amd64,linux/arm64"
+        platforms: ["linux/amd64", "linux/arm64"]
       - target: gazebo
-        platforms: "linux/amd64"
-    python_env: ""
-    python_version: "2.7"
-    ubuntu_distro: "18.04"
-    eol: true
-  -
+        platforms: ["linux/amd64"]
+    base_image: "ubuntu:18.04"
+    eol: "2023-06-27"
+  - family: "ros"
     name: lunar
-    ros_distro: lunar
+    distro: lunar
     targets:
       - target: base
-        platforms: "linux/amd64,linux/arm64"
+        platforms: ["linux/amd64", "linux/arm64"]
       - target: dev
-        platforms: "linux/amd64,linux/arm64"
+        platforms: ["linux/amd64", "linux/arm64"]
       - target: desktop
-        platforms: "linux/amd64,linux/arm64"
+        platforms: ["linux/amd64", "linux/arm64"]
       - target: full
-        platforms: "linux/amd64,linux/arm64"
+        platforms: ["linux/amd64", "linux/arm64"]
       - target: gazebo
-        platforms: "linux/amd64"
-    python_env: ""
-    python_version: "2.7"
-    ubuntu_distro: "18.04"
-    eol: true
-  -
+        platforms: ["linux/amd64"]
+    base_image: "ubuntu:18.04"
+    eol: "2019-05-31"
+  - family: "ros"
     name: kinetic
-    ros_distro: kinetic
+    distro: kinetic
     targets:
       - target: base
-        platforms: "linux/amd64,linux/arm64"
+        platforms: ["linux/amd64", "linux/arm64"]
       - target: dev
-        platforms: "linux/amd64,linux/arm64"
+        platforms: ["linux/amd64", "linux/arm64"]
       - target: desktop
-        platforms: "linux/amd64,linux/arm64"
+        platforms: ["linux/amd64", "linux/arm64"]
       - target: full
-        platforms: "linux/amd64,linux/arm64"
+        platforms: ["linux/amd64", "linux/arm64"]
       - target: gazebo
-        platforms: "linux/amd64"
-    python_env: ""
-    python_version: "2.7"
-    ubuntu_distro: "16.04"
-    eol: true
-ros2:
-  -
+        platforms: ["linux/amd64"]
+    base_image: "ubuntu:16.04"
+    eol: "2021-04-30"
+  - family: "ros2"
     name: rolling
-    ros_distro: rolling
+    distro: rolling
     targets:
       - target: base
-        platforms: "linux/amd64,linux/arm64"
+        platforms: ["linux/amd64", "linux/arm64"]
       - target: dev
-        platforms: "linux/amd64"
+        platforms: ["linux/amd64"]
       - target: desktop
-        platforms: "linux/amd64"
+        platforms: ["linux/amd64"]
       - target: full
-        platforms: "linux/amd64"
+        platforms: ["linux/amd64"]
       - target: gazebo
-        platforms: "linux/amd64"
-    python_version: "3.12"
-    base_image: "ubuntu"
-    image_version: "24.04"
-  -
+        platforms: ["linux/amd64"]
+    base_image: "ubuntu:24.04"
+  - family: "ros2"
     name: rolling-cuda
-    ros_distro: rolling
+    distro: rolling
     targets:
       - target: base
-        platforms: "linux/amd64"
+        platforms: ["linux/amd64"]
       - target: dev
-        platforms: "linux/amd64"
+        platforms: ["linux/amd64"]
       - target: desktop
-        platforms: "linux/amd64"
+        platforms: ["linux/amd64"]
       - target: full
-        platforms: "linux/amd64"
+        platforms: ["linux/amd64"]
       - target: gazebo
-        platforms: "linux/amd64"
-    python_version: "3.12"
-    base_image: "nvidia/cuda"
-    image_version: "13.0.1-cudnn-runtime-ubuntu24.04"
-  -
+        platforms: ["linux/amd64"]
+    base_image: "nvidia/cuda:13.0.1-cudnn-runtime-ubuntu24.04"
+  - family: "ros2"
     name: kilted
-    ros_distro: kilted
+    distro: kilted
     targets:
       - target: base
-        platforms: "linux/amd64,linux/arm64"
+        platforms: ["linux/amd64", "linux/arm64"]
       - target: dev
-        platforms: "linux/amd64"
+        platforms: ["linux/amd64"]
       - target: desktop
-        platforms: "linux/amd64"
+        platforms: ["linux/amd64"]
       - target: full
-        platforms: "linux/amd64"
+        platforms: ["linux/amd64"]
       - target: gazebo
-        platforms: "linux/amd64"
-    python_version: "3.12"
-    base_image: "ubuntu"
-    image_version: "24.04"
-  -
+        platforms: ["linux/amd64"]
+    base_image: "ubuntu:24.04"
+    eol: "2026-12-31"
+  - family: "ros2"
     name: jazzy
-    ros_distro: jazzy
+    distro: jazzy
     targets:
       - target: base
-        platforms: "linux/amd64,linux/arm64"
+        platforms: ["linux/amd64", "linux/arm64"]
       - target: dev
-        platforms: "linux/amd64"
+        platforms: ["linux/amd64"]
       - target: desktop
-        platforms: "linux/amd64"
+        platforms: ["linux/amd64"]
       - target: full
-        platforms: "linux/amd64"
+        platforms: ["linux/amd64"]
       - target: gazebo
-        platforms: "linux/amd64"
-    python_version: "3.12"
-    base_image: "ubuntu"
-    image_version: "24.04"
-  -
+        platforms: ["linux/amd64"]
+    base_image: "ubuntu:24.04"
+    eol: "2029-05-31"
+  - family: "ros2"
     name: jazzy-cuda
-    ros_distro: jazzy
+    distro: jazzy
     targets:
       - target: base
-        platforms: "linux/amd64"
+        platforms: ["linux/amd64"]
       - target: dev
-        platforms: "linux/amd64"
+        platforms: ["linux/amd64"]
       - target: desktop
-        platforms: "linux/amd64"
+        platforms: ["linux/amd64"]
       - target: full
-        platforms: "linux/amd64"
+        platforms: ["linux/amd64"]
       - target: gazebo
-        platforms: "linux/amd64"
-    python_version: "3.12"
-    base_image: "nvidia/cuda"
-    image_version: "13.0.1-cudnn-runtime-ubuntu24.04"
-  -
+        platforms: ["linux/amd64"]
+    base_image: "nvidia/cuda:13.0.1-cudnn-runtime-ubuntu24.04"
+    eol: "2029-05-31"
+  - family: "ros2"
     name: iron
-    ros_distro: iron
+    distro: iron
     targets:
       - target: base
-        platforms: "linux/amd64,linux/arm64"
+        platforms: ["linux/amd64", "linux/arm64"]
       - target: dev
-        platforms: "linux/amd64,linux/arm64"
+        platforms: ["linux/amd64", "linux/arm64"]
       - target: desktop
-        platforms: "linux/amd64,linux/arm64"
+        platforms: ["linux/amd64", "linux/arm64"]
       - target: full
-        platforms: "linux/amd64,linux/arm64"
+        platforms: ["linux/amd64", "linux/arm64"]
       - target: gazebo
-        platforms: "linux/amd64"
-    python_version: "3.10"
-    base_image: "ubuntu"
-    image_version: "22.04"
-    eol: true
-  -
+        platforms: ["linux/amd64"]
+    base_image: "ubuntu:22.04"
+    eol: "2024-12-04"
+  - family: "ros2"
     name: iron-cuda
-    ros_distro: iron
+    distro: iron
     targets:
       - target: base
-        platforms: "linux/amd64"
+        platforms: ["linux/amd64"]
       - target: dev
-        platforms: "linux/amd64"
+        platforms: ["linux/amd64"]
       - target: desktop
-        platforms: "linux/amd64"
+        platforms: ["linux/amd64"]
       - target: full
-        platforms: "linux/amd64"
+        platforms: ["linux/amd64"]
       - target: gazebo
-        platforms: "linux/amd64"
-    python_version: "3.10"
-    base_image: "nvidia/cuda"
-    image_version: "13.0.1-cudnn-runtime-ubuntu24.04"
-    eol: true
-  -
+        platforms: ["linux/amd64"]
+    base_image: "nvidia/cuda:13.0.1-cudnn-runtime-ubuntu24.04"
+    eol: "2024-12-04"
+  - family: "ros2"
     name: humble
-    ros_distro: humble
+    distro: humble
     targets:
       - target: base
-        platforms: "linux/amd64,linux/arm64"
+        platforms: ["linux/amd64", "linux/arm64"]
       - target: dev
-        platforms: "linux/amd64,linux/arm64"
+        platforms: ["linux/amd64", "linux/arm64"]
       - target: desktop
-        platforms: "linux/amd64,linux/arm64"
+        platforms: ["linux/amd64", "linux/arm64"]
       - target: full
-        platforms: "linux/amd64,linux/arm64"
+        platforms: ["linux/amd64", "linux/arm64"]
       - target: gazebo
-        platforms: "linux/amd64"
-    python_version: "3.10"
-    base_image: "ubuntu"
-    image_version: "22.04"
-  -
+        platforms: ["linux/amd64"]
+    base_image: "ubuntu:22.04"
+    eol: "2027-05-31"
+  - family: "ros2"
     name: humble-cuda
-    ros_distro: humble
+    distro: humble
     targets:
       - target: base
-        platforms: "linux/amd64"
+        platforms: ["linux/amd64"]
       - target: dev
-        platforms: "linux/amd64"
+        platforms: ["linux/amd64"]
       - target: desktop
-        platforms: "linux/amd64"
+        platforms: ["linux/amd64"]
       - target: full
-        platforms: "linux/amd64"
+        platforms: ["linux/amd64"]
       - target: gazebo
-        platforms: "linux/amd64"
-    python_version: "3.10"
-    base_image: "nvidia/cuda"
-    image_version: "13.0.1-cudnn-runtime-ubuntu22.04"
-  -
+        platforms: ["linux/amd64"]
+    base_image: "nvidia/cuda:13.0.1-cudnn-runtime-ubuntu22.04"
+    eol: "2027-05-31"
+  - family: "ros2"
     name: galactic
-    ros_distro: galactic
+    distro: galactic
     targets:
       - target: base
-        platforms: "linux/amd64,linux/arm64"
+        platforms: ["linux/amd64", "linux/arm64"]
       - target: dev
-        platforms: "linux/amd64,linux/arm64"
+        platforms: ["linux/amd64", "linux/arm64"]
       - target: desktop
-        platforms: "linux/amd64,linux/arm64"
+        platforms: ["linux/amd64", "linux/arm64"]
       - target: full
-        platforms: "linux/amd64,linux/arm64"
+        platforms: ["linux/amd64", "linux/arm64"]
       - target: gazebo
-        platforms: "linux/amd64"
-    python_version: "3.8"
-    base_image: "ubuntu"
-    image_version: "20.04"
-    eol: true
-  -
+        platforms: ["linux/amd64"]
+    base_image: "ubuntu:20.04"
+    eol: "2022-12-09"
+  - family: "ros2"
     name: galactic-cuda
-    ros_distro: galactic
+    distro: galactic
     targets:
       - target: base
-        platforms: "linux/amd64"
+        platforms: ["linux/amd64"]
       - target: dev
-        platforms: "linux/amd64"
+        platforms: ["linux/amd64"]
       - target: desktop
-        platforms: "linux/amd64"
+        platforms: ["linux/amd64"]
       - target: full
-        platforms: "linux/amd64"
+        platforms: ["linux/amd64"]
       - target: gazebo
-        platforms: "linux/amd64"
-    python_version: "3.8"
-    base_image: "nvidia/cuda"
-    image_version: "11.7.0-runtime-ubuntu20.04"
-    eol: true
-  -
+        platforms: ["linux/amd64"]
+    base_image: "nvidia/cuda:11.7.0-runtime-ubuntu20.04"
+    eol: "2022-12-09"
+  - family: "ros2"
     name: foxy
-    ros_distro: foxy
+    distro: foxy
     targets:
       - target: base
-        platforms: "linux/amd64,linux/arm64"
+        platforms: ["linux/amd64", "linux/arm64"]
       - target: dev
-        platforms: "linux/amd64,linux/arm64"
+        platforms: ["linux/amd64", "linux/arm64"]
       - target: desktop
-        platforms: "linux/amd64,linux/arm64"
+        platforms: ["linux/amd64", "linux/arm64"]
       - target: full
-        platforms: "linux/amd64,linux/arm64"
+        platforms: ["linux/amd64", "linux/arm64"]
       - target: gazebo
-        platforms: "linux/amd64"
-    python_version: "3.8"
-    base_image: "ubuntu"
-    image_version: "20.04"
-    eol: true
-  -
+        platforms: ["linux/amd64"]
+    base_image: "ubuntu:20.04"
+    eol: "2023-06-20"
+  - family: "ros2"
     name: foxy-cuda
-    ros_distro: foxy
+    distro: foxy
     targets:
       - target: base
-        platforms: "linux/amd64"
+        platforms: ["linux/amd64"]
       - target: dev
-        platforms: "linux/amd64"
+        platforms: ["linux/amd64"]
       - target: desktop
-        platforms: "linux/amd64"
+        platforms: ["linux/amd64"]
       - target: full
-        platforms: "linux/amd64"
+        platforms: ["linux/amd64"]
       - target: gazebo
-        platforms: "linux/amd64"
-    python_version: "3.8"
-    base_image: "nvidia/cuda"
-    image_version: "11.8.0-runtime-ubuntu20.04"
-    eol: true
-  -
+        platforms: ["linux/amd64"]
+    base_image: "nvidia/cuda:11.8.0-runtime-ubuntu20.04"
+    eol: "2023-06-20"
+  - family: "ros2"
     name: eloquent
-    ros_distro: eloquent
+    distro: eloquent
     targets:
       - target: base
-        platforms: "linux/amd64,linux/arm64"
+        platforms: ["linux/amd64", "linux/arm64"]
       - target: dev
-        platforms: "linux/amd64,linux/arm64"
+        platforms: ["linux/amd64", "linux/arm64"]
       - target: desktop
-        platforms: "linux/amd64,linux/arm64"
+        platforms: ["linux/amd64", "linux/arm64"]
       - target: full
-        platforms: "linux/amd64,linux/arm64"
+        platforms: ["linux/amd64", "linux/arm64"]
       - target: gazebo
-        platforms: "linux/amd64"
-    python_version: "3.6"
-    base_image: "ubuntu"
-    image_version: "18.04"
-    eol: true
-  -
+        platforms: ["linux/amd64"]
+    base_image: "ubuntu:18.04"
+    eol: "2020-11-30"
+  - family: "ros2"
     name: dashing
-    ros_distro: dashing
+    distro: dashing
     targets:
       - target: base
-        platforms: "linux/amd64,linux/arm64"
+        platforms: ["linux/amd64", "linux/arm64"]
       - target: dev
-        platforms: "linux/amd64,linux/arm64"
+        platforms: ["linux/amd64", "linux/arm64"]
       - target: desktop
-        platforms: "linux/amd64,linux/arm64"
+        platforms: ["linux/amd64", "linux/arm64"]
       - target: full
-        platforms: "linux/amd64,linux/arm64"
+        platforms: ["linux/amd64", "linux/arm64"]
       - target: gazebo
-        platforms: "linux/amd64"
-    python_version: "3.6"
-    base_image: "ubuntu"
-    image_version: "18.04"
-    eol: true
-gazebo:
-  -
+        platforms: ["linux/amd64"]
+    base_image: "ubuntu:18.04"
+    eol: "2021-05-31"
+  - family: "gazebo"
     name: gazebo11
-    gazebo_release: "11"
+    distro: "11"
     targets:
       - target: base
-        platforms: "linux/amd64"
+        platforms: ["linux/amd64"]
       - target: dev
-        platforms: "linux/amd64"
-    ubuntu_distro: "20.04"
-    eol: true
-  -
+        platforms: ["linux/amd64"]
+    base_image: "ubuntu:20.04"
+    eol: "2025-01-29"
+  - family: "gazebo"
     name: gazebo10
-    gazebo_release: "10"
+    distro: "10"
     targets:
       - target: base
-        platforms: "linux/amd64"
+        platforms: ["linux/amd64"]
       - target: dev
-        platforms: "linux/amd64"
-    ubuntu_distro: "18.04"
-    eol: true
-  -
+        platforms: ["linux/amd64"]
+    base_image: "ubuntu:18.04"
+    eol: "2021-01-24"
+  - family: "gazebo"
     name: gazebo9
-    gazebo_release: "9"
+    distro: "9"
     targets:
       - target: base
-        platforms: "linux/amd64"
+        platforms: ["linux/amd64"]
       - target: dev
-        platforms: "linux/amd64"
-    ubuntu_distro: "18.04"
-    eol: true
-ignition:
-  -
+        platforms: ["linux/amd64"]
+    base_image: "ubuntu:18.04"
+    eol: "2023-01-25"
+  - family: "ignition"
     name: fortress
-    ign_distro: fortress
+    distro: fortress
     targets:
       - target: base
-        platforms: "linux/amd64"
+        platforms: ["linux/amd64"]
       - target: dev
-        platforms: "linux/amd64"
+        platforms: ["linux/amd64"]
     gazebo_version: "6"
-    ubuntu_distro: "20.04"
-  -
+    base_image: "ubuntu:20.04"
+    eol: "2026-09-30"
+  - family: "ignition"
     name: edifice
-    ign_distro: edifice
+    distro: edifice
     targets:
       - target: base
-        platforms: "linux/amd64"
+        platforms: ["linux/amd64"]
       - target: dev
-        platforms: "linux/amd64"
+        platforms: ["linux/amd64"]
     gazebo_version: "5"
-    ubuntu_distro: "20.04"
-    eol: true
-  -
+    base_image: "ubuntu:20.04"
+    eol: "2022-03-31"
+  - family: "ignition"
     name: dome
-    ign_distro: dome
+    distro: dome
     targets:
       - target: base
-        platforms: "linux/amd64"
+        platforms: ["linux/amd64"]
       - target: dev
-        platforms: "linux/amd64"
+        platforms: ["linux/amd64"]
     gazebo_version: "4"
-    ubuntu_distro: "18.04"
-    eol: true
-  -
+    base_image: "ubuntu:18.04"
+    eol: "2021-12-31"
+  - family: "ignition"
     name: citadel
-    ign_distro: citadel
+    distro: citadel
     targets:
       - target: base
-        platforms: "linux/amd64"
+        platforms: ["linux/amd64"]
       - target: dev
-        platforms: "linux/amd64"
+        platforms: ["linux/amd64"]
     gazebo_version: "3"
-    ubuntu_distro: "18.04"
-    eol: true
-gz:
-  -
+    base_image: "ubuntu:18.04"
+    eol: "2024-12-31"
+  - family: "gz"
     name: jetty
-    gz_distro: jetty
+    distro: jetty
     targets:
       - target: base
-        platforms: "linux/amd64"
+        platforms: ["linux/amd64"]
       - target: dev
-        platforms: "linux/amd64"
-    base_image: "ubuntu"
-    image_version: "24.04"
-  -
+        platforms: ["linux/amd64"]
+    base_image: "ubuntu:24.04"
+    eol: "2030-09-30"
+  - family: "gz"
     name: jetty-cuda
-    gz_distro: jetty
+    distro: jetty
     targets:
       - target: base
-        platforms: "linux/amd64"
+        platforms: ["linux/amd64"]
       - target: dev
-        platforms: "linux/amd64"
-    base_image: "nvidia/cuda"
-    image_version: "12.8.1-runtime-ubuntu24.04"
-  -
+        platforms: ["linux/amd64"]
+    base_image: "nvidia/cuda:12.8.1-runtime-ubuntu24.04"
+    eol: "2030-09-30"
+  - family: "gz"
     name: ionic
-    gz_distro: ionic
+    distro: ionic
     targets:
       - target: base
-        platforms: "linux/amd64"
+        platforms: ["linux/amd64"]
       - target: dev
-        platforms: "linux/amd64"
-    base_image: "ubuntu"
-    image_version: "24.04"
-  -
+        platforms: ["linux/amd64"]
+    base_image: "ubuntu:24.04"
+    eol: "2026-09-30"
+  - family: "gz"
     name: ionic-cuda
-    gz_distro: ionic
+    distro: ionic
     targets:
       - target: base
-        platforms: "linux/amd64"
+        platforms: ["linux/amd64"]
       - target: dev
-        platforms: "linux/amd64"
-    base_image: "nvidia/cuda"
-    image_version: "12.8.1-runtime-ubuntu24.04"
-  -
+        platforms: ["linux/amd64"]
+    base_image: "nvidia/cuda:12.8.1-runtime-ubuntu24.04"
+    eol: "2026-09-30"
+  - family: "gz"
     name: harmonic
-    gz_distro: harmonic
+    distro: harmonic
     targets:
       - target: base
-        platforms: "linux/amd64"
+        platforms: ["linux/amd64"]
       - target: dev
-        platforms: "linux/amd64"
-    base_image: "ubuntu"
-    image_version: "22.04"
-  -
+        platforms: ["linux/amd64"]
+    base_image: "ubuntu:22.04"
+    eol: "2028-09-30"
+  - family: "gz"
     name: harmonic-cuda
-    gz_distro: harmonic
+    distro: harmonic
     targets:
       - target: base
-        platforms: "linux/amd64"
+        platforms: ["linux/amd64"]
       - target: dev
-        platforms: "linux/amd64"
-    base_image: "nvidia/cuda"
-    image_version: "12.5.0-runtime-ubuntu22.04"
-  -
+        platforms: ["linux/amd64"]
+    base_image: "nvidia/cuda:12.5.0-runtime-ubuntu22.04"
+    eol: "2028-09-30"
+  - family: "gz"
     name: garden
-    gz_distro: garden
+    distro: garden
     targets:
       - target: base
-        platforms: "linux/amd64"
+        platforms: ["linux/amd64"]
       - target: dev
-        platforms: "linux/amd64"
-    base_image: "ubuntu"
-    image_version: "20.04"
-    eol: true
-  -
+        platforms: ["linux/amd64"]
+    base_image: "ubuntu:20.04"
+    eol: "2024-11-30"
+  - family: "gz"
     name: garden-cuda
-    gz_distro: garden
+    distro: garden
     targets:
       - target: base
-        platforms: "linux/amd64"
+        platforms: ["linux/amd64"]
       - target: dev
-        platforms: "linux/amd64"
-    base_image: "nvidia/cuda"
-    image_version: "12.5.0-runtime-ubuntu20.04"
-    eol: true
+        platforms: ["linux/amd64"]
+    base_image: "nvidia/cuda:12.5.0-runtime-ubuntu20.04"
+    eol: "2024-11-30"

@@ -1,8 +1,8 @@
  # Note: Run `xhost +local:docker` on the host before starting this container
 
 services:
-  {{ distro }}:
-    image: althack/gz:{{ distro }}-base
+  garden:
+    image: althack/gz:garden-base
     environment:
       - DISPLAY=${DISPLAY}
       - XAUTHORITY=${XAUTHORITY}

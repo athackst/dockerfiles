@@ -1,0 +1,129 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Dockerfiles Template Settings",
+  "type": "object",
+  "required": [
+    "dockerfiles"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "dockerfiles": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "$ref": "#/$defs/dockerfileEntry"
+      }
+    }
+  },
+  "$defs": {
+    "target": {
+      "type": "object",
+      "required": [
+        "target",
+        "platforms"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "target": {
+          "type": "string",
+          "minLength": 1
+        },
+        "platforms": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string",
+            "pattern": "^[^,\\s]+/[^,\\s]+$"
+          }
+        }
+      }
+    },
+    "dockerfileEntry": {
+      "type": "object",
+      "required": [
+        "family",
+        "name",
+        "distro",
+        "base_image",
+        "targets"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "family": {
+          "type": "string",
+          "enum": [
+            "ros",
+            "ros2",
+            "gazebo",
+            "ignition",
+            "gz"
+          ]
+        },
+        "name": {
+          "type": "string",
+          "pattern": "^[a-z0-9][a-z0-9._-]*$"
+        },
+        "distro": {
+          "type": "string",
+          "minLength": 1
+        },
+        "base_image": {
+          "type": "string",
+          "minLength": 1
+        },
+        "targets": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "$ref": "#/$defs/target"
+          }
+        },
+        "eol": {
+          "type": "string",
+          "format": "date"
+        },
+        "gazebo_version": {
+          "type": "string",
+          "pattern": "^[0-9]+$"
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "family": {
+                "const": "ignition"
+              }
+            }
+          },
+          "then": {
+            "required": [
+              "gazebo_version"
+            ]
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "family": {
+                "enum": [
+                  "ros",
+                  "ros2",
+                  "gazebo",
+                  "gz"
+                ]
+              }
+            }
+          },
+          "then": {
+            "not": {
+              "required": [
+                "gazebo_version"
+              ]
+            }
+          }
+        }
+      ]
+    }
+  }
+}
