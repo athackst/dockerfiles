@@ -17,7 +17,7 @@ docker pull althack/{{ repo_name }}:{{ label }}-{{ target }}
 The main docker image tags are:
 
 {% for file in dockerfiles %}
-{{ file.name }}{% if file.eol %} (eol){% endif %}{% if file.prerelease %} (prerelease){% endif %}
+{{ file.name }}{% if file.in_eol %} (eol){% endif %}{% if file.prerelease %} (prerelease){% endif %}
   {% for target in file.targets %}
 * [{{ file.name }}-{{ target["target"] }}](https://github.com/athackst/dockerfiles/blob/main/{{ repo_name }}/{{ file.name }}.Dockerfile)
   {%- endfor %}

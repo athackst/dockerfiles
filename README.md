@@ -41,17 +41,69 @@ Alternatively, you can build all the docker images directly from source.
 Or just build one
 
 ```bash
-./build.py foxy
+./build.py ros2-jazzy-base
 ```
 
-Or just a single target for one
+Or build one distro group
 
 ```bash
-./build --target dev foxy
+./build.py ros2-jazzy
 ```
 
 To see help information and build options
 
 ```bash
 ./build.py --help
+```
+
+### Shell completion
+
+Enable tab completion for the current shell session:
+
+```bash
+eval "$(_BUILD_PY_COMPLETE=bash_source ./build.py)"
+```
+
+Then try:
+
+```bash
+./build.py <TAB><TAB>
+```
+
+To make completion persistent for bash, add this to your `~/.bashrc`:
+
+```bash
+eval "$(_BUILD_PY_COMPLETE=bash_source /path/to/dockerfiles/build.py)"
+```
+
+## Template accessor package
+
+You can install the template accessor package in another repo without publishing to PyPI.
+
+Install from GitHub:
+
+```bash
+pip install "git+https://github.com/athackst/dockerfiles.git"
+```
+
+Pin to a branch/tag/commit:
+
+```bash
+pip install "git+https://github.com/athackst/dockerfiles.git@main"
+```
+
+For local development (editable install):
+
+```bash
+pip install -e .
+```
+
+Example usage:
+
+```python
+from dockerfiles_templates import Templates
+
+templates = Templates(templates_path="templates.yml")
+for entry in templates.entries(eol=False):
+    print(entry["family"], entry["name"])
 ```

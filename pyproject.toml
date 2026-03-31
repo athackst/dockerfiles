@@ -1,0 +1,26 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "dockerfiles-templates"
+version = "0.1.0"
+description = "Reusable Python API for templates.yml used by athackst/dockerfiles."
+readme = "README.md"
+requires-python = ">=3.9"
+license = { file = "LICENSE" }
+authors = [
+  { name = "Allison Thackston" }
+]
+dependencies = [
+  "ruamel.yaml>=0.19.0",
+  "jsonschema>=4.0.0"
+]
+
+[project.urls]
+Homepage = "https://github.com/athackst/dockerfiles"
+Repository = "https://github.com/athackst/dockerfiles"
+Issues = "https://github.com/athackst/dockerfiles/issues"
+
+[tool.setuptools.packages.find]
+include = ["dockerfiles_templates*"]

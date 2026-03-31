@@ -39,20 +39,15 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
   && rm -rf /var/lib/apt/lists/*
 
 # Setup environment
-ENV LD_LIBRARY_PATH=/opt/ros/melodic/lib
-ENV ROS_DISTRO=melodic
-ENV ROS_ROOT=/opt/ros/melodic/share/ros
-ENV ROS_PACKAGE_PATH=/opt/ros/melodic/share
-ENV ROS_MASTER_URI=http://localhost:11311
-ENV ROS_PYTHON_VERSION=
-ENV ROS_VERSION=1
-ENV PATH=/opt/ros/melodic/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
-ENV ROSLISP_PACKAGE_DIRECTORIES=
-ENV PYTHONPATH=/opt/ros/melodic/lib/python2.7/dist-packages
-ENV PKG_CONFIG_PATH=/opt/ros/melodic/lib/pkgconfig
-ENV ROS_ETC_DIR=/opt/ros/melodic/etc/ros
-ENV CMAKE_PREFIX_PATH=/opt/ros/melodic
 ENV DEBIAN_FRONTEND=
+
+ENV ROS_DISTRO=melodic
+
+# setup entrypoint
+COPY ./ros_entrypoint.sh /
+
+ENTRYPOINT ["/ros_entrypoint.sh"]
+CMD ["bash"]
 
 ###########################################
 # Develop image

@@ -30,43 +30,20 @@ from __future__ import annotations
 
 import argparse
 import json
-from typing import Optional, Tuple
+from pathlib import Path
+import sys
 
 from actions_toolkit import core
-from ruamel import yaml
 
+REPO_ROOT = Path(__file__).resolve().parents[3]
+if str(REPO_ROOT) not in sys.path:
+    sys.path.insert(0, str(REPO_ROOT))
 
-def parse_platform(p: str) -> Tuple[str, str, Optional[str]]:
-    """Parses a Docker platform string into components.
-
-    Args:
-      p: Platform string in the form "os/arch[/variant]". "-" is accepted
-        as a separator for convenience (e.g., "linux-arm-v7").
-
-    Returns:
-      A tuple (os, arch, variant_or_none). If only an arch is provided,
-      defaults os to "linux".
-    """
-    p = (p or "").strip().lower().replace("-", "/")
-    parts = [x for x in p.split("/") if x]
-    if len(parts) == 1:
-        return "linux", parts[0], None
-    if len(parts) == 2:
-        return parts[0], parts[1], None
-    return parts[0], parts[1], "/".join(parts[2:])
-
-
-def canonical_platform(p: str) -> str:
-    """Normalizes a platform string to slash form.
-
-    Args:
-      p: Platform string (any of "amd64", "linux/amd64", "linux-arm-v7", etc.).
-
-    Returns:
-      Canonical platform in slash form "os/arch[/variant]".
-    """
-    os_, arch, var = parse_platform(p)
-    return f"{os_}/{arch}" + (f"/{var}" if var else "")
+from dockerfiles_templates import (  # noqa: E402
+    Templates,
+    canonical_platform,
+    parse_platform,
+)
 
 
 def norm_platform(p: str) -> str:
@@ -80,45 +57,6 @@ def norm_platform(p: str) -> str:
     """
     os_, arch, var = parse_platform(p)
     return f"{os_}-{arch}" + (f"-{var}" if var else "")
-
-
-def load_templates() -> dict:
-    """Loads templates.yml from repo root.
-
-    Returns:
-      Parsed YAML as a dict. Empty dict if file is empty.
-    """
-    y = yaml.YAML()
-    with open("templates.yml", "r", encoding="utf-8") as f:
-        return y.load(f) or {}
-
-
-def platforms_support(allowed_csv: str, want: str) -> bool:
-    """Checks if a wanted platform matches an allowed platforms list.
-
-    Matching rule:
-      - os and arch must match exactly;
-      - if the allowed entry has no variant,
-            it matches any variant of that os/arch;
-      - if the allowed entry has a variant, it must match exactly.
-
-    Args:
-      allowed_csv: Comma-delimited list of platforms from templates.yml.
-      want: Canonical wanted platform (slash form), possibly with variant.
-
-    Returns:
-      True if any allowed entry matches the wanted platform.
-    """
-    want_os, want_arch, want_var = parse_platform(want)
-    for raw in (allowed_csv or "").split(","):
-        a_os, a_arch, a_var = parse_platform(raw.strip())
-        if (a_os, a_arch) != (want_os, want_arch):
-            continue
-        if a_var is None:
-            return True  # wildcard variant
-        if want_var == a_var:
-            return True
-    return False
 
 
 def main() -> int:
@@ -174,16 +112,12 @@ def main() -> int:
     platform_group = f"{os_}-{arch}"
     release_group = f"{release}-{platform_group}"
 
-    data = load_templates()
-    entries = data.get(args.family, [])
-    entry = next(
-        (
-            e
-            for e in entries
-            if e.get("name") == args.distro and not e.get("eol", False)
-        ),
-        None,
-    )
+    try:
+        templates = Templates(templates_path="templates.yml")
+    except ValueError as exc:
+        core.set_failed(str(exc))
+        return 1
+    entry = templates.get_entry(args.family, args.distro, eol=False)
     if entry is None:
         core.set_failed(
             f"No entry '{args.distro}' under '{args.family}'"
@@ -197,9 +131,7 @@ def main() -> int:
     normalized_family = args.family.strip().lower()
     normalized_ghcr_owner = args.ghcr_owner.strip().lower()
     normalized_docker_user = args.docker_username.strip().lower()
-    for tgt in entry.get("targets", []):
-        if not platforms_support(tgt.get("platforms", ""), platform):
-            continue
+    for tgt in templates.targets_for_platform(entry, platform):
         stage = tgt.get("target")
         stages.append(stage)
         tname = f"{release}-{stage}"

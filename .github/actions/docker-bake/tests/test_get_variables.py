@@ -11,10 +11,7 @@ from unittest.mock import MagicMock, patch
 
 def load_get_variables_module():
     # Ensure the parent directory (containing merge_manifests.py) is importable
-    module_path = (
-        Path(__file__).resolve().parents[1]
-        / "get_variables.py"
-    )
+    module_path = Path(__file__).resolve().parents[1] / "get_variables.py"
     spec = importlib.util.spec_from_file_location(
         "get_variables_under_test", module_path
     )
@@ -55,14 +52,16 @@ class GetVariablesTestCase(unittest.TestCase):
     def test_main_emits_expected_outputs(self):
         self._write_templates(
             """
-            ros2:
-              - name: rolling
-                eol: false
+            dockerfiles:
+              - family: ros2
+                name: rolling
+                distro: rolling
+                base_image: ubuntu:24.04
                 targets:
                   - target: base
-                    platforms: linux/amd64,linux/arm64
+                    platforms: [linux/amd64, linux/arm64]
                   - target: dev
-                    platforms: linux/amd64
+                    platforms: [linux/amd64]
             """
         )
 
@@ -105,12 +104,14 @@ class GetVariablesTestCase(unittest.TestCase):
     def test_main_sets_exists_false_when_targets_missing(self):
         self._write_templates(
             """
-            ros2:
-              - name: rolling
-                eol: false
+            dockerfiles:
+              - family: ros2
+                name: rolling
+                distro: rolling
+                base_image: ubuntu:24.04
                 targets:
                   - target: base
-                    platforms: linux/arm64
+                    platforms: [linux/arm64]
             """
         )
 
@@ -135,12 +136,14 @@ class GetVariablesTestCase(unittest.TestCase):
     def test_main_fails_when_distro_missing(self):
         self._write_templates(
             """
-            ros2:
-              - name: humble
-                eol: false
+            dockerfiles:
+              - family: ros2
+                name: humble
+                distro: humble
+                base_image: ubuntu:22.04
                 targets:
                   - target: base
-                    platforms: linux/amd64
+                    platforms: [linux/amd64]
             """
         )
 
@@ -158,6 +161,33 @@ class GetVariablesTestCase(unittest.TestCase):
 
         self.assertEqual(exit_code, 1)
         self.core_mock.set_failed.assert_called()
+        self.assertEqual(self._outputs_dict(), {})
+
+    def test_main_fails_when_templates_schema_invalid(self):
+        self._write_templates(
+            """
+            dockerfiles:
+              - family: ros2
+                name: rolling
+                distro: rolling
+                base_image: ubuntu:24.04
+            """
+        )
+
+        exit_code = self._run_main(
+            [
+                "get_variables.py",
+                "--family",
+                "ros2",
+                "--distro",
+                "rolling",
+                "--platform",
+                "linux/amd64",
+            ]
+        )
+
+        self.assertEqual(exit_code, 1)
+        self.core_mock.set_failed.assert_called_once()
         self.assertEqual(self._outputs_dict(), {})
 
 

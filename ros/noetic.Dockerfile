@@ -39,20 +39,15 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
   && rm -rf /var/lib/apt/lists/*
 
 # Setup environment
-ENV LD_LIBRARY_PATH=/opt/ros/noetic/lib
-ENV ROS_DISTRO=noetic
-ENV ROS_ROOT=/opt/ros/noetic/share/ros
-ENV ROS_PACKAGE_PATH=/opt/ros/noetic/share
-ENV ROS_MASTER_URI=http://localhost:11311
-ENV ROS_PYTHON_VERSION=3
-ENV ROS_VERSION=1
-ENV PATH=/opt/ros/noetic/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
-ENV ROSLISP_PACKAGE_DIRECTORIES=
-ENV PYTHONPATH=/opt/ros/noetic/lib/python3/dist-packages
-ENV PKG_CONFIG_PATH=/opt/ros/noetic/lib/pkgconfig
-ENV ROS_ETC_DIR=/opt/ros/noetic/etc/ros
-ENV CMAKE_PREFIX_PATH=/opt/ros/noetic
 ENV DEBIAN_FRONTEND=
+
+ENV ROS_DISTRO=noetic
+
+# setup entrypoint
+COPY ./ros_entrypoint.sh /
+
+ENTRYPOINT ["/ros_entrypoint.sh"]
+CMD ["bash"]
 
 ###########################################
 # Develop image
@@ -62,14 +57,14 @@ FROM base AS dev
 ENV DEBIAN_FRONTEND=noninteractive
 # Install dev tools
 RUN apt-get update && apt-get install -y --no-install-recommends \
-    python3-rosdep \
-    python3-rosinstall \
-    python3-rosinstall-generator \
-    python3-wstool \
-    python3-pip \
-    python3-pep8 \
-    python3-autopep8 \
-    pylint3 \
+    python-rosdep \
+    python-rosinstall \
+    python-rosinstall-generator \
+    python-wstool \
+    python-pip \
+    python-pep8 \
+    python-autopep8 \
+    pylint \
     build-essential \
     bash-completion \
     git \

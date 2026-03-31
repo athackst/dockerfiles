@@ -33,11 +33,11 @@ RUN curl -L -s -o /tmp/ros2-apt-source.deb https://github.com/ros-infrastructure
     && rm -f /tmp/ros2-apt-source.deb \
     && rm -rf /var/lib/apt/lists/*
 
-ENV ROS_DISTRO={{ ros_distro }}
+ENV ROS_DISTRO={{ distro }}
 
 # Install ROS2
 RUN apt-get update && apt-get install -y --no-install-recommends \
-    ros-{{ ros_distro }}-ros-base \
+    ros-{{ distro }}-ros-base \
     python3-argcomplete \
     python3-rosdep \
   && rm -rf /var/lib/apt/lists/*
@@ -71,7 +71,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
   python3-argcomplete \
   python3-pip \
   ros-dev-tools \
-  ros-{{ ros_distro }}-ament-* \
+  ros-{{ distro }}-ament-* \
   vim \
   && rm -rf /var/lib/apt/lists/*
 
@@ -88,7 +88,7 @@ FROM dev AS desktop
 ENV DEBIAN_FRONTEND=noninteractive
 # Install the desktop release
 RUN apt-get update && apt-get install -y --no-install-recommends \
-  ros-{{ ros_distro }}-desktop \
+  ros-{{ distro }}-desktop \
   && rm -rf /var/lib/apt/lists/*
 ENV DEBIAN_FRONTEND=
 
@@ -100,7 +100,7 @@ FROM desktop AS full
 ENV DEBIAN_FRONTEND=noninteractive
 # Install the desktop release
 RUN apt-get update && apt-get install -y --no-install-recommends \
-  ros-{{ ros_distro }}-desktop-full \
+  ros-{{ distro }}-desktop-full \
   && rm -rf /var/lib/apt/lists/*
 ENV DEBIAN_FRONTEND=
 
@@ -115,7 +115,7 @@ ENV DEBIAN_FRONTEND=noninteractive
 RUN wget https://packages.osrfoundation.org/gazebo.gpg -O /usr/share/keyrings/pkgs-osrf-archive-keyring.gpg \
   && echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/pkgs-osrf-archive-keyring.gpg] http://packages.osrfoundation.org/gazebo/ubuntu-stable $(lsb_release -cs) main" | sudo tee /etc/apt/sources.list.d/gazebo-stable.list > /dev/null \
   && apt-get update && apt-get install -q -y --no-install-recommends \
-    ros-{{ ros_distro }}-ros-gz \
+    ros-{{ distro }}-ros-gz \
   && rm -rf /var/lib/apt/lists/*
 ENV DEBIAN_FRONTEND=
 

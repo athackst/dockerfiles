@@ -52,11 +52,18 @@
       "problemMatcher": "$python"
     },
     {
+      "label": "api tests",
+      "type": "shell",
+      "command": "python -m unittest discover -s tests -p 'test_*.py'",
+      "problemMatcher": "$python"
+    },
+    {
       "label": "test",
       "dependsOn": [
         "flake8",
         "pydocstyle",
-        "action tests"
+        "action tests",
+        "api tests"
       ]
     },
     {
@@ -78,7 +85,7 @@
     {
       "label": "build target",
       "type": "shell",
-      "command": "./build.py --no-push --target ${input:build_target} ${input:build_name}",
+      "command": "./build.py --no-push ${input:build_name}-${input:build_target}",
       "problemMatcher": [],
       "group": {
         "kind": "build",
@@ -104,23 +111,22 @@
       "type": "pickString",
       "description": "name of the image to build",
       "options": [
-        "rolling",
-        "rolling-cuda",
-        "kilted",
-        "jazzy",
-        "jazzy-cuda",
-        "humble",
-        "humble-cuda",
-        "fortress",
-        "jetty",
-        "jetty-cuda",
-        "ionic",
-        "ionic-cuda",
-        "harmonic",
-        "harmonic-cuda",
-        "all"
+        "ros2-rolling",
+        "ros2-rolling-cuda",
+        "ros2-kilted",
+        "ros2-jazzy",
+        "ros2-jazzy-cuda",
+        "ros2-humble",
+        "ros2-humble-cuda",
+        "ignition-fortress",
+        "gz-jetty",
+        "gz-jetty-cuda",
+        "gz-ionic",
+        "gz-ionic-cuda",
+        "gz-harmonic",
+        "gz-harmonic-cuda"
       ],
-      "default": "kilted"
+      "default": "ros2-kilted"
     },
     {
       "id": "build_target",

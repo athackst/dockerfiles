@@ -6,34 +6,34 @@ from __future__ import annotations
 import logging
 import os
 import subprocess
+import json
+import re
 from datetime import date
 from pathlib import Path
 from typing import Iterable
 
 import click
 
-from generate import gen
-from generate import templates
-
 """ md
 # Build (`build.py`)
 
-`build.py` wraps `docker buildx bake` so you can regenerate Dockerfiles and build
+`build.py` wraps `docker buildx bake` to build
 (or push) the generated targets from your workstation.
 
 ## Usage
 ```bash
-# Regenerate Dockerfiles, build all targets locally
+# Build all active targets (bake default group)
 python build.py all
 
-# Build a single image + target stage and push to the registry
-python build.py --push rolling --target base
+# Build a single bake target
+python build.py ros2-rolling-base
+
+# Build a bake group (for example, one distro group)
+python build.py ros2-jazzy
 ```
 
 ### Options
-- `--no-generate`: Skip the file generation step.
 - `--push`: Push results to `${DOCKER_REGISTRY:-althack}` (or set `DOCKER_PUSH=true`).
-- `--target <stage>`: Limit to a single Dockerfile stage.
 - `--no-clean`: Skip the final `docker system prune -f` (or set `DOCKER_CLEAN=false`).
 
 The script always reads from the generated `docker-bake.hcl`, updating tags like
@@ -46,6 +46,23 @@ DEFAULT_REGISTRY = "althack"
 DOCKER_BAKE_FILE = Path(__file__).resolve().parent / "docker-bake.hcl"
 
 log = logging.getLogger(__name__)
+
+
+def _bake_selector_completion(
+    ctx: click.Context, param: click.Parameter, incomplete: str
+) -> list[click.shell_completion.CompletionItem]:
+    """Return shell completion candidates for bake selectors."""
+    del ctx, param
+    values = {"all"}
+    if DOCKER_BAKE_FILE.exists():
+        text = DOCKER_BAKE_FILE.read_text(encoding="utf-8")
+        for match in re.findall(r'^(?:target|group)\s+"([^"]+)"', text, re.M):
+            values.add(match)
+    return [
+        click.shell_completion.CompletionItem(value)
+        for value in sorted(values)
+        if value.startswith(incomplete)
+    ]
 
 
 def _get_bool(value: str | None) -> bool:
@@ -110,9 +127,41 @@ class DockerBake:
 
         cmd.append(target)
         log.debug("Running: %s", " ".join(cmd))
-        ret = os.system(" ".join(cmd))
-        if ret != 0:
-            raise Exception("Error in docker bake")
+        subprocess.run(cmd, check=True)
+
+    def resolve_targets(self, ref: str) -> list[str]:
+        """Resolve a bake target/group selector to concrete targets."""
+        cmd = [
+            "docker",
+            "buildx",
+            "bake",
+            "--file",
+            self.bake_file,
+            "--print",
+            ref,
+        ]
+        log.debug("Resolving targets with: %s", " ".join(cmd))
+        output = subprocess.check_output(cmd, text=True)
+        payload = json.loads(output)
+        targets = list((payload.get("target") or {}).keys())
+        targets.sort()
+        return targets
+
+    def has_target(self, target: str) -> bool:
+        """Return True when the target exists in docker-bake.hcl."""
+        with open(self.bake_file, "r", encoding="utf-8") as file:
+            content = file.read()
+        return f'target "{target}"' in content
+
+    def has_group(self, group: str) -> bool:
+        """Return True when the group exists in docker-bake.hcl."""
+        with open(self.bake_file, "r", encoding="utf-8") as file:
+            content = file.read()
+        return f'group "{group}"' in content
+
+    def has_ref(self, ref: str) -> bool:
+        """Return True when a bake ref exists as either target or group."""
+        return self.has_target(ref) or self.has_group(ref)
 
     @staticmethod
     def prune() -> None:
@@ -120,53 +169,50 @@ class DockerBake:
         subprocess.run(["docker", "system", "prune", "-f"], check=True)
 
 
-def build(image: str, target: str, push: bool, clean: bool) -> None:
-    """Build selected templates with docker bake.
+def parse_bake_target(target: str) -> tuple[str, str, str]:
+    """Parse ``family-name-stage`` bake target into parts."""
+    family, separator, rest = target.partition("-")
+    name, separator2, stage = rest.rpartition("-")
+    if not separator or not separator2 or not family or not name or not stage:
+        raise ValueError(f"Invalid bake target '{target}'")
+    return family, name, stage
 
-    Args:
-        image: Template key or ``all`` for every template.
-        target: Optional specific stage to build.
-        push: Whether to push artifacts to the registry.
-        clean: Whether to prune Docker after completion.
-    """
-    builds = templates.images(eol=True)
-    if image != "all":
-        builds = {image: templates.images()[image]}
 
+def build(selection: str, push: bool, clean: bool) -> None:
+    """Build a bake target/group, or ``all`` (mapped to ``default`` group)."""
     baker = DockerBake()
-    push_requested = push or should_push()
+    bake_ref = "default" if selection == "all" else selection
+    if not baker.has_ref(bake_ref):
+        raise Exception(
+            f"Bake target/group '{bake_ref}' was not found in docker-bake.hcl. "
+            "Run './generate.py' to refresh bake targets."
+        )
 
-    for name, definition in builds.items():
-        repo = definition["repository"]
-        stages = definition["targets"] if not target else [target]
-        print(f"***Found Stages: {stages}")
-        for current_stage in stages:
-            bake_target = f"{repo}-{name}-{current_stage}"
-            base_tag = f"{baker.registry}/{repo}:{name}-{current_stage}"
+    push_requested = push or should_push()
+    if push_requested:
+        targets = baker.resolve_targets(bake_ref)
+        if not targets:
+            raise Exception(f"No concrete bake targets resolved for '{bake_ref}'.")
+        for target in targets:
+            family, name, stage = parse_bake_target(target)
+            base_tag = f"{baker.registry}/{family}:{name}-{stage}"
+            extra_tags = [base_tag, f"{base_tag}-{TODAY}"]
             log.info(
                 "Building %s (target=%s push=%s)",
                 base_tag,
-                bake_target,
+                target,
                 push_requested,
             )
-            extra_tags = None
-            if push_requested:
-                extra_tags = [base_tag, f"{base_tag}-{TODAY}"]
-            baker.bake(bake_target, push=push_requested, tags=extra_tags)
-
-    if not builds:
-        raise Exception(f"No builds found for {image}")
+            baker.bake(target, push=True, tags=extra_tags)
+    else:
+        log.info("Building %s (push=%s)", bake_ref, push_requested)
+        baker.bake(bake_ref, push=False)
 
     if clean or should_clean():
         baker.prune()
 
 
 @click.command()
-@click.option(
-    "--generate/--no-generate",
-    default=True,
-    help="Generate docker files first.",
-)
 @click.option(
     "--push/--no-push",
     default=False,
@@ -177,12 +223,11 @@ def build(image: str, target: str, push: bool, clean: bool) -> None:
     default=True,
     help="Run `docker system prune -f` after the build.",
 )
-@click.option(
-    "--target", default="", help="Limit to a specific Dockerfile target."
-)
-@click.argument("image", type=click.Choice(list(templates.images()) + ["all"]))
+@click.argument("selector", shell_complete=_bake_selector_completion)
 def main(
-    generate: bool, push: bool, clean: bool, image: str, target: str
+    push: bool,
+    clean: bool,
+    selector: str,
 ) -> None:
     """CLI entry point dispatching generate + build routines."""
     log.setLevel(logging.DEBUG)
@@ -191,10 +236,7 @@ def main(
     handler.setLevel(logging.DEBUG)
     log.addHandler(handler)
 
-    if generate:
-        gen(log)
-
-    build(image, target, push, clean)
+    build(selector, push, clean)
 
 
 if __name__ == "__main__":

@@ -54,15 +54,29 @@ class GetTargetsTestCase(unittest.TestCase):
     def test_main_filters_by_changed_files_and_sets_outputs(self) -> None:
         self._write_templates(
             """
-            ros2:
-              - name: rolling
+            dockerfiles:
+              - family: ros2
+                name: rolling
+                distro: rolling
+                base_image: ubuntu:24.04
                 targets:
                   - target: base
-                    platforms: linux/amd64
-              - name: humble
-                eol: true
-            gazebo:
-              - name: garden
+                    platforms: [linux/amd64]
+              - family: ros2
+                name: humble
+                distro: humble
+                base_image: ubuntu:22.04
+                eol: "2024-01-01"
+                targets:
+                  - target: base
+                    platforms: [linux/amd64]
+              - family: gazebo
+                name: garden
+                distro: "11"
+                base_image: ubuntu:20.04
+                targets:
+                  - target: base
+                    platforms: [linux/amd64]
             """
         )
 
@@ -93,19 +107,28 @@ class GetTargetsTestCase(unittest.TestCase):
                     "distro": "rolling",
                     "stage": "base",
                     "platforms": "linux/amd64",
-                }
+                },
             ],
         )
 
     def test_main_returns_all_when_flag_set(self) -> None:
         self._write_templates(
             """
-            ros2:
-              - name: rolling
+            dockerfiles:
+              - family: ros2
+                name: rolling
+                distro: rolling
+                base_image: ubuntu:24.04
                 targets:
                   - target: base
-            gazebo:
-              - name: garden
+                    platforms: [linux/amd64]
+              - family: gazebo
+                name: garden
+                distro: "11"
+                base_image: ubuntu:20.04
+                targets:
+                  - target: base
+                    platforms: [linux/amd64]
             """
         )
 
@@ -131,24 +154,37 @@ class GetTargetsTestCase(unittest.TestCase):
         )
         self.assertEqual(sorted(outputs["families"]), ["gazebo", "ros2"])
         self.assertEqual(
-            outputs["stages"],
+            sorted(
+                outputs["stages"],
+                key=lambda x: (x["family"], x["distro"], x["stage"]),
+            ),
             [
+                {
+                    "family": "gazebo",
+                    "distro": "garden",
+                    "stage": "base",
+                    "platforms": "linux/amd64",
+                },
                 {
                     "family": "ros2",
                     "distro": "rolling",
                     "stage": "base",
-                    "platforms": "",
-                }
+                    "platforms": "linux/amd64",
+                },
             ],
         )
 
     def test_main_with_no_changes_produces_empty_outputs(self) -> None:
         self._write_templates(
             """
-            ros2:
-              - name: rolling
+            dockerfiles:
+              - family: ros2
+                name: rolling
+                distro: rolling
+                base_image: ubuntu:24.04
                 targets:
                   - target: base
+                    platforms: [linux/amd64]
             """
         )
 
@@ -168,24 +204,6 @@ class GetTargetsTestCase(unittest.TestCase):
         self.assertEqual(outputs.get("families"), [])
         self.assertEqual(outputs.get("stages"), [])
 
-    def test_collect_non_eol_respects_platform_filter(self) -> None:
-        data = {
-            "ros2": [
-                {
-                    "name": "rolling",
-                    "targets": [
-                        {"target": "base", "platforms": "linux/amd64"},
-                        {"target": "dev", "platforms": "linux/arm64"},
-                    ],
-                }
-            ]
-        }
-        results = TARGETS_MODULE.collect_non_eol(data, platform="linux/arm64")
-        self.assertEqual(results, [{"family": "ros2", "distro": "rolling"}])
-
-        results = TARGETS_MODULE.collect_non_eol(data, platform="linux/ppc64le")
-        self.assertEqual(results, [])
-
     def test_parse_changed_ignores_non_dockerfiles(self) -> None:
         raw = "ros2/rolling.Dockerfile\nros2/README.md,gazebo/garden.Dockerfile"
         changed = TARGETS_MODULE.parse_changed(raw)
@@ -193,6 +211,28 @@ class GetTargetsTestCase(unittest.TestCase):
             changed,
             {("ros2", "rolling"), ("gazebo", "garden")},
         )
+
+    def test_main_fails_for_schema_invalid_templates(self) -> None:
+        self._write_templates(
+            """
+            dockerfiles:
+              - family: ros2
+                name: rolling
+                distro: rolling
+                base_image: ubuntu:24.04
+            """
+        )
+
+        argv = [
+            "get_targets.py",
+            "--all",
+            "true",
+        ]
+        with patch.object(sys, "argv", argv):
+            exit_code = TARGETS_MODULE.main()
+
+        self.assertEqual(exit_code, 1)
+        self.core_mock.set_failed.assert_called_once()
 
 
 if __name__ == "__main__":

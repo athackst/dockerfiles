@@ -4,7 +4,7 @@ variable "REGISTRY" { default = "althack" }
 
 {# ---------- Targets and repo+name groups ---------- #} 
 {% for repo, entries in settings.items() %}
-  {% for entry in entries if include_eol or ('eol' not in entry) %}
+  {% for entry in entries %}
     {% set name = entry['name'] %}
     {% set dockerfile_path = name ~ '.Dockerfile' %}
 # ----------- targets for {{repo}}-{{name}} -----------
@@ -37,14 +37,14 @@ group "{{ repo }}-{{ name }}" {
 
 # ---------- Parent-platform groups per entry (os/arch; variant-agnostic) ---------- #
 {%- for repo, entries in settings.items() %}
-  {%- for entry in entries if include_eol or ('eol' not in entry) %}
+  {%- for entry in entries %}
     {%- set name = entry['name'] %}
 
     {# Collect unique parent platforms (os/arch) for this entry #}
     {%- set parents = [] %}
     {%- for t in entry['targets'] %}
-      {%- for raw in t['platforms'].split(',') %}
-        {%- set tok = raw.strip() | lower %}
+      {%- for raw in t['platforms'] %}
+        {%- set tok = raw | lower %}
         {%- set parts = tok.split('/') %}
         {%- if parts|length >= 2 %}
           {%- set parent = parts[0] ~ '/' ~ parts[1] %}
@@ -60,10 +60,12 @@ group "{{ repo }}-{{ name }}" {
       {%- set parent_key = parent.replace('/', '-') %}
       {%- set tgtlist = [] %}
       {%- for t in entry['targets'] %}
-        {%- set plats = (t['platforms'] | lower) %}
-        {%- if (parent in plats) or ((parent ~ '/') in plats) %}
-          {%- set _ = tgtlist.append(repo ~ '-' ~ name ~ '-' ~ t['target']) %}
-        {%- endif %}
+        {%- for plat in t['platforms'] %}
+          {%- set plat_l = plat | lower %}
+          {%- if (plat_l == parent) or (plat_l.startswith(parent ~ '/')) %}
+            {%- set _ = tgtlist.append(repo ~ '-' ~ name ~ '-' ~ t['target']) %}
+          {%- endif %}
+        {%- endfor %}
       {%- endfor %}
       {% if tgtlist %}
 group "{{ repo }}-{{ name }}-{{ parent_key }}" { targets = [ {{ tgtlist | map('tojson') | join(', ') }} ] }
@@ -78,7 +80,7 @@ group "{{ repo }}-{{ name }}-{{ parent_key }}" { targets = [ {{ tgtlist | map('t
 
 {% for repo, entries in settings.items() %}
   {%- set repo_targets = [] %}
-  {%- for entry in entries if include_eol or ('eol' not in entry) %}
+  {%- for entry in entries %}
     {%- for t in entry['targets'] %}
       {%- set _ = repo_targets.append(repo ~ '-' ~ entry['name'] ~ '-' ~ t['target']) %}
     {%- endfor %}
@@ -86,12 +88,12 @@ group "{{ repo }}-{{ name }}-{{ parent_key }}" { targets = [ {{ tgtlist | map('t
 group "{{ repo }}" { targets = [ {{ repo_targets | map('tojson') | join(', ') }} ] }
 {% endfor %}
 
-# ---- all non-EOL ----
+# ---- all non-EOL targets ----
 group "default" {
   targets = [
     {% set all_targets = [] %}
-    {% for repo, entries in settings.items() %}
-      {% for entry in entries if include_eol or ('eol' not in entry) %}
+    {% for repo, entries in active_settings.items() %}
+      {% for entry in entries %}
         {% for t in entry['targets'] %}
           {% set _ = all_targets.append(repo ~ '-' ~ entry['name'] ~ '-' ~ t['target']) %}
         {% endfor %}

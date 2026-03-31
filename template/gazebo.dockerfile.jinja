@@ -22,7 +22,7 @@ RUN apt-get update && apt-get install -q -y \
     && sh -c 'echo "deb http://packages.osrfoundation.org/gazebo/ubuntu-stable `lsb_release -cs` main" > /etc/apt/sources.list.d/gazebo-stable.list' \
     && wget https://packages.osrfoundation.org/gazebo.key -O - | apt-key add - \
     && apt-get update && apt-get install -y \
-    gazebo{{ gazebo_release }} \
+    gazebo{{ distro }} \
   && rm -rf /var/lib/apt/lists/*
 
 ###########################################
@@ -33,7 +33,7 @@ FROM base AS dev
 ENV DEBIAN_FRONTEND=noninteractive
 # Install dev tools
 RUN apt-get update && apt-get install -y \
-    libgazebo{{ gazebo_release }}-dev \
+    libgazebo{{ distro }}-dev \
   && rm -rf /var/lib/apt/lists/*
 
 {% include 'snippits/ros_user.jinja' %}

@@ -5,67 +5,30 @@ from __future__ import annotations
 
 import argparse
 from pathlib import Path
+import sys
 from actions_toolkit import core
-from ruamel import yaml
+
+REPO_ROOT = Path(__file__).resolve().parents[3]
+if str(REPO_ROOT) not in sys.path:
+    sys.path.insert(0, str(REPO_ROOT))
+
+from dockerfiles_templates import (  # noqa: E402
+    Templates,
+    canonical_platform,
+)
 
 
-def load_templates(path: Path) -> dict:
-    loader = yaml.YAML()
-    with path.open("r", encoding="utf-8") as fh:
-        return loader.load(fh) or {}
-
-
-def parse_platform(raw: str) -> tuple[str, str, str | None]:
-    raw = (raw or "").strip().lower().replace("-", "/")
-    parts = [p for p in raw.split("/") if p]
-    if len(parts) == 1:
-        return "linux", parts[0], None
-    if len(parts) == 2:
-        return parts[0], parts[1], None
-    return parts[0], parts[1], "/".join(parts[2:])
-
-
-def canonical_platform(raw: str) -> str:
-    os_name, arch, variant = parse_platform(raw)
-    return f"{os_name}/{arch}" + (f"/{variant}" if variant else "")
-
-
-def platforms_support(platforms_csv: str, want: str) -> bool:
-    want_os, want_arch, want_var = parse_platform(want)
-    for raw in (platforms_csv or "").split(","):
-        p_os, p_arch, p_var = parse_platform(raw.strip())
-        if (p_os, p_arch) != (want_os, want_arch):
-            continue
-        if p_var is None:
-            return True
-        if want_var == p_var:
-            return True
-    return False
-
-
-def entry_supports_platform(entry: dict, platform: str) -> bool:
-    if not platform:
-        return True
-    platform = canonical_platform(platform)
-    for target in entry.get("targets") or []:
-        if platforms_support(target.get("platforms", ""), platform):
-            return True
-    return False
-
-
-def collect_non_eol(data: dict, platform: str | None = None) -> list[dict]:
+def collect_non_eol(
+    templates: Templates, platform: str | None = None
+) -> list[dict]:
     platform = platform or ""
     include: list[dict] = []
-    for family, entries in (data or {}).items():
-        for entry in entries or []:
-            if not entry or entry.get("eol"):
-                continue
-            name = entry.get("name")
-            if not name:
-                continue
-            if platform and not entry_supports_platform(entry, platform):
-                continue
-            include.append({"family": family, "distro": name})
+    for entry in templates.entries(eol=False, platform=platform or None):
+        name = entry.get("name")
+        family = entry.get("family")
+        if not name or not family:
+            continue
+        include.append({"family": family, "distro": name})
     return include
 
 
@@ -119,39 +82,36 @@ def parse_args() -> argparse.Namespace:
 
 def main() -> int:
     args = parse_args()
-    data = load_templates(Path(args.templates))
+    try:
+        templates = Templates(templates_path=Path(args.templates))
+    except ValueError as exc:
+        core.set_failed(str(exc))
+        return 1
     changed = parse_changed(args.changed)
     all = args.all.lower() == "true"
     include: list[dict[str, str]] = []
     stage_details: list[dict[str, str]] = []
     want_platform = canonical_platform(args.platform) if args.platform else ""
-    for item in collect_non_eol(data, args.platform or None):
+    for item in collect_non_eol(templates, args.platform or None):
         if (not all and not changed) or (
             not all and (item["family"], item["distro"]) not in changed
         ):
             continue
         include.append(item)
-        entries = data.get(item["family"], []) or []
-        entry = next(
-            (e for e in entries if e and e.get("name") == item["distro"]), None
-        )
+        entry = templates.get_entry(item["family"], item["distro"], eol=False)
         if not entry:
             continue
-        for target in entry.get("targets") or []:
+        for target in templates.targets_for_platform(entry, want_platform):
             stage = target.get("target")
             if not stage:
                 continue
-            platforms = target.get("platforms", "")
-            if want_platform and not platforms_support(
-                platforms, want_platform
-            ):
-                continue
+            platforms = target.get("platforms", [])
             stage_details.append(
                 {
                     "family": item["family"],
                     "distro": item["distro"],
                     "stage": stage,
-                    "platforms": platforms,
+                    "platforms": ",".join(platforms),
                 }
             )
     families = sorted({item["family"] for item in include})
