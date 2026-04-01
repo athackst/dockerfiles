@@ -17,12 +17,19 @@ def generate_dockerfiles(eol: bool = False):
     """Generate the dockerfiles for this repo."""
     file_loader = FileSystemLoader("template")
     env = Environment(loader=file_loader)
+    entries = templates.entries(eol=eol)
 
-    for dockerfile in templates.dockerfile_settings(eol=eol):
+    for entry in entries:
+        settings = entry.copy()
+        family = settings["family"]
+        name = settings["name"]
+        settings["template_file"] = f"{family}.dockerfile.jinja"
+        settings["out_file"] = f"{family}/{name}.Dockerfile"
+        template_file = f"{family}.dockerfile.jinja"
+        out_file = f"{family}/{name}.Dockerfile"
         # The jinja template
-        template = env.get_template(dockerfile["template_file"])
-        output = template.render(dockerfile)
-        out_file = dockerfile["out_file"]
+        template = env.get_template(template_file)
+        output = template.render(settings)
         log.info(f"Generating {out_file}")
         os.makedirs(os.path.dirname(out_file), exist_ok=True)
         dockerfile_out = open(out_file, "w")
@@ -34,7 +41,7 @@ def generate_readmes():
     """Generate the readme files."""
     file_loader = FileSystemLoader("template")
     env = Environment(loader=file_loader)
-    repositories = templates.repo_names()
+    repositories = templates.group_by("family").keys()
     for repository in repositories:
         dockerfiles = templates.entries(family=repository, eol=True)
         dockerfiles_for_readme = []
@@ -57,20 +64,51 @@ def generate_readmes():
         readme_out.close()
 
 
+def get_compose_templates():
+    """Get docker compose templates from templates folder."""
+    suffix = ".docker-compose.yml.jinja"
+    compose_templates = []
+    for entry in os.scandir("template"):
+        if not entry.is_file() or not entry.name.endswith(suffix):
+            continue
+        prefix = entry.name[: -len(suffix)]
+        parts = prefix.split(".", 1)
+        if len(parts) != 2:
+            continue
+        group, family = parts
+        compose_templates.append(
+            {
+                "family": family,
+                "group": group,
+                "file": entry.name,
+            }
+        )
+    return compose_templates
+
+
 def generate_docker_compose(eol: bool = False):
     """Generate the docker compose files."""
     file_loader = FileSystemLoader("template")
     env = Environment(loader=file_loader)
 
-    for compose_settings in templates.dockercompose_settings(eol=eol):
-        template = env.get_template(compose_settings["compose_file"])
-        output = template.render(compose_settings)
-        out_file = compose_settings["compose_out_file"]
-        log.info(f"Generating {out_file}")
-        os.makedirs(os.path.dirname(out_file), exist_ok=True)
-        compose_out = open(out_file, "w")
-        compose_out.write(output)
-        compose_out.close()
+    compose_templates = get_compose_templates()
+
+    for compose_template in compose_templates:
+        group = compose_template["group"]
+        family = compose_template["family"]
+        template_file = compose_template["file"]
+        log.info(f"Template file: {template_file}")
+        template = env.get_template(template_file)
+        entries = templates.entries(family=family, eol=eol)
+        for entry in entries:
+            name = entry["name"]
+            output = template.render(entry)
+            out_file = f"docker-compose/{group}/{name}-docker-compose.yml"
+            log.info(f"Generating {out_file}")
+            os.makedirs(os.path.dirname(out_file), exist_ok=True)
+            compose_out = open(out_file, "w")
+            compose_out.write(output)
+            compose_out.close()
 
 
 def generate_tasks(eol: bool = False):
@@ -81,7 +119,7 @@ def generate_tasks(eol: bool = False):
         tasks = json_parser.load(file)
         for input in tasks["inputs"]:
             if input["id"] == "build_name":
-                input["options"] = templates.task_names(eol=eol)
+                input["options"] = templates.image_tokens(eol=eol)
     with open(tasks_file, "w") as file:
         json_parser.dump(tasks, file, indent=2)
         file.write("\n")
@@ -99,8 +137,8 @@ def generate_bake():
     template = env.get_template("docker-bake.hcl.jinja")
 
     # Always emit all bake targets/groups, but keep default as non-EOL.
-    all_settings = templates.grouped(eol=True)
-    active_settings = templates.grouped(eol=False)
+    all_settings = templates.group_by("family", eol=True)
+    active_settings = templates.group_by("family", eol=False)
 
     output = template.render(
         settings=all_settings,

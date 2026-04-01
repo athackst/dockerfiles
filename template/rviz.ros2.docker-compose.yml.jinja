@@ -1,8 +1,8 @@
  # Note: Run `xhost +local:docker` on the host before starting this container
 
 services:
-  garden:
-    image: althack/gz:garden-base
+  rviz-{{ distro }}:
+    image: althack/ros2:{{ distro }}-full
     environment:
       - DISPLAY=${DISPLAY}
       - XAUTHORITY=${XAUTHORITY}
@@ -13,5 +13,5 @@ services:
     network_mode: host  # Use host networking
     stdin_open: true
     tty: true
-    command: gz sim
+    command: ros2 run rviz2 rviz2
    
