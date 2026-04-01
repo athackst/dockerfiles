@@ -34,7 +34,9 @@ def canonical_platform(raw: str) -> str:
 def platforms_support(platforms: list[str] | str, want: str) -> bool:
     """Return True when any allowed platform matches ``want``."""
     want_os, want_arch, want_var = parse_platform(want)
-    entries = platforms if isinstance(platforms, list) else str(platforms).split(",")
+    entries = (
+        platforms if isinstance(platforms, list) else str(platforms).split(",")
+    )
     for raw in entries:
         p_os, p_arch, p_var = parse_platform(str(raw).strip())
         if (p_os, p_arch) != (want_os, want_arch):
@@ -125,9 +127,7 @@ class Templates:
         with self._schema_path.open("r", encoding="utf-8") as file:
             schema = json.load(file)
 
-        validator = Draft202012Validator(
-            schema, format_checker=FormatChecker()
-        )
+        validator = Draft202012Validator(schema, format_checker=FormatChecker())
         errors = sorted(
             validator.iter_errors(self._settings),
             key=lambda item: list(item.absolute_path),
@@ -192,7 +192,9 @@ class Templates:
             output.append(entry)
         return output
 
-    def get_entry(self, family: str, name: str, eol: bool = False) -> dict | None:
+    def get_entry(
+        self, family: str, name: str, eol: bool = False
+    ) -> dict | None:
         """Get one entry by (family, name), honoring EOL filter rules."""
         entry = self._entry_by_key.get((family, name))
         if entry is None:
@@ -207,42 +209,25 @@ class Templates:
         """Get entry targets filtered by platform support."""
         return filter_targets_by_platform(entry.get("targets") or [], platform)
 
-    def grouped(self, eol: bool = False) -> dict:
-        """Get entries grouped by family."""
-        output = {}
-        for entry in self.entries(eol=eol):
-            family = entry["family"]
-            output.setdefault(family, [])
-            output[family].append(entry)
-        return output
-
-    def dockerfile_settings(self, eol: bool = False) -> dict:
-        """Get dockerfile generation settings."""
-        dockerfiles = []
-        for entry in self.entries(eol=eol):
-            settings = entry.copy()
-            family = settings["family"]
-            name = settings["name"]
-            settings["template_file"] = f"{family}.dockerfile.jinja"
-            settings["out_file"] = f"{family}/{name}.Dockerfile"
-            dockerfiles.append(settings)
-        return dockerfiles
-
-    def dockercompose_settings(self, eol: bool = False) -> dict:
-        """Get docker compose generation settings."""
-        docker_compose_files = []
-        for entry in self.entries(family="gz", eol=eol):
-            if "nvidia" in entry["base_image"]:
-                continue
-            distro = entry.copy()
-            name = distro["name"]
-            family = distro["family"]
-            distro["compose_file"] = f"{family}.docker-compose.yml.jinja"
-            distro["compose_out_file"] = (
-                f"docker-compose/{family}/{name}-docker-compose.yml"
+    def group_by(
+        self,
+        key: str,
+        eol: bool = False,
+        platform: str | None = None,
+    ) -> dict:
+        """Get entries grouped by a supported key."""
+        valid_keys = {"family", "name", "distro", "base_image"}
+        if key not in valid_keys:
+            raise ValueError(
+                f"Unsupported group_by key '{key}'. "
+                f"Expected one of: {', '.join(sorted(valid_keys))}"
             )
-            docker_compose_files.append(distro)
-        return docker_compose_files
+        output = {}
+        for entry in self.entries(eol=eol, platform=platform):
+            value = entry.get(key)
+            output.setdefault(value, [])
+            output[value].append(entry)
+        return output
 
     def images(self, eol: bool = False) -> dict:
         """Get nested dict of images and targets as [family][name]."""
@@ -270,37 +255,11 @@ class Templates:
         """Resolve a ``family-name`` token to image definition."""
         family, separator, name = token.partition("-")
         if not separator:
-            raise KeyError(f"Invalid image token '{token}', expected family-name")
+            raise KeyError(
+                f"Invalid image token '{token}', expected family-name"
+            )
 
         image_map = self.images(eol=eol)
         if family not in image_map or name not in image_map[family]:
             raise KeyError(f"Unknown image token '{token}'")
         return image_map[family][name]
-
-    def workflow_names(self, eol: bool = False) -> list:
-        """List workflow docker image entries."""
-        output = []
-        for entry in self.entries(eol=eol):
-            tag = entry["name"]
-            for target in entry["targets"]:
-                item = {
-                    "label": entry["family"],
-                    "tag": tag,
-                    "target": target["target"],
-                    "platforms": ",".join(target["platforms"]),
-                }
-                output.append(item)
-        return output
-
-    def task_names(self, eol: bool = False) -> list:
-        """List image task names."""
-        return self.image_tokens(eol=eol)
-
-    def repo_names(self) -> list:
-        """List unique repository family names."""
-        names = []
-        for entry in self._entries:
-            family = entry["family"]
-            if family not in names:
-                names.append(family)
-        return names
