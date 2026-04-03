@@ -31,6 +31,7 @@ RUN ln -fs /usr/share/zoneinfo/UTC /etc/localtime \
 RUN apt-get update && apt-get install -y --no-install-recommends \
     ca-certificates \
     curl \
+    gettext-base \
     gnupg \
     lsb-release \
     python3-argcomplete \
