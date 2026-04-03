@@ -31,6 +31,7 @@ RUN apt-get update && apt-get -y upgrade \
 # Install common programs
 RUN apt-get update && apt-get install -y --no-install-recommends \
     curl \
+    gettext-base \
     gnupg2 \
     lsb-release \
     sudo \
