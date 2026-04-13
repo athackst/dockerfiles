@@ -18,7 +18,7 @@ pyflakes==3.4.0
 Pygments==2.20.0
 pyparsing==3.3.2
 requests==2.33.1
-rich==14.3.3
+rich==15.0.0
 ruamel.yaml==0.19.1
 ruamel.yaml.clib==0.2.15
 shellingham==1.5.4
