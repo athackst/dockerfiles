@@ -32,4 +32,4 @@ jobs:
           RELEASE_ID: ${{ needs.release-draft.outputs.id }}
         run: |
           set -euo pipefail
-          gh variable set DRAFT_RELEASE_ID --body "$RELEASE_ID"
+          gh variable set DRAFT_RELEASE_ID --body "$RELEASE_ID" --repo "${{ github.repository }}"
