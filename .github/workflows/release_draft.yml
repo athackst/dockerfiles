@@ -12,7 +12,24 @@ jobs:
     permissions:
       contents: write
       pull-requests: read
-      actions: write
     uses: athackst/ci/.github/workflows/release_drafter.yml@main
+    with:
+      draft-release-id: ${{ vars.DRAFT_RELEASE_ID }}
     secrets:
       token: ${{ secrets.CI_BOT_TOKEN }}
+
+  persist-draft-id:
+    needs:
+      - release-draft
+    permissions:
+      actions: write
+    runs-on: ubuntu-latest
+    steps:
+      - name: Persist draft release id
+        shell: bash
+        env:
+          GH_TOKEN: ${{ secrets.CI_BOT_TOKEN }}
+          RELEASE_ID: ${{ needs.release-draft.outputs.id }}
+        run: |
+          set -euo pipefail
+          gh variable set DRAFT_RELEASE_ID --body "$RELEASE_ID"
