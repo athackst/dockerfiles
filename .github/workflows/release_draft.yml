@@ -12,5 +12,7 @@ jobs:
     permissions:
       contents: write
       pull-requests: read
+      actions: write
     uses: athackst/ci/.github/workflows/release_drafter.yml@main
-    secrets: inherit
+    secrets:
+      token: ${{ secrets.CI_BOT_TOKEN }}
