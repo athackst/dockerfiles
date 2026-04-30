@@ -5,9 +5,8 @@
 name: CI Update
 
 on:
-  repository_dispatch:
-    types:
-      - ci-update
+  schedule:
+    - cron: "0 15 * * *"
   workflow_dispatch:
 
 concurrency:
